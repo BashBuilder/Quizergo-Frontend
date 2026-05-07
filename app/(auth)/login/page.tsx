@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Logo from "@/components/global/Logo";
 
 const focusHints: Record<string, string> = {
   name: "Enter the name your school uses so your student profile stays synced.",
@@ -99,39 +100,15 @@ export default function AuthPage() {
                   </p>
                 </div>
               </div>
-
-              <div className="space-y-4 rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-[0_20px_70px_-40px_rgba(15,23,42,0.8)]">
-                <div className="flex items-center justify-between gap-4 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-100">
-                    What matters today
-                  </span>
-                  <span className="rounded-full bg-slate-800/90 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-400">
-                    Student mode
-                  </span>
-                </div>
-                <div className="space-y-3 text-sm">
-                  <p className="flex items-center gap-3 text-slate-300">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />{" "}
-                    Review 3 pending quizzes
-                  </p>
-                  <p className="flex items-center gap-3 text-slate-300">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-violet-400" />{" "}
-                    Save progress after every login
-                  </p>
-                  <p className="flex items-center gap-3 text-slate-300">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-slate-300" />{" "}
-                    Unlock achievements on every passed lesson
-                  </p>
-                </div>
-              </div>
             </div>
           </section>
 
           <Card className="overflow-hidden bg-slate-950/95 shadow-2xl shadow-slate-950/40 ring-1 ring-white/10">
             <CardHeader>
               <div>
-                <CardTitle className="text-2xl text-white">
-                  Student Login
+                <CardTitle className="text-2xl text-white flex gap-2">
+                  {" "}
+                  <Logo /> Login
                 </CardTitle>
                 <CardDescription className="mt-2 text-slate-400">
                   Enter your details to open your quiz dashboard and study
@@ -207,14 +184,6 @@ export default function AuthPage() {
                     />
                   </div>
                 </div>
-
-                <div className="space-y-3 rounded-3xl border border-white/10 bg-slate-900/75 p-4 text-sm text-slate-300">
-                  <p className="font-medium text-slate-100">
-                    Quick student tip
-                  </p>
-                  <p>{summaryText}</p>
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full rounded-3xl px-6 py-3 text-sm font-semibold"
