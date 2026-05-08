@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Logo from "@/components/global/Logo";
+import Image from "next/image";
 
 const focusHints: Record<string, string> = {
   name: "Enter the name your school uses so your student profile stays synced.",
@@ -52,19 +53,27 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.18),_transparent_25%),radial-gradient(circle_at_bottom_left,_rgba(168,85,247,0.2),_transparent_22%)]" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-72 bg-[linear-gradient(180deg,_rgba(15,23,42,0.92)_0%,_transparent_80%)]" />
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-6 py-12">
+    <main className="relative h-dvh overflow-hidden bg-slate-950 text-slate-100">
+      <Image
+        width={1000}
+        height={1000}
+        alt="background image"
+        src="/assets/120493 (1).jpg"
+        loading="lazy"
+        className="absolute top-0 left-0 h-full w-full object-cover opacity-20 "
+      />
+      <div className="absolute top-12 left-12 z-50 max-sm:top-4 max-sm:left-4 ">
+        <Logo />
+      </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.18),transparent_25%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.2),transparent_22%)]" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-72 bg-[linear-gradient(180deg,rgba(15,23,42,0.92)_0%,transparent_80%)]" />
+      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center px-6 py-12">
         <div className="grid w-full gap-10 lg:grid-cols-[1.25fr_0.95fr]">
-          <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/90 p-10 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+          <section className="relative max-md:hidden overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/90 p-10 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
             <div className="absolute -left-10 top-16 h-40 w-40 rounded-full bg-cyan-500/20 blur-3xl" />
             <div className="absolute right-0 top-12 h-52 w-52 rounded-full bg-violet-500/15 blur-3xl" />
             <div className="relative z-10 flex h-full flex-col justify-between gap-8">
               <div>
-                <p className="inline-flex items-center gap-2 rounded-full bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 ring-1 ring-cyan-300/20">
-                  <Sparkles size={16} /> Student-first login
-                </p>
                 <h1 className="mt-8 max-w-xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
                   Your learning hub is one login away.
                 </h1>
@@ -73,74 +82,20 @@ export default function AuthPage() {
                   the streak you built for your next assessment.
                 </p>
               </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_60px_-30px_rgba(15,23,42,0.9)] backdrop-blur-xl">
-                  <div className="flex items-center gap-3 text-cyan-300">
-                    <BookOpen size={20} />
-                    <span className="text-sm font-semibold">Study streak</span>
-                  </div>
-                  <p className="mt-4 text-3xl font-semibold text-white">
-                    4 days
-                  </p>
-                  <p className="mt-2 text-sm text-slate-400">
-                    Keep it up — your quiz momentum is strong.
-                  </p>
-                </div>
-                <div className="rounded-3xl border border-white/10 bg-violet-500/10 p-5 shadow-[0_18px_60px_-30px_rgba(99,102,241,0.5)] backdrop-blur-xl">
-                  <div className="flex items-center gap-3 text-violet-300">
-                    <CheckCircle2 size={20} />
-                    <span className="text-sm font-semibold">
-                      Assessment readiness
-                    </span>
-                  </div>
-                  <p className="mt-4 text-3xl font-semibold text-white">72%</p>
-                  <p className="mt-2 text-sm text-slate-300">
-                    Target next quiz with recommended review flashcards.
-                  </p>
-                </div>
-              </div>
             </div>
           </section>
 
-          <Card className="overflow-hidden bg-slate-950/95 shadow-2xl shadow-slate-950/40 ring-1 ring-white/10">
+          <Card className="overflow-hidden  bg-slate-950 shadow-2xl shadow-slate-950/40 ring-1 ring-white/10">
             <CardHeader>
               <div>
                 <CardTitle className="text-2xl text-white flex gap-2">
-                  {" "}
-                  <Logo /> Login
+                  Login
                 </CardTitle>
-                <CardDescription className="mt-2 text-slate-400">
-                  Enter your details to open your quiz dashboard and study
-                  insights.
-                </CardDescription>
               </div>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="backdrop:blur-2xl">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-5">
-                  <label
-                    className="block text-sm font-medium text-slate-200"
-                    htmlFor="name"
-                  >
-                    Student name
-                  </label>
-                  <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-cyan-400 focus-within:ring-1 focus-within:ring-cyan-400/20">
-                    <User2 className="text-cyan-300" size={18} />
-                    <input
-                      id="name"
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                      onFocus={() => setFocusField("name")}
-                      placeholder="e.g. Amina Patel"
-                      className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                      type="text"
-                      autoComplete="name"
-                    />
-                  </div>
-                </div>
-
                 <div className="space-y-5">
                   <label
                     className="block text-sm font-medium text-slate-200"
@@ -188,9 +143,7 @@ export default function AuthPage() {
                   type="submit"
                   className="w-full rounded-3xl px-6 py-3 text-sm font-semibold"
                 >
-                  {submitted
-                    ? "Continue to dashboard"
-                    : "Sign in and start studying"}
+                  {submitted ? "Continue to dashboard" : "Sign in"}
                 </Button>
 
                 {error ? (
@@ -200,11 +153,6 @@ export default function AuthPage() {
                 ) : null}
               </form>
             </CardContent>
-
-            <CardFooter className="flex flex-wrap justify-between gap-3 px-6 pt-4 text-xs text-slate-400 sm:px-4">
-              <span>Need help? Contact your campus IT or teacher.</span>
-              <span>Designed for quiz-ready students.</span>
-            </CardFooter>
           </Card>
         </div>
       </div>
