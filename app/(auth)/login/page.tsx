@@ -1,16 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BookOpen, CheckCircle2, Lock, Sparkles, User2 } from "lucide-react";
+import { BookOpen, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Logo from "@/components/global/Logo";
 import Image from "next/image";
 
@@ -27,17 +20,6 @@ export default function AuthPage() {
   const [focusField, setFocusField] = useState<string>("name");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-
-  const summaryText = useMemo(() => {
-    if (submitted) {
-      return `Welcome back, ${name || "student"}! Your personalized study board is ready.`;
-    }
-
-    return (
-      focusHints[focusField] ||
-      "Login to continue your daily streak and unlock your next quiz."
-    );
-  }, [focusField, name, submitted]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -85,13 +67,9 @@ export default function AuthPage() {
             </div>
           </section>
 
-          <Card className="overflow-hidden  bg-slate-950 shadow-2xl shadow-slate-950/40 ring-1 ring-white/10">
+          <Card className="backdrop-blur-sm bg-slate-950/5">
             <CardHeader>
-              <div>
-                <CardTitle className="text-2xl text-white flex gap-2">
-                  Login
-                </CardTitle>
-              </div>
+              <CardTitle className="text-2xl text-white ">Login</CardTitle>
             </CardHeader>
 
             <CardContent className="backdrop:blur-2xl">
