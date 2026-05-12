@@ -1,4 +1,5 @@
 import React from "react";
+import { Input } from "../ui/input";
 
 interface InputGroupProps {
   label: string;
@@ -9,6 +10,7 @@ interface InputGroupProps {
   placeholder: string;
   type: string;
   autoComplete?: string;
+  icon?: React.ReactNode;
 }
 
 const InputGroup = ({
@@ -18,6 +20,7 @@ const InputGroup = ({
   name,
   placeholder,
   type,
+  icon,
 }: InputGroupProps) => {
   return (
     <div className="space-y-5">
@@ -28,8 +31,9 @@ const InputGroup = ({
         {label}
       </label>
       <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-violet-400 focus-within:ring-1 focus-within:ring-violet-400/20">
+        {icon}
         {/* <BookOpen className="text-violet-300" size={18} /> */}
-        <input
+        <Input
           id={name}
           value={value}
           name={name}
