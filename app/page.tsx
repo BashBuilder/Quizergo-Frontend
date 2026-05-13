@@ -16,7 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/global/Header";
 import Hero from "@/components/Homepage/Hero";
-import QuizerGoSections from "@/components/Homepage/Subjects";
+import QuizerGoSections from "@/components/Homepage/four-sections";
+import Subjects from "@/components/Homepage/Subjects";
+import Testimonials from "@/components/Homepage/Testimonials";
 
 export default function HomePage() {
   const stats = [
@@ -84,12 +86,14 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <Hero />
+      <Subjects />
+      <Testimonials />
       <QuizerGoSections />
       {/* FEATURES */}
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-14 text-center">
-            <p className="font-semibold uppercase tracking-widest text-primary">
+            <p className="font-semibold uppercase tracking-widest text-primary-600">
               Features
             </p>
             <h2 className="mt-3 text-4xl font-black">
@@ -144,7 +148,7 @@ export default function HomePage() {
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
-            <p className="font-semibold uppercase tracking-widest text-primary">
+            <p className="font-semibold uppercase tracking-widest text-primary-600">
               Pricing
             </p>
             <h2 className="mt-3 text-4xl font-black">
@@ -158,7 +162,7 @@ export default function HomePage() {
                 key={plan.name}
                 className={`rounded-3xl p-2 shadow-xl ${
                   plan.featured
-                    ? "border-primary bg-primary text-white"
+                    ? "border-primary-600 bg-primary-600 text-white"
                     : "border-slate-200"
                 }`}
               >
@@ -182,7 +186,7 @@ export default function HomePage() {
                     className={`mt-8 w-full ${
                       plan.featured
                         ? "bg-white text-primary hover:bg-primary-50"
-                        : "bg-primary hover:bg-primary"
+                        : "bg-primary-600 hover:bg-primary"
                     }`}
                   >
                     Choose Plan
