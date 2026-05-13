@@ -7,7 +7,7 @@ const modes = [
       "Drill thousands of WAEC and JAMB past questions at your own pace with instant explanations.",
     icon: BookOpen,
     badge: "Practices",
-    color: "bg-primary-50 text-primary-600 border-primary-200",
+    color: "bg-primary-50 text-primary border-primary-200",
     image:
       "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=600&h=400&fit=crop",
   },
@@ -133,7 +133,7 @@ export default function QuizerGoSections() {
       <section className="bg-slate-50 px-6 py-20 lg:px-16">
         <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary">
               What You Can Do
             </p>
 
@@ -181,7 +181,7 @@ export default function QuizerGoSections() {
                       </p>
                     </div>
 
-                    <button className="mt-8 inline-flex items-center gap-2 font-semibold text-primary-600 transition group-hover:gap-3">
+                    <button className="mt-8 inline-flex items-center gap-2 font-semibold text-primary transition group-hover:gap-3">
                       Learn more
                       <ArrowRight size={16} />
                     </button>
@@ -249,7 +249,7 @@ export default function QuizerGoSections() {
       {/* HOW IT WORKS */}
       <section className="bg-slate-50 px-6 py-20 lg:px-16">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary">
             How It Works
           </p>
 
@@ -261,7 +261,7 @@ export default function QuizerGoSections() {
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
           {steps.map((step, index) => (
             <div key={index} className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary-100 bg-white text-2xl font-extrabold text-primary-600 shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary-100 bg-white text-2xl font-extrabold text-primary shadow-sm">
                 {index + 1}
               </div>
 
@@ -284,7 +284,7 @@ export default function QuizerGoSections() {
       {/* STUDENT STORIES */}
       <section className="bg-white px-6 py-20 lg:px-16">
         <div className="mb-14">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary">
             Student Stories
           </p>
 
@@ -299,7 +299,7 @@ export default function QuizerGoSections() {
               key={index}
               className={`rounded-3xl border p-8 transition hover:-translate-y-1 hover:shadow-xl ${
                 item.featured
-                  ? "border-primary bg-primary-600 text-white"
+                  ? "border-primary bg-primary text-white"
                   : "border-slate-200 bg-white"
               }`}
             >
