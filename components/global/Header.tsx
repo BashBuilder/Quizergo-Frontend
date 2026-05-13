@@ -2,18 +2,14 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import Logo from "./Logo";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-blue-100 bg-white/80 backdrop-blur-xl">
+    <header className="fixed top-0 z-50 w-full border-b border-primary-100 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-bold">
-            Q
-          </div>
-          <span className="text-xl font-black tracking-tight text-blue-700">
-            QuizerGo
-          </span>
+          <Logo />
         </div>
 
         <nav className="hidden gap-8 md:flex text-sm font-medium text-slate-600">
@@ -28,7 +24,7 @@ const Header = () => {
             <Button variant="outline">Login</Button>
           </Link>
           <Link href="/login">
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-primary-500 hover:bg-primary">
               Get Started
             </Button>
           </Link>

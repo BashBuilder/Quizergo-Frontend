@@ -6,12 +6,12 @@ import { ArrowRight } from "lucide-react";
 const Hero = () => {
   return (
     <section className="relative overflow-hidden pt-32 pb-20">
-      <div className="absolute inset-0 bg-linear-to-br from-blue-50 via-white to-blue-100" />
+      <div className="absolute inset-0 bg-linear-to-br from-primary-50 via-white to-primary-100" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
         <div>
           <h1 className="text-3xl font-black leading-tight tracking-tight md:text-5xl">
             Study Smart. <br />
-            Pass <span className="text-blue-600">WAEC & JAMB</span> with
+            Pass <span className="text-primary-600">WAEC & JAMB</span> with
             Confidence.
           </h1>
 
@@ -21,7 +21,7 @@ const Hero = () => {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button size="lg" className="bg-blue-600 px-8 hover:bg-blue-700">
+            <Button size="lg" className="bg-primary-600 px-8 hover:bg-primary">
               Start Free <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
 

@@ -6,7 +6,7 @@ const Logo = () => {
   return (
     <Link href="/" className="motion-preset-confetti">
       <div className="relative w-fit">
-        <h1 className="text-3xl font-bold">Quizer</h1>
+        <h1 className="text-3xl font-bold text-primary ">Quizer</h1>
         <img
           src="/assets/quizzer.png"
           alt="quizer logo"

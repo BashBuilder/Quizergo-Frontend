@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import Header from "@/components/global/Header";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("h-full", "antialiased", poppins.className)}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full">
+        <Header />
+        <main className="flex-1">{children}</main>
+      </body>
     </html>
   );
 }

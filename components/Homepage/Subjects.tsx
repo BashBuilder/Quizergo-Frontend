@@ -7,7 +7,7 @@ const modes = [
       "Drill thousands of WAEC and JAMB past questions at your own pace with instant explanations.",
     icon: BookOpen,
     badge: "Practices",
-    color: "bg-blue-50 text-blue-600 border-blue-200",
+    color: "bg-primary-50 text-primary-600 border-primary-200",
     image:
       "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=600&h=400&fit=crop",
   },
@@ -133,7 +133,7 @@ export default function QuizerGoSections() {
       <section className="bg-slate-50 px-6 py-20 lg:px-16">
         <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
               What You Can Do
             </p>
 
@@ -181,7 +181,7 @@ export default function QuizerGoSections() {
                       </p>
                     </div>
 
-                    <button className="mt-8 inline-flex items-center gap-2 font-semibold text-blue-600 transition group-hover:gap-3">
+                    <button className="mt-8 inline-flex items-center gap-2 font-semibold text-primary-600 transition group-hover:gap-3">
                       Learn more
                       <ArrowRight size={16} />
                     </button>
@@ -197,7 +197,7 @@ export default function QuizerGoSections() {
       <section className="bg-slate-950 px-6 py-20 lg:px-16">
         <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-blue-400">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-400">
               Subjects Covered
             </p>
 
@@ -237,7 +237,7 @@ export default function QuizerGoSections() {
                   {subject.name}
                 </h3>
 
-                <p className="mt-1 text-sm text-blue-300">
+                <p className="mt-1 text-sm text-primary-300">
                   {subject.questions}
                 </p>
               </div>
@@ -249,7 +249,7 @@ export default function QuizerGoSections() {
       {/* HOW IT WORKS */}
       <section className="bg-slate-50 px-6 py-20 lg:px-16">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
             How It Works
           </p>
 
@@ -261,7 +261,7 @@ export default function QuizerGoSections() {
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
           {steps.map((step, index) => (
             <div key={index} className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-blue-100 bg-white text-2xl font-extrabold text-blue-600 shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary-100 bg-white text-2xl font-extrabold text-primary-600 shadow-sm">
                 {index + 1}
               </div>
 
@@ -284,7 +284,7 @@ export default function QuizerGoSections() {
       {/* STUDENT STORIES */}
       <section className="bg-white px-6 py-20 lg:px-16">
         <div className="mb-14">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
             Student Stories
           </p>
 
@@ -299,7 +299,7 @@ export default function QuizerGoSections() {
               key={index}
               className={`rounded-3xl border p-8 transition hover:-translate-y-1 hover:shadow-xl ${
                 item.featured
-                  ? "border-blue-700 bg-blue-600 text-white"
+                  ? "border-primary bg-primary-600 text-white"
                   : "border-slate-200 bg-white"
               }`}
             >
@@ -307,7 +307,7 @@ export default function QuizerGoSections() {
 
               <p
                 className={`mb-8 leading-8 ${
-                  item.featured ? "text-blue-100" : "text-slate-600"
+                  item.featured ? "text-primary-100" : "text-slate-600"
                 }`}
               >
                 {item.text}
@@ -331,7 +331,7 @@ export default function QuizerGoSections() {
 
                   <p
                     className={`text-sm ${
-                      item.featured ? "text-blue-200" : "text-slate-500"
+                      item.featured ? "text-primary-200" : "text-slate-500"
                     }`}
                   >
                     {item.role}

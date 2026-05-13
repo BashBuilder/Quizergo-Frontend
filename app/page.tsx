@@ -83,17 +83,13 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      {/* NAVBAR */}
-      <Header />
-      {/* HERO */}
       <Hero />
       <QuizerGoSections />
-
       {/* FEATURES */}
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-14 text-center">
-            <p className="font-semibold uppercase tracking-widest text-blue-600">
+            <p className="font-semibold uppercase tracking-widest text-primary-600">
               Features
             </p>
             <h2 className="mt-3 text-4xl font-black">
@@ -107,10 +103,10 @@ export default function HomePage() {
               return (
                 <Card
                   key={item.title}
-                  className="rounded-3xl border-blue-100 shadow-lg transition hover:-translate-y-1"
+                  className="rounded-3xl border-primary-100 shadow-lg transition hover:-translate-y-1"
                 >
                   <CardContent className="p-7">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-100 text-primary">
                       <Icon />
                     </div>
                     <h3 className="text-xl font-bold">{item.title}</h3>
@@ -128,7 +124,7 @@ export default function HomePage() {
       {/* TESTIMONIAL */}
       <section className="bg-slate-50 py-24">
         <div className="mx-auto max-w-5xl px-6 text-center">
-          <Star className="mx-auto h-10 w-10 fill-blue-500 text-blue-500" />
+          <Star className="mx-auto h-10 w-10 fill-primary-500 text-primary-500" />
           <h2 className="mt-6 text-4xl font-black">
             Real Students. Real Results.
           </h2>
@@ -138,7 +134,7 @@ export default function HomePage() {
             scored 312. This app changed everything for me.”
           </p>
 
-          <p className="mt-6 font-semibold text-blue-700">
+          <p className="mt-6 font-semibold text-primary">
             — Adebayo Olamide, Lagos
           </p>
         </div>
@@ -148,7 +144,7 @@ export default function HomePage() {
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
-            <p className="font-semibold uppercase tracking-widest text-blue-600">
+            <p className="font-semibold uppercase tracking-widest text-primary-600">
               Pricing
             </p>
             <h2 className="mt-3 text-4xl font-black">
@@ -162,7 +158,7 @@ export default function HomePage() {
                 key={plan.name}
                 className={`rounded-3xl p-2 shadow-xl ${
                   plan.featured
-                    ? "border-blue-600 bg-blue-600 text-white"
+                    ? "border-primary-600 bg-primary-600 text-white"
                     : "border-slate-200"
                 }`}
               >
@@ -185,8 +181,8 @@ export default function HomePage() {
                   <Button
                     className={`mt-8 w-full ${
                       plan.featured
-                        ? "bg-white text-blue-700 hover:bg-blue-50"
-                        : "bg-blue-600 hover:bg-blue-700"
+                        ? "bg-white text-primary hover:bg-primary-50"
+                        : "bg-primary-600 hover:bg-primary"
                     }`}
                   >
                     Choose Plan
@@ -199,7 +195,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-blue-700 py-24 text-white">
+      <section className="bg-primary py-24 text-white">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <h2 className="text-5xl font-black">
             Your Exam is Coming.
@@ -207,13 +203,13 @@ export default function HomePage() {
             Start Today.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-100">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-primary-100">
             Join 50,000+ students using QuizerGo to prepare smarter.
           </p>
 
           <Button
             size="lg"
-            className="mt-8 bg-white px-8 text-blue-700 hover:bg-blue-50"
+            className="mt-8 bg-white px-8 text-primary hover:bg-primary-50"
           >
             Create Free Account
           </Button>
