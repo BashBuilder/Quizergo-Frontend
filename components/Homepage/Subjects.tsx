@@ -1,35 +1,14 @@
-const subjects = [
-  {
-    name: "Mathematics",
-    emoji: "📐",
-    questions: "1,840 Questions",
-    image:
-      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=500&fit=crop",
-  },
-  {
-    name: "English",
-    emoji: "✍️",
-    questions: "2,100 Questions",
-    image:
-      "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&h=500&fit=crop",
-  },
-  {
-    name: "Biology",
-    emoji: "🧬",
-    questions: "1,620 Questions",
-    image:
-      "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=400&h=500&fit=crop",
-  },
-  {
-    name: "Chemistry",
-    emoji: "⚗️",
-    questions: "1,450 Questions",
-    image:
-      "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=400&h=500&fit=crop",
-  },
-];
+/* eslint-disable @next/next/no-img-element */
+import { subjects } from "@/data/constants";
+import React from "react";
 
-export default function Subjects() {
+interface SubjectsProps {
+  length?: number;
+}
+
+function Subjects({ length }: SubjectsProps) {
+  const subjectsList = subjects.slice(0, length);
+
   return (
     <div className="w-full">
       {/* SUBJECTS SECTION */}
@@ -56,7 +35,7 @@ export default function Subjects() {
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {subjects.map((subject, index) => (
+          {subjectsList.map((subject, index) => (
             <div
               key={index}
               className="group relative overflow-hidden rounded-3xl"
@@ -64,13 +43,14 @@ export default function Subjects() {
               <img
                 src={subject.image}
                 alt={subject.name}
-                className="h-[360px] w-full object-cover transition duration-500 group-hover:scale-110"
+                loading="lazy"
+                className="h-90 w-full object-cover transition duration-500 group-hover:scale-110"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
               <div className="absolute bottom-0 p-6">
-                <div className="mb-2 text-3xl">{subject.emoji}</div>
+                {/* <div className="mb-2 text-3xl">{subject.emoji}</div> */}
 
                 <h3 className="text-2xl font-bold text-white">
                   {subject.name}
@@ -87,3 +67,5 @@ export default function Subjects() {
     </div>
   );
 }
+
+export default React.memo(Subjects);

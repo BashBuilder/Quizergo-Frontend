@@ -86,7 +86,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <Hero />
-      <Subjects />
+      <Subjects length={4} />
       <Testimonials />
       <QuizerGoSections />
       {/* FEATURES */}
@@ -219,21 +219,6 @@ export default function HomePage() {
           </Button>
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-slate-200 py-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 md:flex-row">
-          <p className="text-sm text-slate-500">
-            © 2025 QuizerGo. All rights reserved.
-          </p>
-
-          <div className="flex gap-6 text-sm text-slate-500">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Support</a>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }
