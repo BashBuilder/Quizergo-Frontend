@@ -104,3 +104,35 @@ export const subjects = [
       "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
+
+export const pricing = [
+  {
+    name: "Starter",
+    price: "Free",
+    features: ["500 Questions", "3 Subjects", "Basic Analytics"],
+    featured: false,
+  },
+  {
+    name: "Pro",
+    price: "₦2,500/mo",
+    features: [
+      "Unlimited Questions",
+      "All Subjects",
+      "Live Sessions",
+      "Video Tutorials",
+      "Exam Simulations",
+    ],
+    featured: true,
+  },
+  {
+    name: "School",
+    price: "₦18,000/yr",
+    features: [
+      "50 Students",
+      "Teacher Dashboard",
+      "Reports",
+      "Priority Support",
+    ],
+    featured: false,
+  },
+];

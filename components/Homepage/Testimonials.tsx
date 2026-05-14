@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+import React from "react";
 const testimonials = [
   {
     name: "Adebayo Olamide",
@@ -23,7 +25,7 @@ const testimonials = [
   },
 ];
 
-export default function Testimonials() {
+export default React.memo(function Testimonials() {
   return (
     <div className="w-full">
       {/* STUDENT STORIES */}
@@ -62,6 +64,7 @@ export default function Testimonials() {
                 <img
                   src={item.image}
                   alt={item.name}
+                  loading="lazy"
                   className="h-12 w-12 rounded-full object-cover"
                 />
 
@@ -89,4 +92,4 @@ export default function Testimonials() {
       </section>
     </div>
   );
-}
+});
