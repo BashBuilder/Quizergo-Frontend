@@ -1,4 +1,3 @@
-// app/page.jsx
 "use client";
 import Hero from "@/components/Homepage/Hero";
 import Features from "@/components/Homepage/features";

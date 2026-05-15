@@ -1,38 +1,37 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { BookOpen, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Logo from "@/components/global/Logo";
 import Image from "next/image";
-
-const focusHints: Record<string, string> = {
-  name: "Enter the name your school uses so your student profile stays synced.",
-  studentId: "Use your school ID or email to keep your quiz progress linked.",
-  password: "A secure password protects your study streak and course history.",
-};
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 export default function AuthPage() {
-  const [name, setName] = useState("");
-  const [studentId, setStudentId] = useState("");
-  const [password, setPassword] = useState("");
-  const [focusField, setFocusField] = useState<string>("name");
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const schema = z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+  });
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  // Infer the type from the schema
+  type FormFields = z.infer<typeof schema>;
 
-    if (!name.trim() || !studentId.trim() || !password.trim()) {
-      setError("Please complete every field to access your student dashboard.");
-      setSubmitted(false);
-      return;
-    }
+  // 2. Setup useForm with the Zod resolver
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormFields>({
+    // @ts-expect-error "error"
+    resolver: zodResolver(schema),
+  });
 
-    setError("");
-    setSubmitted(true);
-  }
+  // 4. Define the submission handler
+  const onSubmit: SubmitHandler<FormFields> = (data) => {
+    console.log("Validated Data:", data);
+  };
 
   return (
     <main className="relative h-dvh overflow-hidden bg-slate-950 text-slate-100">
@@ -68,7 +67,7 @@ export default function AuthPage() {
               <CardTitle className="text-2xl text-white ">Login</CardTitle>
             </CardHeader>
             <CardContent className="backdrop:blur-2xl">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="space-y-5">
                   <label
                     className="block text-sm font-medium text-slate-200"
@@ -80,9 +79,7 @@ export default function AuthPage() {
                     <BookOpen className="text-primary" size={18} />
                     <input
                       id="studentId"
-                      value={studentId}
-                      onChange={(event) => setStudentId(event.target.value)}
-                      onFocus={() => setFocusField("studentId")}
+                      {...register("email")}
                       placeholder="studentid@school.edu or 23A100"
                       className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
                       type="text"
@@ -102,9 +99,7 @@ export default function AuthPage() {
                     <Lock className="text-slate-400" size={18} />
                     <input
                       id="password"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      onFocus={() => setFocusField("password")}
+                      {...register("password")}
                       placeholder="••••••••"
                       className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
                       type="password"
@@ -116,12 +111,12 @@ export default function AuthPage() {
                   type="submit"
                   className="w-full rounded-3xl px-6 py-3 text-sm font-semibold"
                 >
-                  {submitted ? "Continue to dashboard" : "Sign in"}
+                  Sign in
+                  {/* {submitted ? "Continue to dashboard" : "Sign in"} */}
                 </Button>
-
-                {error ? (
+                {errors ? (
                   <p className="rounded-3xl bg-red-500/10 px-4 py-3 text-sm text-red-200 ring-1 ring-red-400/20">
-                    {error}
+                    {errors.email?.message || errors.password?.message}
                   </p>
                 ) : null}
               </form>

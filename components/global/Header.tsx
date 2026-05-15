@@ -4,6 +4,14 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
 
+const links = [
+  { href: "/", label: "Practice" },
+  { href: "/", label: "Live" },
+  { href: "/", label: "Challenges" },
+  { href: "/", label: "Leaderboard" },
+  { href: "/", label: "Blog" },
+];
+
 const Header = () => {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-primary-100 bg-white/80 backdrop-blur-xl">
@@ -12,10 +20,11 @@ const Header = () => {
           <Logo />
         </div>
         <nav className="hidden gap-8 md:flex text-sm font-medium text-slate-600">
-          <Link href="/">Practice</Link>
-          <Link href="/">Live</Link>
-          <Link href="/">Challenges</Link>
-          <Link href="/">Pricing</Link>
+          {links.map((link) => (
+            <Link key={link.href} href={link.href}>
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="hidden gap-3 md:flex">

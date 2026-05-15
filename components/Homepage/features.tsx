@@ -1,4 +1,4 @@
-import { BookOpen, Video, Trophy, Users, ArrowRight } from "lucide-react";
+import { BookOpen, Video, Trophy, Users,} from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 
 const modes = [
