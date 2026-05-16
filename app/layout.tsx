@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import QueryProvider from "@/hooks/queryClientProvider";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -21,8 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("h-full", "antialiased", poppins.className)}>
       <body className="min-h-full">
-        {children}
-        <Toaster richColors position="top-right" />
+        <QueryProvider>
+          {children}
+          <Toaster richColors position="top-right" />
+        </QueryProvider>
       </body>
     </html>
   );
