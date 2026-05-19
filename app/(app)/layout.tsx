@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import Header from "@/components/global/Header";
+import Footer from "@/components/global/Footer";
 
 export default async function AppLayout({
   children,
@@ -19,5 +21,11 @@ export default async function AppLayout({
     redirect("/");
   }
 
-  return <main>{children}</main>;
+  return (
+    <main className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1 pt-14">{children}</main>
+      <Footer />
+    </main>
+  );
 }

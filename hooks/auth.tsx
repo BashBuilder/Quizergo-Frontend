@@ -15,8 +15,8 @@ export function useAuth() {
     queryKey: ["auth", "me"],
     queryFn: async () => {
       try {
-        const user = await getMe();
-        return user;
+        const returnRes = await getMe();
+        return returnRes.user as User;
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
