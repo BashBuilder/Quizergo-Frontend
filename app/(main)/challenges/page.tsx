@@ -477,7 +477,7 @@ function DuelModal({
     >
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
         {/* Header */}
-        <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 px-6 pt-6 pb-8 text-white">
+        <div className="relative bg-linear-to-br from-slate-900 to-slate-800 px-6 pt-6 pb-8 text-white">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"

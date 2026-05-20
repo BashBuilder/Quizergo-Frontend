@@ -268,7 +268,7 @@ function JoinModal({
     >
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
         {/* Dark header */}
-        <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 px-6 pt-6 pb-7">
+        <div className="relative bg-linear-to-br from-slate-900 to-slate-800 px-6 pt-6 pb-7">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
@@ -447,7 +447,7 @@ export default function LivePage() {
                 return (
                   <article
                     key={s.id}
-                    className="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl overflow-hidden shadow-xl"
+                    className="relative bg-linear-to-br from-slate-900 to-slate-800 rounded-3xl overflow-hidden shadow-xl"
                     aria-label={`Live: ${s.title}`}
                   >
                     {/* Subtle grid texture */}
