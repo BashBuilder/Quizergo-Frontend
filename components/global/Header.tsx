@@ -7,13 +7,7 @@ import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import { useAuth } from "@/hooks/auth";
 import { cn } from "@/lib/utils";
-
-const links = [
-  { href: "/practice", label: "Practice" },
-  { href: "/live", label: "Live" },
-  { href: "/challenges", label: "Challenges" },
-  { href: "/dashboard", label: "Summary" },
-];
+import { links } from "@/data/constants";
 
 function NavSkeleton() {
   return (

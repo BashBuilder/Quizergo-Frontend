@@ -136,3 +136,11 @@ export const pricing = [
     featured: false,
   },
 ];
+
+export const links = [
+  { href: "/subjects", label: "Subjects" },
+  { href: "/practice", label: "Practice" },
+  { href: "/live", label: "Live" },
+  { href: "/challenges", label: "Challenges" },
+  { href: "/dashboard", label: "Summary" },
+];
