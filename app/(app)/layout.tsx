@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Header from "@/components/global/Header";
-import Footer from "@/components/global/Footer";
+// import Footer from "@/components/global/Footer";
 
 export default async function AppLayout({
   children,
@@ -10,14 +10,13 @@ export default async function AppLayout({
 }) {
   const cookieStore = await cookies();
   const allCookies = cookieStore.toString();
-  try {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-      headers: {
-        Cookie: allCookies,
-      },
-    });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+    headers: {
+      Cookie: allCookies,
+    },
+  });
+
+  if (!res.ok) {
     redirect("/");
   }
 
@@ -25,7 +24,7 @@ export default async function AppLayout({
     <main className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 pt-14">{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

@@ -50,7 +50,7 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-br from-primary-50 via-white to-primary-100" />
-      <Image
+      {/* <Image
         width={1000}
         height={1000}
         alt="background image"
@@ -58,7 +58,7 @@ const Hero = () => {
         loading="lazy"
         decoding="async"
         className="absolute top-0 left-0 h-full w-full object-cover opacity-5"
-      />
+      /> */}
       <div className="relative mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-2 px-6 pt-10 pb-20">
         <div>
           <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl">
@@ -87,7 +87,7 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="relative h-full min-h-40 overflow-hidden">
+        <div className="relative h-full min-h-40 overflow-hidden rounded-md">
           <Carousel
             setApi={setApi}
             opts={{

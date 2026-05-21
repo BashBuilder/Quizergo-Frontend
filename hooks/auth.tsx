@@ -19,9 +19,11 @@ export function useAuth() {
         return returnRes.user as User;
       } catch (error) {
         if (error instanceof Error) {
-          toast.error(error.message);
+          // toast.error(error.message);
+          throw new Error(error.message);
         } else {
-          toast.error("user not authorized");
+          throw new Error("User not authorized");
+          // toast.error("user not authorized");
         }
         router.push("/");
       }
