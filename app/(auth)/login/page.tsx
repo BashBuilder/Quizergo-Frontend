@@ -210,6 +210,19 @@ export default function LoginPage() {
                     "Sign in"
                   )}
                 </Button>
+
+                {/* register redirect */}
+                <div>
+                  <p className="text-center text-sm text-slate-500">
+                    Don&apos;t have an account?
+                    <a
+                      href="/register"
+                      className="text-cyan-400 hover:underline"
+                    >
+                      Sign up
+                    </a>
+                  </p>
+                </div>
               </form>
             </CardContent>
           </Card>

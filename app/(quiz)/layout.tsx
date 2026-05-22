@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import Header from "@/components/global/Header";
 
-export default async function AppLayout({
+export default async function QuizLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -19,11 +18,5 @@ export default async function AppLayout({
     redirect("/");
   }
 
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <div className="flex-1 pt-14">{children}</div>
-      {/* <Footer /> */}
-    </div>
-  );
+  return <div>{children}</div>;
 }
