@@ -1,46 +1,40 @@
 import axios from "@/config/axios";
 import { getMe } from "@/services/auth.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 export function useAuth() {
   const queryClient = useQueryClient();
-  const router = useRouter();
   const {
     data: user,
     isLoading,
     isError,
+    error,
+    refetch,
   } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: async () => {
-      try {
-        const returnRes = await getMe();
-        return returnRes.user as User;
-      } catch (error) {
-        if (error instanceof Error) {
-          // toast.error(error.message);
-          throw new Error(error.message);
-        } else {
-          throw new Error("User not authorized");
-          // toast.error("user not authorized");
-        }
-        router.push("/");
-      }
+      const returnRes = await getMe();
+      return returnRes.user;
     },
-    retry: false, // don't retry on 401
-    staleTime: 5 * 60 * 1000, // treat as fresh for 5 mins
+    retry: false,
+    // staleTime: 5 * 60 * 1000, // treat as fresh for 5 mins
+    staleTime: Infinity,
   });
 
   const logout = async () => {
-    await axios.post("/auth/logout"); // backend clears the cookie
-    queryClient.removeQueries({ queryKey: ["auth"] });
+    try {
+      await axios.post("/auth/logout");
+    } finally {
+      queryClient.removeQueries({ queryKey: ["auth"] });
+    }
   };
 
   return {
     user,
     isLoading,
     isAuthenticated: !!user && !isError,
+    error,
+    refetch,
     logout,
   };
 }

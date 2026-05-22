@@ -3,18 +3,16 @@
 import { BookOpen, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Logo from "@/components/global/Logo";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import axios from "@/config/axios";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const schema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -70,10 +68,6 @@ export default function LoginPage() {
         className="absolute inset-0 h-full w-full object-cover opacity-20"
       />
 
-      <div className="absolute top-12 left-12 z-50 max-sm:top-4 max-sm:left-4">
-        <Logo />
-      </div>
-
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center px-6 py-12">
         <div className="grid w-full gap-10 lg:grid-cols-[1fr_1fr]">
           {/* Left panel — hidden on mobile */}
@@ -97,9 +91,7 @@ export default function LoginPage() {
           {/* Login form */}
           <Card className="backdrop-blur-sm bg-slate-950/5 max-w-md w-full mx-auto">
             <CardHeader>
-              <CardTitle className="text-2xl text-white">
-                Sign in to QuizerGo
-              </CardTitle>
+              <CardTitle className="text-2xl text-white">Sign in</CardTitle>
             </CardHeader>
 
             <CardContent>

@@ -1,9 +1,8 @@
 "use client";
 
-import { BookOpen, Loader2, Lock, User2 } from "lucide-react";
+import { Loader2, Lock, Unlock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Logo from "@/components/global/Logo";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +11,8 @@ import { useState } from "react";
 import axios from "@/config/axios";
 import { useRouter } from "next/navigation";
 import InputField from "../Field";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const schema = z
   .object({
@@ -35,6 +36,10 @@ type FormFields = z.infer<typeof schema>;
 
 export default function RegisterPage() {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [show, setShow] = useState({
+    password: false,
+    confirmPassword: false,
+  });
   const router = useRouter();
 
   const {
@@ -50,8 +55,12 @@ export default function RegisterPage() {
     setServerError(null);
     try {
       const response = await axios.post("/auth/register", formData);
-      localStorage.setItem("token", response.data);
-      router.push("/dashboard");
+      toast.success(
+        response.data?.message ||
+          "Registration successful! Verification otp sent to your email.",
+      );
+      const email = encodeURIComponent(formData.email);
+      router.push(`/confirm?email=${email}`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setServerError(
@@ -68,9 +77,6 @@ export default function RegisterPage() {
     }
   };
 
-  const emailErrorId = "email-error";
-  const passwordErrorId = "password-error";
-
   return (
     <main className="relative h-dvh overflow-hidden bg-slate-950 text-slate-100">
       {/* Decorative background — hidden from assistive tech */}
@@ -83,11 +89,6 @@ export default function RegisterPage() {
         priority
         className="absolute inset-0 h-full w-full object-cover opacity-20"
       />
-
-      <div className="absolute top-12 left-12 z-50 max-sm:top-4 max-sm:left-4">
-        <Logo />
-      </div>
-
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center px-6 py-12">
         <div className="grid w-full gap-10 lg:grid-cols-[1fr_1fr]">
           {/* Left panel — hidden on mobile */}
@@ -111,15 +112,13 @@ export default function RegisterPage() {
           {/* Login form */}
           <Card className="backdrop-blur-sm bg-slate-950/5 max-w-md w-full mx-auto">
             <CardHeader>
-              <CardTitle className="text-2xl text-white">
-                Sign up for QuizerGo
-              </CardTitle>
+              <CardTitle className="text-2xl text-white">Sign up</CardTitle>
             </CardHeader>
 
             <CardContent>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="space-y-3 overflow-y-auto max-h-102 "
+                className="space-y-3 overflow-y-auto max-h-200 md:max-h-102 scrollbar-thin scrollbar-thumb-slate-700/50 scrollbar-track-transparent"
                 noValidate
                 aria-label="Login form"
               >
@@ -174,7 +173,6 @@ export default function RegisterPage() {
                     type="text"
                     autoComplete="username"
                     aria-invalid={!!errors.email}
-                    aria-describedby={errors.email ? emailErrorId : undefined}
                   />
                 </InputField>
 
@@ -188,18 +186,35 @@ export default function RegisterPage() {
                     {...register("password")}
                     placeholder="••••••••"
                     className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type="password"
+                    type={show.password ? "text" : "password"}
                     autoComplete="current-password"
                     aria-invalid={!!errors.password}
-                    aria-describedby={
-                      errors.password ? passwordErrorId : undefined
+                  />
+                  <button
+                    className="cursor-pointer"
+                    type="button"
+                    onClick={() =>
+                      setShow((prev) => ({
+                        ...prev,
+                        password: !prev.password,
+                      }))
                     }
-                  />
-                  <Lock
-                    className="text-slate-400 shrink-0"
-                    size={18}
-                    aria-hidden="true"
-                  />
+                  >
+                    <Lock
+                      className={cn(
+                        "text-slate-400 shrink-0",
+                        show.password ? "hidden" : "block",
+                      )}
+                      size={18}
+                    />
+                    <Unlock
+                      className={cn(
+                        "text-slate-400 shrink-0",
+                        show.password ? "block" : "hidden",
+                      )}
+                      size={18}
+                    />
+                  </button>
                 </InputField>
                 <InputField
                   label="Confirm Password"
@@ -215,7 +230,7 @@ export default function RegisterPage() {
                     {...register("confirmPassword")}
                     placeholder="••••••••"
                     className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type="password"
+                    type={show.confirmPassword ? "text" : "password"}
                     autoComplete="current-password"
                     aria-invalid={!!errors.confirmPassword}
                     aria-describedby={
@@ -224,14 +239,32 @@ export default function RegisterPage() {
                         : undefined
                     }
                   />
-                  <Lock
-                    className="text-slate-400 shrink-0"
-                    size={18}
-                    aria-hidden="true"
-                  />
+                  <button
+                    className="cursor-pointer"
+                    type="button"
+                    onClick={() =>
+                      setShow((prev) => ({
+                        ...prev,
+                        confirmPassword: !prev.confirmPassword,
+                      }))
+                    }
+                  >
+                    <Lock
+                      className={cn(
+                        "text-slate-400 shrink-0",
+                        show.confirmPassword ? "hidden" : "block",
+                      )}
+                      size={18}
+                    />
+                    <Unlock
+                      className={cn(
+                        "text-slate-400 shrink-0",
+                        show.confirmPassword ? "block" : "hidden",
+                      )}
+                      size={18}
+                    />
+                  </button>
                 </InputField>
-
-                {/* Server-side error */}
                 {serverError && (
                   <p
                     role="alert"
@@ -254,18 +287,21 @@ export default function RegisterPage() {
                         size={16}
                         aria-hidden="true"
                       />
-                      <span>Signing in…</span>
+                      <span>Signing up…</span>
                     </>
                   ) : (
-                    "Sign in"
+                    "Sign up"
                   )}
                 </Button>
 
                 {/* register redirect */}
                 <div>
                   <p className="text-center text-sm text-slate-50">
-                    Already have an account?
-                    <a href="/login" className="text-cyan-400 hover:underline">
+                    Already have an account?{" "}
+                    <a
+                      href="/login"
+                      className="text-orange-400 hover:underline"
+                    >
                       Login
                     </a>
                   </p>

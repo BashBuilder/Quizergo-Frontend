@@ -8,6 +8,7 @@ import Logo from "./Logo";
 import { useAuth } from "@/hooks/auth";
 import { cn } from "@/lib/utils";
 import { links } from "@/data/constants";
+import { toast } from "sonner";
 
 function NavSkeleton() {
   return (
@@ -37,6 +38,7 @@ function Avatar({ name }: { name: string }) {
 
 const Header = () => {
   const { user, isLoading, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
@@ -52,14 +54,12 @@ const Header = () => {
   // Trap focus & close on Escape
   useEffect(() => {
     if (!mobileOpen) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         closeMenu();
         mobileToggleRef.current?.focus();
       }
     };
-
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [mobileOpen]);
@@ -73,6 +73,19 @@ const Header = () => {
   }, [mobileOpen]);
 
   const isActive = (href: string) => pathname === href;
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      toast.success("Logged out successfully");
+      closeMenu();
+    } catch (error) {
+      toast.error("Failed to log out. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <>
@@ -125,9 +138,10 @@ const Header = () => {
                 <Button
                   variant="outline"
                   className="text-sm h-8"
-                  onClick={logout}
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
                 >
-                  Sign out
+                  {isLoggingOut ? "Signing out..." : "Sign out"}
                 </Button>
               </div>
             ) : (
@@ -222,13 +236,11 @@ const Header = () => {
                 </Link>
                 <Button
                   variant="outline"
+                  disabled={isLoggingOut}
                   className="w-full text-sm"
-                  onClick={() => {
-                    logout();
-                    closeMenu();
-                  }}
+                  onClick={handleLogout}
                 >
-                  Sign out
+                  {isLoggingOut ? "Signing out..." : "Sign out"}
                 </Button>
               </div>
             ) : (

@@ -7,8 +7,6 @@ import {
   Clock,
   Flag,
   X,
-  Delete,
-  CheckCircle2,
   AlertCircle,
   Send,
   BookOpen,
@@ -445,7 +443,7 @@ function SubmitModal({
             </button>
             <button
               onClick={onConfirm}
-              className="flex-[2] py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="flex-2 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <Send size={13} aria-hidden="true" /> Submit Now
             </button>
@@ -478,7 +476,7 @@ function ResultsPage({
       <div className="w-full max-w-2xl">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
           {/* Score hero */}
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 px-8 py-10 text-center">
+          <div className="bg-linear-to-br from-slate-900 to-slate-800 px-8 py-10 text-center">
             <p className="text-sm text-white/50 uppercase tracking-widest font-semibold mb-4">
               Session Complete
             </p>
