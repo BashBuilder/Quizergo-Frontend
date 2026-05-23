@@ -34,8 +34,7 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<FormFields> = async (formData) => {
     setServerError(null);
     try {
-      const response = await axios.post("/auth/login", formData);
-      localStorage.setItem("token", response.data);
+      await axios.post("/auth/login", formData);
       router.push("/dashboard");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -203,13 +202,25 @@ export default function LoginPage() {
                   )}
                 </Button>
 
+                {/* forgot password redirect */}
+                <div>
+                  <p className="text-right text-sm text-slate-500">
+                    <a
+                      href="/forgot-password"
+                      className="text-orange-400 hover:underline"
+                    >
+                      Forgot your password?
+                    </a>
+                  </p>
+                </div>
+
                 {/* register redirect */}
                 <div>
                   <p className="text-center text-sm text-slate-500">
                     Don&apos;t have an account?
                     <a
                       href="/register"
-                      className="text-cyan-400 hover:underline"
+                      className="text-orange-400 hover:underline"
                     >
                       Sign up
                     </a>

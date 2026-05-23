@@ -8,13 +8,31 @@ const apiUrl =
 axios.defaults.baseURL = apiUrl;
 axios.defaults.withCredentials = true;
 
+// const protectedRoutes = ["/dashboard", "/settings", "/profile"];
+const unprotectedRoutes = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/privacy",
+  "/terms",
+  "/contact",
+  "/cookie",
+  "/subjects",
+];
+
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const status = error.response?.status;
     const code = error.response?.data?.code;
+    const isUnprotectedRoute = unprotectedRoutes.some((route) =>
+      window.location.pathname.startsWith(route),
+    );
 
     if (status === 401 && code === "UNAUTHORIZED") {
+      if (isUnprotectedRoute || window.location.pathname === "/") {
+        return Promise.reject(error);
+      }
       queryClient.removeQueries({ queryKey: ["auth"] });
       toast.error(
         error.response?.data?.message ||
