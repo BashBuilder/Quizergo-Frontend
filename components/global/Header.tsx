@@ -81,6 +81,10 @@ const Header = () => {
       toast.success("Logged out successfully");
       closeMenu();
     } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`${error.message}`);
+        return;
+      }
       toast.error("Failed to log out. Please try again.");
     } finally {
       setIsLoggingOut(false);
