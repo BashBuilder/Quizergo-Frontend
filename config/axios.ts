@@ -23,6 +23,17 @@ const unprotectedRoutes = [
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (!error.response) {
+      toast.error(
+        "Unable to connect to the server. Check your internet connection.",
+      );
+      return Promise.reject({
+        message:
+          "Unable to connect to the server. Check your internet connection.",
+        code: "NETWORK_ERROR",
+      });
+    }
+
     const status = error.response?.status;
     const code = error.response?.data?.code;
     const isUnprotectedRoute = unprotectedRoutes.some((route) =>
