@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import {
   Search,
   BookOpen,
@@ -14,7 +14,6 @@ import {
   Clock,
   Target,
   TrendingUp,
-  ChevronRight,
   Play,
   Star,
   Lock,
@@ -495,7 +494,7 @@ function ModePicker({
             </button>
             <button
               onClick={() => onStart(selected)}
-              className="flex-[2] py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="flex-2 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <Play size={14} aria-hidden="true" />
               Start Session
@@ -590,7 +589,7 @@ export default function PracticePage() {
         {/* ── Filters ── */}
         <div className="flex flex-wrap items-center gap-3 mb-6">
           {/* Search */}
-          <div className="relative flex-1 min-w-[200px] max-w-xs">
+          <div className="relative flex-1 min-w-50 max-w-xs">
             <Search
               size={14}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"

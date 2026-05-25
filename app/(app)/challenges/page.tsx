@@ -7,7 +7,6 @@ import {
   Star,
   Clock,
   Search,
-  ChevronRight,
   Zap,
   Shield,
   Crown,
@@ -749,7 +748,7 @@ export default function ChallengesPage() {
                 {t.count !== undefined && t.count > 0 && (
                   <span
                     className={cn(
-                      "text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center",
+                      "text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-4.5 text-center",
                       isActive
                         ? "bg-white/20 text-white"
                         : "bg-slate-100 text-slate-600",
@@ -767,7 +766,7 @@ export default function ChallengesPage() {
         {tab === "daily" && (
           <div id="panel-daily" role="tabpanel" aria-label="Daily challenges">
             {/* Weekly quiz banner */}
-            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-primary-900 rounded-3xl p-6 mb-8 overflow-hidden">
+            <div className="relative bg-linear-to-r from-slate-900 via-slate-800 to-primary-900 rounded-3xl p-6 mb-8 overflow-hidden">
               <div
                 className="absolute inset-0 opacity-5"
                 style={{

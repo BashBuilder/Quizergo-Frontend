@@ -56,7 +56,7 @@ export const DURATIONS = [
 ];
 
 export const MODES = [
-  { value: "topic", label: "By topic" },
+  // { value: "topic", label: "By topic" },
   { value: "year", label: "By year" },
   { value: "random", label: "Random" },
 ];

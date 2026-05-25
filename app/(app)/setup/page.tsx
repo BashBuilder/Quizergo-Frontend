@@ -16,7 +16,9 @@ import { ChevronRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageWrapper from "@/components/global/PageWrapper";
 import Field from "./Field";
-import { DURATIONS, MODES, QUESTION_COUNTS, SUBJECTS } from "./constant";
+import { DURATIONS, MODES, QUESTION_COUNTS } from "./constant";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useGetQuestions, useGetSubjects } from "@/services/question.service";
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 const schema = z
@@ -48,6 +50,10 @@ type FormValues = z.infer<typeof schema>;
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function QuizSetupPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const query = useSearchParams();
+  const subject = query.get("subject");
+  const { data: subjects } = useGetSubjects();
+  const router = useRouter();
 
   const {
     control,
@@ -58,7 +64,7 @@ export default function QuizSetupPage() {
     // @ts-expect-error zodResolver types are messed up
     resolver: zodResolver(schema),
     defaultValues: {
-      subject: "",
+      subject: subject || "",
       mode: "random",
       questionCount: "",
       topic: "",
@@ -67,13 +73,34 @@ export default function QuizSetupPage() {
   });
 
   const watchSubject = useWatch({ control, name: "subject" });
-  const watchMode = useWatch({ control, name: "mode" });
+  const watchDuration = useWatch({ control, name: "duration" });
+  // const watchMode = useWatch({ control, name: "mode" });
+  const limit = useWatch({ control, name: "questionCount" });
 
-  const selectedSubject = SUBJECTS.find((s) => s.code === watchSubject);
+  const { refetch } = useGetQuestions({
+    name: watchSubject,
+    limit: Number(limit),
+  });
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async () => {
     setIsLoading(true);
-    console.log(data);
+    try {
+      const { data } = await refetch();
+      console.log(data?.questions.data);
+      localStorage.setItem(
+        "quizerQuestions",
+        JSON.stringify(data?.questions.data),
+      );
+      localStorage.setItem(
+        "quizerTimer",
+        JSON.stringify(Number(watchDuration)),
+      );
+      router.push("/quiz");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -124,13 +151,13 @@ export default function QuizSetupPage() {
                       <SelectValue placeholder="Choose a subject…" />
                     </SelectTrigger>
                     <SelectContent>
-                      {SUBJECTS.map((s) => (
-                        <SelectItem key={s.code} value={s.code}>
+                      {subjects?.map((s) => (
+                        <SelectItem key={s.apiKey} value={s.apiKey}>
                           <span className="flex flex-col">
                             <span className="font-semibold">{s.name}</span>
-                            <span className="text-xs text-slate-400">
+                            {/* <span className="text-xs text-slate-400">
                               {s.code}
-                            </span>
+                            </span> */}
                           </span>
                         </SelectItem>
                       ))}
@@ -211,7 +238,7 @@ export default function QuizSetupPage() {
             </Field>
 
             {/* Topic — conditional */}
-            {watchMode === "topic" && (
+            {/* {watchMode === "topic" && (
               <Field
                 label="Topic"
                 htmlFor="topic"
@@ -253,7 +280,7 @@ export default function QuizSetupPage() {
                   )}
                 />
               </Field>
-            )}
+            )} */}
 
             {/* Duration */}
             <Field
