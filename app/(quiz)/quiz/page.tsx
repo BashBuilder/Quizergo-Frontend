@@ -1,170 +1,33 @@
 "use client";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  // Calculator as Calc,
   Clock,
   Flag,
-  AlertCircle,
   Send,
   BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { QUIZ_META, QUESTIONS, Question } from "./constants";
+// import { QUIZ_META, QUESTIONS } from "./constants";
 import Calculator from "./calculator";
 import SubmitModal from "./submitModal";
+import ResultsPage from "./result";
+import LessonContent from "@/components/global/LessonContent";
 
-// ── Submit Modal ──────────────────────────────────────────────────────────────
-
-// ── Results Page ──────────────────────────────────────────────────────────────
-function ResultsPage({
-  answers,
-  questions,
-  timeTaken,
-  onRetry,
-}: {
-  answers: Record<number, number>;
-  questions: Question[];
-  timeTaken: number;
-  onRetry: () => void;
-}) {
-  const correct = questions.filter((q) => answers[q.id] === q.correct).length;
-  const score = Math.round((correct / questions.length) * 100);
-  const mins = Math.floor(timeTaken / 60);
-  const secs = timeTaken % 60;
-
-  return (
-    <div className="min-h-screen bg-[oklch(0.99_0.01_265)] flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
-          {/* Score hero */}
-          <div className="bg-linear-to-br from-slate-900 to-slate-800 px-8 py-10 text-center">
-            <p className="text-sm text-white/50 uppercase tracking-widest font-semibold mb-4">
-              Session Complete
-            </p>
-            <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-              <svg
-                className="w-32 h-32 -rotate-90"
-                viewBox="0 0 120 120"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="54"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.1)"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="54"
-                  fill="none"
-                  stroke={
-                    score >= 80
-                      ? "#34d399"
-                      : score >= 60
-                        ? "#fbbf24"
-                        : "#f87171"
-                  }
-                  strokeWidth="8"
-                  strokeDasharray={`${(score / 100) * 339.3} 339.3`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute text-center">
-                <p className="text-4xl font-bold text-white">{score}%</p>
-              </div>
-            </div>
-            <p className="text-white/60 text-sm">
-              {correct} of {questions.length} correct
-            </p>
-          </div>
-
-          <div className="p-6">
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-3 mb-6">
-              {[
-                {
-                  label: "Score",
-                  value: `${score}%`,
-                  sub:
-                    score >= 80
-                      ? "Excellent"
-                      : score >= 60
-                        ? "Good"
-                        : "Needs work",
-                },
-                {
-                  label: "Correct",
-                  value: correct,
-                  sub: `of ${questions.length}`,
-                },
-                { label: "Time", value: `${mins}m ${secs}s`, sub: "taken" },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className="bg-slate-50 rounded-2xl p-3 text-center"
-                >
-                  <p className="text-xl font-bold text-slate-900">{s.value}</p>
-                  <p className="text-xs text-slate-500">{s.label}</p>
-                  <p className="text-[10px] text-slate-400">{s.sub}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Question review */}
-            <div className="mb-6">
-              <h3 className="text-sm font-bold text-slate-700 mb-3">Review</h3>
-              <div className="flex flex-wrap gap-2">
-                {questions.map((q) => {
-                  const answered = answers[q.id] !== undefined;
-                  const isCorrect = answers[q.id] === q.correct;
-                  return (
-                    <div
-                      key={q.id}
-                      className={cn(
-                        "w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold",
-                        !answered
-                          ? "bg-slate-100 text-slate-400"
-                          : isCorrect
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-rose-100 text-rose-700",
-                      )}
-                      title={`Q${q.id}: ${!answered ? "Skipped" : isCorrect ? "Correct" : "Wrong"}`}
-                    >
-                      {q.id}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={onRetry}
-                className="flex-1 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition-all"
-              >
-                Try Again
-              </button>
-              <a
-                href="/practice"
-                className="flex-1 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors text-center"
-              >
-                Back to Practice
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Main Quiz Page ────────────────────────────────────────────────────────────
 export default function QuizPage() {
+  const timerMiinutes = useMemo(() => {
+    const timer = localStorage.getItem("quizerTimer");
+    if (timer) return Number(timer);
+  }, []);
+
+  const QUIZ_META = {
+    title: "Full Practice",
+    subject: "Mathematics",
+    totalTime: (timerMiinutes || 1) * 60, // 30 minutes in seconds
+    mode: "Full Practice",
+  };
+
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [flagged, setFlagged] = useState<Set<number>>(new Set());
@@ -176,9 +39,16 @@ export default function QuizPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const questionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const q = QUESTIONS[current];
-  const totalQ = QUESTIONS.length;
+  const questionList = useMemo(() => {
+    const questions = localStorage.getItem("quizerQuestions");
+    if (questions) {
+      return JSON.parse(questions) as QuestionType[];
+    }
+  }, []);
 
+  const question = questionList?.[current] || ({} as QuestionType);
+  // const totalQ = QUESTIONS.length;
+  const totalQ = questionList?.length || 0;
   // Timer
   useEffect(() => {
     if (submitted) return;
@@ -194,6 +64,7 @@ export default function QuizPage() {
       });
     }, 1000);
     return () => clearInterval(timerRef.current!);
+    // eslint-disable-next-line
   }, [submitted]);
 
   const mins = Math.floor(timeLeft / 60);
@@ -202,14 +73,14 @@ export default function QuizPage() {
   const timerUrgent = timeLeft <= 5 * 60;
 
   const selectAnswer = (optionIdx: number) => {
-    setAnswers((prev) => ({ ...prev, [q.id]: optionIdx }));
+    setAnswers((prev) => ({ ...prev, [question.id]: optionIdx }));
   };
 
   const toggleFlag = () => {
     setFlagged((prev) => {
       const next = new Set(prev);
       // eslint-disable-next-line
-      next.has(q.id) ? next.delete(q.id) : next.add(q.id);
+      next.has(question.id) ? next.delete(question.id) : next.add(question.id);
       return next;
     });
   };
@@ -241,14 +112,14 @@ export default function QuizPage() {
     return (
       <ResultsPage
         answers={answers}
-        questions={QUESTIONS}
+        questions={questionList!}
         timeTaken={timeTaken}
         onRetry={handleRetry}
       />
     );
   }
 
-  const optionLabels = ["A", "B", "C", "D"];
+  const optionLabels = ["A", "B", "C", "D", "E"];
 
   return (
     <div className="min-h-screen bg-[oklch(0.99_0.01_265)] flex flex-col">
@@ -353,9 +224,9 @@ export default function QuizPage() {
                       {current + 1}
                     </span>
                     <div>
-                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        {q.subject}
-                      </p>
+                      {/* <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                        {question.subject}
+                      </p> */}
                       <p className="text-xs text-slate-400">
                         Question {current + 1} of {totalQ}
                       </p>
@@ -365,25 +236,25 @@ export default function QuizPage() {
                     onClick={toggleFlag}
                     className={cn(
                       "flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0",
-                      flagged.has(q.id)
+                      flagged.has(question.id)
                         ? "bg-amber-50 text-amber-600 ring-1 ring-amber-200"
                         : "bg-slate-100 text-slate-500 hover:bg-amber-50 hover:text-amber-500",
                     )}
-                    aria-pressed={flagged.has(q.id)}
+                    aria-pressed={flagged.has(question.id)}
                     aria-label={
-                      flagged.has(q.id) ? "Remove flag" : "Flag for review"
+                      flagged.has(question.id)
+                        ? "Remove flag"
+                        : "Flag for review"
                     }
                   >
                     <Flag size={12} aria-hidden="true" />
-                    {flagged.has(q.id) ? "Flagged" : "Flag"}
+                    {flagged.has(question.id) ? "Flagged" : "Flag"}
                   </button>
                 </div>
               </div>
-
-              {/* Question text */}
               <div className="px-6 py-6">
                 <p className="text-base sm:text-lg font-medium text-slate-900 leading-relaxed">
-                  {q.text}
+                  <LessonContent content={question.question} />
                 </p>
               </div>
 
@@ -393,44 +264,45 @@ export default function QuizPage() {
                 role="radiogroup"
                 aria-label="Answer options"
               >
-                {q.options.map((option, idx) => {
-                  const selected = answers[q.id] === idx;
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => selectAnswer(idx)}
-                      role="radio"
-                      aria-checked={selected}
-                      className={cn(
-                        "w-full flex items-start gap-4 px-4 py-3.5 rounded-2xl border-2 text-left transition-all duration-150 group",
-                        selected
-                          ? "border-primary-500 bg-primary-50"
-                          : "border-slate-100 bg-slate-50 hover:border-slate-200 hover:bg-white",
-                      )}
-                    >
-                      <span
+                {question?.option &&
+                  Object.values(question.option).map((option, idx) => {
+                    const selected = answers[question.id] === idx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => selectAnswer(idx)}
+                        role="radio"
+                        aria-checked={selected}
                         className={cn(
-                          "flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold shrink-0 mt-0.5 transition-colors",
+                          "w-full flex items-start gap-4 px-4 py-3.5 rounded-2xl border-2 text-left transition-all duration-150 group",
                           selected
-                            ? "bg-primary-500 text-white"
-                            : "bg-white text-slate-500 border border-slate-200 group-hover:border-slate-300",
+                            ? "border-primary-500 bg-primary-50"
+                            : "border-slate-100 bg-slate-50 hover:border-slate-200 hover:bg-white",
                         )}
                       >
-                        {optionLabels[idx]}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-sm leading-relaxed pt-0.5 transition-colors",
-                          selected
-                            ? "text-primary-800 font-medium"
-                            : "text-slate-700",
-                        )}
-                      >
-                        {option}
-                      </span>
-                    </button>
-                  );
-                })}
+                        <span
+                          className={cn(
+                            "flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold shrink-0 mt-0.5 transition-colors",
+                            selected
+                              ? "bg-primary-500 text-white"
+                              : "bg-white text-slate-500 border border-slate-200 group-hover:border-slate-300",
+                          )}
+                        >
+                          {optionLabels[idx]}
+                        </span>
+                        <span
+                          className={cn(
+                            "text-sm leading-relaxed pt-0.5 transition-colors",
+                            selected
+                              ? "text-primary-800 font-medium"
+                              : "text-slate-700",
+                          )}
+                        >
+                          <LessonContent content={option as string} />
+                        </span>
+                      </button>
+                    );
+                  })}
               </div>
             </div>
 
@@ -495,7 +367,7 @@ export default function QuizPage() {
                 role="list"
                 aria-label="Question navigation"
               >
-                {QUESTIONS.map((question, idx) => {
+                {questionList?.map((question, idx) => {
                   const isAnswered = answers[question.id] !== undefined;
                   const isFlagged = flagged.has(question.id);
                   const isCurrent = idx === current;
@@ -571,7 +443,7 @@ export default function QuizPage() {
             Jump to Question
           </h2>
           <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5">
-            {QUESTIONS.map((question, idx) => {
+            {questionList?.map((question, idx) => {
               const isAnswered = answers[question.id] !== undefined;
               const isFlagged = flagged.has(question.id);
               const isCurrent = idx === current;
