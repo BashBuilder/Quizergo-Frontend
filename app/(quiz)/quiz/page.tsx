@@ -1,43 +1,23 @@
 "use client";
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import {
+  CalculatorIcon,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Flag,
   Send,
-  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-// import { QUIZ_META, QUESTIONS } from "./constants";
 import Calculator from "./calculator";
 import SubmitModal from "./submitModal";
-import ResultsPage from "./result";
 import LessonContent from "@/components/global/LessonContent";
+import Timer from "./timer";
 
 export default function QuizPage() {
   const timerMiinutes = useMemo(() => {
     const timer = localStorage.getItem("quizerTimer");
     if (timer) return Number(timer);
   }, []);
-
-  const QUIZ_META = {
-    title: "Full Practice",
-    subject: "Mathematics",
-    totalTime: (timerMiinutes || 1) * 60, // 30 minutes in seconds
-    mode: "Full Practice",
-  };
-
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [flagged, setFlagged] = useState<Set<number>>(new Set());
-  const [timeLeft, setTimeLeft] = useState(QUIZ_META.totalTime);
-  const [showCalc, setShowCalc] = useState(false);
-  const [showSubmit, setShowSubmit] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [timeTaken, setTimeTaken] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const questionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const questionList = useMemo(() => {
     const questions = localStorage.getItem("quizerQuestions");
@@ -46,35 +26,28 @@ export default function QuizPage() {
     }
   }, []);
 
-  const question = questionList?.[current] || ({} as QuestionType);
-  // const totalQ = QUESTIONS.length;
-  const totalQ = questionList?.length || 0;
-  // Timer
-  useEffect(() => {
-    if (submitted) return;
-    timerRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          clearInterval(timerRef.current!);
-          setTimeTaken(QUIZ_META.totalTime);
-          setSubmitted(true);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current!);
-    // eslint-disable-next-line
-  }, [submitted]);
+  const QUIZ_META = {
+    title: "Full Practice",
+    subject: "Mathematics",
+    totalTime: (timerMiinutes || 1) * 60,
+  };
 
-  const mins = Math.floor(timeLeft / 60);
-  const secs = timeLeft % 60;
-  const timePct = (timeLeft / QUIZ_META.totalTime) * 100;
-  const timerUrgent = timeLeft <= 5 * 60;
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [flagged, setFlagged] = useState<Set<number>>(new Set());
+  const [showCalc, setShowCalc] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const questionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const question = questionList?.[current] || ({} as QuestionType);
+  const totalQ = questionList?.length || 0;
 
   const selectAnswer = (optionIdx: number) => {
     setAnswers((prev) => ({ ...prev, [question.id]: optionIdx }));
   };
+
+  console.log(answers);
 
   const toggleFlag = () => {
     setFlagged((prev) => {
@@ -93,30 +66,12 @@ export default function QuizPage() {
   );
 
   const handleSubmit = () => {
-    clearInterval(timerRef.current!);
-    setTimeTaken(QUIZ_META.totalTime - timeLeft);
     setSubmitted(true);
     setShowSubmit(false);
   };
 
-  const handleRetry = () => {
-    setAnswers({});
-    setFlagged(new Set());
-    setTimeLeft(QUIZ_META.totalTime);
-    setSubmitted(false);
-    setTimeTaken(0);
-    setCurrent(0);
-  };
-
   if (submitted) {
-    return (
-      <ResultsPage
-        answers={answers}
-        questions={questionList!}
-        timeTaken={timeTaken}
-        onRetry={handleRetry}
-      />
-    );
+    return <div> Results page</div>;
   }
 
   const optionLabels = ["A", "B", "C", "D", "E"];
@@ -128,13 +83,6 @@ export default function QuizPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           {/* Subject + mode */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="p-1.5 rounded-lg bg-primary-50 shrink-0">
-              <BookOpen
-                size={14}
-                className="text-primary-600"
-                aria-hidden="true"
-              />
-            </div>
             <div className="min-w-0">
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider leading-none">
                 {QUIZ_META.subject}
@@ -146,29 +94,13 @@ export default function QuizPage() {
           </div>
 
           {/* Timer */}
-          <div
-            className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-xl font-mono text-sm font-bold transition-colors shrink-0",
-              timerUrgent
-                ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200"
-                : "bg-slate-100 text-slate-700",
-            )}
-            aria-label={`Time remaining: ${mins} minutes ${secs} seconds`}
-            aria-live="polite"
-          >
-            <Clock
-              size={14}
-              className={timerUrgent ? "animate-pulse" : ""}
-              aria-hidden="true"
-            />
-            {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
-          </div>
+          <Timer
+            submitted={submitted}
+            setSubmitted={setSubmitted}
+            totalTime={QUIZ_META.totalTime}
+          />
 
-          {/* Progress + actions */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-xs text-slate-400 font-medium hidden sm:block">
-              {Object.keys(answers).length}/{totalQ} answered
-            </span>
             <button
               onClick={() => setShowCalc((s) => !s)}
               className={cn(
@@ -180,8 +112,7 @@ export default function QuizPage() {
               aria-label={showCalc ? "Hide calculator" : "Show calculator"}
               aria-pressed={showCalc}
             >
-              {/* <Calculator size={16} aria-hidden="true" /> */}
-              Calc
+              <CalculatorIcon size={16} aria-hidden="true" />
             </button>
             <button
               onClick={() => setShowSubmit(true)}
@@ -190,22 +121,6 @@ export default function QuizPage() {
               <Send size={12} aria-hidden="true" /> Submit
             </button>
           </div>
-        </div>
-
-        {/* Progress bar */}
-        <div className="h-0.5 bg-slate-100">
-          <div
-            className={cn(
-              "h-full transition-all duration-1000",
-              timerUrgent ? "bg-rose-400" : "bg-primary-500",
-            )}
-            style={{ width: `${timePct}%` }}
-            role="progressbar"
-            aria-valuenow={timeLeft}
-            aria-valuemin={0}
-            aria-valuemax={QUIZ_META.totalTime}
-            aria-label="Time remaining"
-          />
         </div>
       </header>
 
@@ -426,13 +341,6 @@ export default function QuizPage() {
                   </div>
                 ))}
               </div>
-
-              <button
-                onClick={() => setShowSubmit(true)}
-                className="mt-4 w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
-              >
-                <Send size={12} aria-hidden="true" /> Submit Quiz
-              </button>
             </div>
           </aside>
         </div>
@@ -472,10 +380,7 @@ export default function QuizPage() {
         </div>
       </main>
 
-      {/* ── Floating calculator ── */}
       {showCalc && <Calculator onClose={() => setShowCalc(false)} />}
-
-      {/* ── Submit modal ── */}
       {showSubmit && (
         <SubmitModal
           answers={answers}
