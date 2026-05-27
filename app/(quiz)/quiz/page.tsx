@@ -33,7 +33,7 @@ export default function QuizPage() {
   };
 
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [flagged, setFlagged] = useState<Set<number>>(new Set());
   const [showCalc, setShowCalc] = useState(false);
   const [showSubmit, setShowSubmit] = useState(false);
@@ -43,8 +43,8 @@ export default function QuizPage() {
   const question = questionList?.[current] || ({} as QuestionType);
   const totalQ = questionList?.length || 0;
 
-  const selectAnswer = (optionIdx: number) => {
-    setAnswers((prev) => ({ ...prev, [question.id]: optionIdx }));
+  const selectAnswer = (optionIdx: string, question: QuestionType) => {
+    setAnswers((prev) => ({ ...prev, [String(question.id)]: optionIdx }));
   };
 
   console.log(answers);
@@ -70,11 +70,7 @@ export default function QuizPage() {
     setShowSubmit(false);
   };
 
-  if (submitted) {
-    return <div> Results page</div>;
-  }
-
-  const optionLabels = ["A", "B", "C", "D", "E"];
+  const optionLabels = ["a", "b", "c", "d", "e"];
 
   return (
     <div className="min-h-screen bg-[oklch(0.99_0.01_265)] flex flex-col">
@@ -181,11 +177,14 @@ export default function QuizPage() {
               >
                 {question?.option &&
                   Object.values(question.option).map((option, idx) => {
-                    const selected = answers[question.id] === idx;
+                    const selected =
+                      answers[String(question.id)] === optionLabels[idx];
                     return (
                       <button
                         key={idx}
-                        onClick={() => selectAnswer(idx)}
+                        onClick={() =>
+                          selectAnswer(optionLabels[idx], question)
+                        }
                         role="radio"
                         aria-checked={selected}
                         className={cn(
@@ -311,35 +310,6 @@ export default function QuizPage() {
                     </button>
                   );
                 })}
-              </div>
-
-              {/* Summary */}
-              <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
-                {[
-                  {
-                    label: "Answered",
-                    value: Object.keys(answers).length,
-                    color: "text-primary-600",
-                  },
-                  {
-                    label: "Unanswered",
-                    value: totalQ - Object.keys(answers).length,
-                    color: "text-slate-500",
-                  },
-                  {
-                    label: "Flagged",
-                    value: flagged.size,
-                    color: "text-amber-600",
-                  },
-                ].map((s) => (
-                  <div
-                    key={s.label}
-                    className="flex items-center justify-between text-xs"
-                  >
-                    <span className="text-slate-400">{s.label}</span>
-                    <span className={cn("font-bold", s.color)}>{s.value}</span>
-                  </div>
-                ))}
               </div>
             </div>
           </aside>

@@ -19,6 +19,7 @@ import Field from "./Field";
 import { DURATIONS, MODES, QUESTION_COUNTS } from "./constant";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetQuestions, useGetSubjects } from "@/services/question.service";
+import { toast } from "sonner";
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 const schema = z
@@ -74,19 +75,22 @@ export default function QuizSetupPage() {
 
   const watchSubject = useWatch({ control, name: "subject" });
   const watchDuration = useWatch({ control, name: "duration" });
-  // const watchMode = useWatch({ control, name: "mode" });
   const limit = useWatch({ control, name: "questionCount" });
 
   const { refetch } = useGetQuestions({
-    name: watchSubject,
+    name: [watchSubject],
     limit: Number(limit),
+    duration: Number(watchDuration),
   });
 
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      const { data } = await refetch();
-      console.log(data?.questions.data);
+      const { data, error } = await refetch();
+      if (error) {
+        toast.error(error.message || "error getting questions");
+        return;
+      }
       localStorage.setItem(
         "quizerQuestions",
         JSON.stringify(data?.questions.data),

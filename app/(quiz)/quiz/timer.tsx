@@ -37,7 +37,6 @@ const Timer = ({ submitted, totalTime, setSubmitted }: TimerType) => {
 
   const mins = Math.floor(timeLeft / 60);
   const secs = timeLeft % 60;
-  const timePct = (timeLeft / totalTime) * 100;
   const timerUrgent = timeLeft <= 5 * 60;
 
   useEffect(() => {

@@ -26,7 +26,6 @@ declare interface QuestionType {
   option: Option;
   section: string;
   image: string;
-  answer: string;
   solution: string;
   examtype: string;
   examyear: string;

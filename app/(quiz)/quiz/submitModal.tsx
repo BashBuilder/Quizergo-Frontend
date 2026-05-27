@@ -9,7 +9,7 @@ export default function SubmitModal({
   onConfirm,
   onCancel,
 }: {
-  answers: Record<number, number>;
+  answers: Record<string, string>;
   flagged: Set<number>;
   total: number;
   onConfirm: () => void;
