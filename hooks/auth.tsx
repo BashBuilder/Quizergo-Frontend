@@ -18,7 +18,9 @@ export function useAuth() {
     },
     retry: false,
     // staleTime: 5 * 60 * 1000, // treat as fresh for 5 mins
-    staleTime: Infinity,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const logout = async () => {
