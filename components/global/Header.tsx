@@ -43,7 +43,6 @@ const Header = () => {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
-  // Derive open state from pathname — when route changes, menu closes automatically
   const [menuOpenPathname, setMenuOpenPathname] = useState<string | null>(null);
   const mobileOpen = menuOpenPathname !== null && menuOpenPathname === pathname;
 
@@ -51,7 +50,6 @@ const Header = () => {
   const closeMenu = () => setMenuOpenPathname(null);
   const toggleMenu = () => (mobileOpen ? closeMenu() : openMenu());
 
-  // Trap focus & close on Escape
   useEffect(() => {
     if (!mobileOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
