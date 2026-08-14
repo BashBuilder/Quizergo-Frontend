@@ -20,162 +20,16 @@ import {
   Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// ── Mock Data ─────────────────────────────────────────────────────────────────
-const student = {
-  firstName: "Adaeze",
-  lastName: "Okonkwo",
-  level: "300L",
-  department: "Computer Science",
-  xp: 3_840,
-  xpToNext: 5_000,
-  streak: 12,
-  rank: 4,
-  totalStudents: 142,
-};
-
-const subjects = [
-  {
-    id: 1,
-    code: "CSC 301",
-    name: "Data Structures",
-    score: 87,
-    sessions: 14,
-    trend: "up",
-    color: "violet",
-  },
-  {
-    id: 2,
-    code: "CSC 305",
-    name: "Operating Systems",
-    score: 72,
-    sessions: 9,
-    trend: "up",
-    color: "blue",
-  },
-  {
-    id: 3,
-    code: "CSC 311",
-    name: "Computer Networks",
-    score: 61,
-    sessions: 6,
-    trend: "down",
-    color: "amber",
-  },
-  {
-    id: 4,
-    code: "MTH 301",
-    name: "Numerical Methods",
-    score: 55,
-    sessions: 4,
-    trend: "flat",
-    color: "rose",
-  },
-  {
-    id: 5,
-    code: "CSC 321",
-    name: "Software Engineering",
-    score: 90,
-    sessions: 18,
-    trend: "up",
-    color: "emerald",
-  },
-];
-
-const recentSessions = [
-  {
-    id: 1,
-    subject: "Data Structures",
-    topic: "AVL Trees & Rotations",
-    score: 92,
-    time: "2h ago",
-    questions: 20,
-    correct: 18,
-  },
-  {
-    id: 2,
-    subject: "Software Engineering",
-    topic: "SOLID Principles",
-    score: 88,
-    time: "Yesterday",
-    questions: 15,
-    correct: 13,
-  },
-  {
-    id: 3,
-    subject: "Operating Systems",
-    topic: "Deadlock Detection",
-    score: 74,
-    time: "2 days ago",
-    questions: 25,
-    correct: 18,
-  },
-  {
-    id: 4,
-    subject: "Computer Networks",
-    topic: "TCP/IP Stack",
-    score: 60,
-    time: "3 days ago",
-    questions: 20,
-    correct: 12,
-  },
-];
-
-const lastRead = {
-  subject: "Data Structures",
-  topic: "Red-Black Trees",
-  progress: 65,
-  estimatedTime: "18 min left",
-  chapter: "Chapter 7 — Balanced BSTs",
-};
-
-const todos = [
-  {
-    id: 1,
-    task: "Complete Computer Networks practice quiz",
-    priority: "high",
-    due: "Today",
-    done: false,
-  },
-  {
-    id: 2,
-    task: "Revise Numerical Methods — Chapter 4",
-    priority: "high",
-    due: "Today",
-    done: false,
-  },
-  {
-    id: 3,
-    task: "Review OS midterm corrections",
-    priority: "medium",
-    due: "Tomorrow",
-    done: false,
-  },
-  {
-    id: 4,
-    task: "Attempt Software Eng challenge set",
-    priority: "low",
-    due: "This week",
-    done: true,
-  },
-  {
-    id: 5,
-    task: "Join live session — CSC 311",
-    priority: "medium",
-    due: "Fri 4pm",
-    done: false,
-  },
-];
-
-const weeklyActivity = [
-  { day: "Mon", sessions: 3 },
-  { day: "Tue", sessions: 5 },
-  { day: "Wed", sessions: 2 },
-  { day: "Thu", sessions: 7 },
-  { day: "Fri", sessions: 4 },
-  { day: "Sat", sessions: 1 },
-  { day: "Sun", sessions: 6 },
-];
+import {
+  subjects,
+  recentSessions,
+  student,
+  todos,
+  weeklyActivity,
+  lastRead,
+} from "./constant";
+import PageWrapper from "@/components/global/PageWrapper";
+import { useAuth } from "@/hooks/auth";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const subjectColors: Record<string, string> = {
@@ -312,7 +166,7 @@ function XPBar({ xp, xpToNext }: { xp: number; xpToNext: number }) {
         aria-label={`${pct}% to next XP level`}
       >
         <div
-          className="h-full rounded-full bg-gradient-to-r from-primary-400 to-primary-600 transition-all duration-700"
+          className="h-full rounded-full bg-linear-to-r from-primary-400 to-primary-600 transition-all duration-700"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -328,7 +182,7 @@ function WeeklyChart() {
       <div className="flex items-center gap-2 mb-4">
         <BarChart2 size={16} className="text-primary-500" aria-hidden="true" />
         <h2 className="text-sm font-semibold text-slate-700">
-          This week's activity
+          This week&apos;s activity
         </h2>
       </div>
       <div
@@ -375,6 +229,7 @@ function WeeklyChart() {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function SummaryPage() {
+  const { user, isLoading } = useAuth();
   const [completedTodos, setCompletedTodos] = useState<number[]>(
     todos.filter((t) => t.done).map((t) => t.id),
   );
@@ -390,22 +245,17 @@ export default function SummaryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.01_265)] pt-20 pb-16">
+    <PageWrapper>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        {/* ── Hero greeting ── */}
         <div className="mb-8">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <p className="text-sm text-primary-500 font-semibold tracking-wide uppercase mb-1">
-                Student Summary
+                Summary
               </p>
               <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                Good afternoon, {student.firstName} 👋
+                Good afternoon, {user?.firstName || ""}
               </h1>
-              <p className="text-slate-500 mt-1 text-sm">
-                {student.department} · {student.level} · Ranked #{student.rank}{" "}
-                of {student.totalStudents}
-              </p>
             </div>
             <div className="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm">
               <Calendar
@@ -786,6 +636,6 @@ export default function SummaryPage() {
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
