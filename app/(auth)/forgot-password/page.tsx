@@ -44,7 +44,6 @@ export default function ForgotPassword() {
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
-    //@ts-expect-error Zod validation error
     resolver: zodResolver(schema),
   });
 

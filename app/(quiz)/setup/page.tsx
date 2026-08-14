@@ -47,7 +47,6 @@ export default function QuizSetupPage() {
     setValue,
     formState: { errors },
   } = useForm<FormValues>({
-    // @ts-expect-error zodResolver types mismatch
     resolver: zodResolver(schema),
     defaultValues: {
       subjects: preselectedSubject ? [preselectedSubject] : [],

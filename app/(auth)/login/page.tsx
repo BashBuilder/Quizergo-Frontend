@@ -27,7 +27,6 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
-    //@ts-expect-error Zod validation error
     resolver: zodResolver(schema),
   });
 
