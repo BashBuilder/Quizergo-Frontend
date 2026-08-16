@@ -8,11 +8,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
-import axios from "@/config/axios";
 import { useRouter } from "next/navigation";
 import InputField from "../Field";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/auth";
 
 const schema = z
   .object({
@@ -40,6 +40,7 @@ export default function RegisterPage() {
     password: false,
     confirmPassword: false,
   });
+  const { register: registerUser } = useAuth();
   const router = useRouter();
 
   const {
@@ -53,21 +54,14 @@ export default function RegisterPage() {
   const onSubmit: SubmitHandler<FormFields> = async (formData) => {
     setServerError(null);
     try {
-      const response = await axios.post("/auth/register", formData);
+      const response = await registerUser(formData);
       toast.success(
-        response.data?.message ||
+        response.message ||
           "Registration successful! Verification otp sent to your email.",
       );
       const email = encodeURIComponent(formData.email);
       router.push(`/confirm?email=${email}`);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setServerError(
-          error.response?.data?.message ||
-            "Registration failed. Please try again.",
-        );
-        return;
-      }
       if (error instanceof Error) {
         setServerError(error.message);
         return;

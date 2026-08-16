@@ -228,10 +228,10 @@ export default function ResultsPage() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-slate-500">
         <p>No results found.</p>
         <Link
-          href="/practice"
+          href="/dashboard"
           className="text-sm font-semibold text-primary-600 hover:underline"
         >
-          Back to Practice
+          Back to Dashboard
         </Link>
       </div>
     );
@@ -372,14 +372,14 @@ export default function ResultsPage() {
         {/* Actions */}
         <div className="flex gap-3">
           <Link
-            href="/practice"
+            href="/dashboard"
             className="flex-1 py-3 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors text-center flex items-center justify-center gap-2"
           >
             <BookOpen size={14} aria-hidden="true" />
-            Back to Practice
+            Back to Dashboard
           </Link>
           <Link
-            href="/practice"
+            href="/setup"
             className="flex-1 py-3 rounded-2xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2"
           >
             <RotateCcw size={14} aria-hidden="true" />

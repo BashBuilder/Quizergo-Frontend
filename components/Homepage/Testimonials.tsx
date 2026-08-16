@@ -13,7 +13,7 @@ const testimonials = [
     role: "7 A's in WAEC",
     image:
       "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=100&h=100&fit=crop",
-    text: "The live sessions made difficult topics easy to understand. It felt like personal tutoring.",
+    text: "The timed mock exams made real exam day feel completely familiar. Reviewing every answer afterwards is what actually made topics stick.",
     featured: true,
   },
   {
@@ -21,7 +21,7 @@ const testimonials = [
     role: "Chemistry Grade B",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-    text: "Challenge mode made studying fun and competitive. I improved faster than I expected.",
+    text: "Having thousands of real past questions in one place made studying so much more focused. I improved faster than I expected.",
   },
 ];
 

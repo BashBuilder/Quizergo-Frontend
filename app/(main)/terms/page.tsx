@@ -49,7 +49,7 @@ export default function TermsOfServicePage() {
             <p className="mt-3 leading-relaxed text-muted-foreground">
               These terms apply to all users, including students, educators, and
               institutions using the QuizerGo platform for exam preparation,
-              quizzes, live sessions, and related educational activities.
+              quizzes, and related educational activities.
             </p>
           </CardContent>
         </Card>
@@ -130,8 +130,7 @@ export default function TermsOfServicePage() {
                     • Use the platform solely for lawful, educational purposes.
                   </li>
                   <li>
-                    • Interact respectfully with other users in live sessions,
-                    duels, and challenges.
+                    • Interact respectfully with other users on the platform.
                   </li>
                   <li>
                     • Submit accurate information when registering for sessions
@@ -249,8 +248,8 @@ export default function TermsOfServicePage() {
                     and features.
                   </li>
                   <li>
-                    • Premium plans unlock full question banks, live sessions,
-                    challenges, and analytics.
+                    • Premium plans unlock full question banks, additional
+                    mock exams, and analytics.
                   </li>
                   <li>
                     • Feature availability may change between tiers without

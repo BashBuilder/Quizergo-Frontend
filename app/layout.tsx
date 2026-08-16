@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/hooks/queryClientProvider";
+import { AuthProvider } from "@/hooks/auth";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -23,8 +24,10 @@ export default function RootLayout({
     <html lang="en" className={cn("h-full", "antialiased", poppins.className)}>
       <body className="min-h-full">
         <QueryProvider>
-          {children}
-          <Toaster richColors position="top-right" />
+          <AuthProvider>
+            {children}
+            <Toaster richColors position="top-right" />
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

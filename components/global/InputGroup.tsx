@@ -30,9 +30,9 @@ const InputGroup = ({
       >
         {label}
       </label>
-      <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-violet-400 focus-within:ring-1 focus-within:ring-violet-400/20">
+      <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-orange-400 focus-within:ring-1 focus-within:ring-orange-400/20">
         {icon}
-        {/* <BookOpen className="text-violet-300" size={18} /> */}
+        {/* <BookOpen className="text-primary-300" size={18} /> */}
         <Input
           id={name}
           value={value}

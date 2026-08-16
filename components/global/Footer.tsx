@@ -10,9 +10,9 @@ const Footer = () => {
 
         <div className="flex gap-6 text-sm text-slate-500">
           <a href="/privacy">Privacy</a>
-          <a href="/cookie">Cookie</a>
+          <a href="/cookies">Cookie</a>
           <a href="/terms">Terms</a>
-          <a href="#">Support</a>
+          <a href="mailto:contact@quizergo.online">Support</a>
         </div>
       </div>
     </footer>

@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import Image from "next/image";
 
 const Hero = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,22 +68,27 @@ const Hero = () => {
           </h1>
 
           <p className="mt-6 max-w-xl leading-5 text-slate-600">
-            Practice thousands of questions, join live sessions, challenge
-            friends, and watch tutorials — all in one app.
+            Practice thousands of past questions, sit timed mock exams, and
+            get instant results with full answer explanations — all in one
+            app.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button size="lg" className="bg-primary px-8 hover:bg-primary">
-              Start Free <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link href="/register">
+              <Button size="lg" className="bg-primary px-8 hover:bg-primary">
+                Start Free <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
 
-            <Button size="lg" variant="outline">
-              Watch Live Class
-            </Button>
+            <Link href="/subjects">
+              <Button size="lg" variant="outline">
+                Browse Subjects
+              </Button>
+            </Link>
           </div>
 
           <div className="mt-8 flex items-center gap-3 text-sm text-slate-600">
-            Trusted by 50,000+ Nigerian students
+            Built for Nigerian WAEC & JAMB students
           </div>
         </div>
 

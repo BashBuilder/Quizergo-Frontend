@@ -152,7 +152,7 @@ export default function QuizPage() {
       sessionStorage.removeItem("quizDuration");
       setSubmitted(true);
       setShowSubmit(false);
-      router.push("/quiz/results");
+      router.push("/result");
       // eslint-disable-next-line
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to submit quiz");

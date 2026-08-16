@@ -139,8 +139,5 @@ export const pricing = [
 
 export const links = [
   { href: "/subjects", label: "Subjects" },
-  { href: "/practice", label: "Practice" },
-  // { href: "/live", label: "Live" },
-  // { href: "/challenges", label: "Challenges" },
-  // { href: "/dashboard", label: "Summary" },
+  { href: "/setup", label: "Start a Quiz" },
 ];

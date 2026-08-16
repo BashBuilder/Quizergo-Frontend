@@ -1,46 +1,46 @@
-import { BookOpen, Video, Trophy, Users,} from "lucide-react";
+import { BookOpen, Clock, CheckCircle2, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 
 const modes = [
   {
-    title: "Self-Paced Practice Sessions",
+    title: "Real Past Questions",
     description:
-      "Drill thousands of WAEC and JAMB past questions at your own pace with instant explanations.",
+      "Drill thousands of WAEC and JAMB past questions, organised by subject and ready whenever you are.",
     icon: BookOpen,
-    badge: "Practices",
+    badge: "Practice",
     color: "bg-primary-50 text-primary-600 border-primary-200",
     image:
       "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=600&h=400&fit=crop",
   },
   {
-    title: "Real-Time Tutor-Led Classes",
+    title: "Timed Mock Exams",
     description:
-      "Join live interactive sessions with expert tutors and ask questions in real-time.",
-    icon: Users,
-    badge: "Live Sessions",
+      "Pick your subjects, set a question count and time limit, then sit a mock exam under real exam conditions.",
+    icon: Clock,
+    badge: "Mock Exams",
     color: "bg-green-50 text-green-600 border-green-200",
     image:
-      "https://images.unsplash.com/photo-1588702547919-26089e690ecc?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600&h=400&fit=crop",
   },
   {
-    title: "Compete With Peers Nationwide",
+    title: "Instant Results & Review",
     description:
-      "Take on timed quizzes, climb leaderboards, and challenge students across Nigeria.",
-    icon: Trophy,
-    badge: "Challenges",
+      "See your score the moment you submit, then review every question with the correct answer and a full explanation.",
+    icon: CheckCircle2,
+    badge: "Instant Feedback",
     color: "bg-orange-50 text-orange-600 border-orange-200",
     image:
-      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
   },
   {
-    title: "Video Lessons for Every Topic",
+    title: "Track Your Progress",
     description:
-      "Watch focused tutorials covering every examinable WAEC and JAMB topic.",
-    icon: Video,
-    badge: "Tutorials",
-    color: "bg-purple-50 text-purple-600 border-purple-200",
+      "Keep a full history of every quiz you've taken and watch your scores improve over time.",
+    icon: TrendingUp,
+    badge: "Progress",
+    color: "bg-primary-50 text-primary-600 border-primary-200",
     image:
-      "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&h=400&fit=crop",
   },
 ];
 

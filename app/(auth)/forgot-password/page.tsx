@@ -8,7 +8,6 @@ import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
-import axios from "@/config/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -19,6 +18,7 @@ import {
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import InputField from "../Field";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/auth";
 
 const schema = z.object({
   email: z.email("Invalid email address"),
@@ -36,6 +36,7 @@ export default function ForgotPassword() {
     confirmPassword: false,
   });
   const [tab, setTab] = useState(1);
+  const { forgotPassword, verifyOtp, resetPassword } = useAuth();
   const router = useRouter();
 
   const {
@@ -51,21 +52,16 @@ export default function ForgotPassword() {
     setServerError(null);
     try {
       if (tab === 1) {
-        const response = await axios.post("/auth/forgot-password", {
-          email: formData.email,
-        });
+        const response = await forgotPassword(formData.email);
         toast.success(
-          response.data.message ||
+          response.message ||
             "Password reset email sent, verify otp in your email",
         );
         setTab(2);
         return;
       }
       if (tab === 2) {
-        await axios.post("/auth/verify", {
-          email: formData.email,
-          otp: formData.otp,
-        });
+        await verifyOtp(formData.email, formData.otp ?? "");
         setTab(3);
         return;
       }
@@ -74,11 +70,11 @@ export default function ForgotPassword() {
           setServerError("Passwords do not match");
           return;
         }
-        await axios.post("/auth/reset-password", {
+        await resetPassword({
           email: formData.email,
-          otp: formData.otp,
-          newPassword: formData.password,
-          confirmPassword: formData.confirmPassword,
+          otp: formData.otp ?? "",
+          newPassword: formData.password ?? "",
+          confirmPassword: formData.confirmPassword ?? "",
         });
         toast.success(
           "Password reset successful, you can now login with new password",
@@ -87,13 +83,6 @@ export default function ForgotPassword() {
         return;
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setServerError(
-          error.response?.data?.message ||
-            "Failed to send password reset email.",
-        );
-        return;
-      }
       if (error instanceof Error) {
         setServerError(error.message);
         return;
