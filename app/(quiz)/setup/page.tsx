@@ -80,7 +80,7 @@ export default function QuizSetupPage() {
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
     try {
-      const res = await axios.post("/quiz/session", {
+      const res = await axios.post("/quiz", {
         subjects: data.subjects,
         questionCount: Number(data.questionCount),
         duration: Number(data.duration),

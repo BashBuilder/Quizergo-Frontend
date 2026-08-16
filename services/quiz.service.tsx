@@ -16,9 +16,6 @@ export interface QuizResultSummary {
   submittedAt: string;
 }
 
-// NOTE: same assumption as the mobile app -- `/quiz/history`, following the
-// existing `/quiz/session` and `/quiz/session/:id/submit` naming. Adjust
-// this path if the real backend route differs.
 export const useGetQuizHistory = () => {
   const { isAuthenticated } = useAuth();
 
@@ -27,7 +24,7 @@ export const useGetQuizHistory = () => {
     queryFn: async () => {
       const { data } = await axios.get<
         QuizResultSummary[] | { results: QuizResultSummary[] }
-      >("/quiz/history");
+      >("/user/history");
       return Array.isArray(data) ? data : (data?.results ?? []);
     },
     enabled: isAuthenticated,

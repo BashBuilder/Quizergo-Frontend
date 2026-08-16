@@ -118,7 +118,7 @@ export default function QuizPage() {
       if (!Object.keys(diff).length) return;
 
       try {
-        await axios.patch(`/quiz/session/${session.sessionId}/sync`, {
+        await axios.patch(`/quiz/${session.sessionId}/sync`, {
           answers: buildAnswerPayload(diff),
         });
         lastSyncedRef.current = {
@@ -143,10 +143,9 @@ export default function QuizPage() {
     if (!session?.sessionId) return;
     setIsSubmitting(true);
     try {
-      const res = await axios.post(
-        `/quiz/session/${session.sessionId}/submit`,
-        { answers: buildAnswerPayload(answers) },
-      );
+      const res = await axios.post(`/quiz/${session.sessionId}/submit`, {
+        answers: buildAnswerPayload(answers),
+      });
       sessionStorage.setItem("quizResult", JSON.stringify(res.data));
       sessionStorage.removeItem("quizSession");
       sessionStorage.removeItem("quizDuration");
