@@ -13,6 +13,11 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "QuizerGo",
   description: "QuizerGo = Your very first quiz go-to for enlightenment",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
