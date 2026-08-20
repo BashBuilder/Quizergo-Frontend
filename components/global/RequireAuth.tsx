@@ -33,7 +33,6 @@ const RequireAuth = ({
     );
   }
 
-  // Prevent rendering protected content
   if (!isAuthenticated) {
     return null;
   }
