@@ -1,15 +1,3 @@
-export const student = {
-  firstName: "Adaeze",
-  lastName: "Okonkwo",
-  level: "300L",
-  department: "Computer Science",
-  xp: 3_840,
-  xpToNext: 5_000,
-  streak: 12,
-  rank: 4,
-  totalStudents: 142,
-};
-
 export const subjects = [
   {
     id: 1,
