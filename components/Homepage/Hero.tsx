@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
+
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -50,15 +52,6 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-br from-primary-50 via-white to-primary-100" />
-      {/* <Image
-        width={1000}
-        height={1000}
-        alt="background image"
-        src="/assets/olav-ahrens-rotne-jvBXiynINGE-unsplash.jpg"
-        loading="lazy"
-        decoding="async"
-        className="absolute top-0 left-0 h-full w-full object-cover opacity-5"
-      /> */}
       <div className="relative mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-2 px-6 pt-10 pb-20">
         <div>
           <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl">
@@ -68,9 +61,8 @@ const Hero = () => {
           </h1>
 
           <p className="mt-6 max-w-xl leading-5 text-slate-600">
-            Practice thousands of past questions, sit timed mock exams, and
-            get instant results with full answer explanations — all in one
-            app.
+            Practice thousands of past questions, sit timed mock exams, and get
+            instant results with full answer explanations — all in one app.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
