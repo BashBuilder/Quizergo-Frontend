@@ -1,7 +1,7 @@
 import Hero from "@/components/Homepage/Hero";
 import Features from "@/components/Homepage/features";
 import Subjects from "@/components/Homepage/Subjects";
-import Testimonials from "@/components/Homepage/Testimonials";
+// import Testimonials from "@/components/Homepage/Testimonials";
 import CTA from "@/components/Homepage/CTA";
 
 export default function HomePage() {
@@ -10,7 +10,7 @@ export default function HomePage() {
       <Hero />
       <Subjects length={4} />
       <Features />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <CTA />
     </main>
   );
