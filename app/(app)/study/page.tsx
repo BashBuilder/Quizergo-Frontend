@@ -257,7 +257,7 @@ function SubjectCard({
       aria-label={`${subject.name} — ${subject.locked ? "locked" : "available"}`}
     >
       {/* Top accent strip */}
-      <div className={cn("h-1 w-full", c.bar)} aria-hidden="true" />
+      <div className={cn("h-1 w-full")} aria-hidden="true" />
 
       <div className="p-5">
         {/* Header */}
@@ -607,7 +607,7 @@ export default function PracticePage() {
           </div>
 
           {/* Difficulty filter */}
-          <div
+          {/* <div
             className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1"
             role="group"
             aria-label="Filter by difficulty"
@@ -627,7 +627,7 @@ export default function PracticePage() {
                 {d === "all" ? "All" : d}
               </button>
             ))}
-          </div>
+          </div> */}
 
           {/* Sort */}
           <div className="flex items-center gap-2 ml-auto text-xs text-slate-500">

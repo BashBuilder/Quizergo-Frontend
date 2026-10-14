@@ -10,7 +10,6 @@ export default async function AppLayout({
     <div className="flex min-h-screen flex-col">
       <Header />
       <RequireAuth className="flex-1 pt-14">{children}</RequireAuth>
-      {/* <Footer /> */}
     </div>
   );
 }
