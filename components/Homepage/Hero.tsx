@@ -52,15 +52,15 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-br from-primary-50 via-white to-primary-100" />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-2 px-6 pt-10 pb-20">
-        <div>
-          <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-1 justify-self-center  px-6 pt-10 pb-20">
+        <div className="flex flex-col items-center">
+          <h1 className="text-3xl font-bold leading-tight text-center tracking-tight md:text-5xl">
             Study Smart. <br />
             Pass <span className="text-primary">WAEC & JAMB</span> with
             Confidence.
           </h1>
 
-          <p className="mt-6 max-w-xl leading-5 text-slate-600">
+          <p className="mt-6 max-w-xl leading-5 text-slate-600 text-center">
             Practice thousands of past questions, sit timed mock exams, and get
             instant results with full answer explanations — all in one app.
           </p>
@@ -78,13 +78,9 @@ const Hero = () => {
               </Button>
             </Link>
           </div>
-
-          <div className="mt-8 flex items-center gap-3 text-sm text-slate-600">
-            Built for Nigerian WAEC & JAMB students
-          </div>
         </div>
 
-        <div className="relative h-full min-h-40 overflow-hidden rounded-md">
+        {/* <div className="relative h-full min-h-40 overflow-hidden rounded-md">
           <Carousel
             setApi={setApi}
             opts={{
@@ -107,7 +103,7 @@ const Hero = () => {
               ))}
             </CarouselContent>
           </Carousel>
-        </div>
+        </div> */}
       </div>
     </section>
   );
