@@ -1,15 +1,27 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["agent.md"],
+  "instructions": ["AGENTS.md", "agent.md"],
+  "mcp": {
+    "21st": {
+      "type": "remote",
+      "url": "https://21st.dev/api/mcp",
+      "headers": { "x-api-key": "{env:API_KEY_21ST}" },
+      "enabled": true
+    }
+  },
   "watcher": {
     "ignore": [
       "node_modules/**",
       "**/node_modules/**",
+      ".next/**",
+      "**/.next/**",
+      "out/**",
       "**/dist/**",
       "**/build/**",
       "**/coverage/**",
-      "logs/**",
-      ".next/**",
+      "**/playwright-report/**",
+      "**/test-results/**",
+      ".vercel/**",
       ".git/**"
     ]
   },
@@ -22,21 +34,33 @@
       "*.pem": "deny",
       "*.key": "deny",
       "*node_modules/*": "deny",
+      "*.next/*": "deny",
+      "out/*": "deny",
       "*dist/*": "deny",
       "*build/*": "deny",
       "*coverage/*": "deny",
-      "logs/*": "deny",
-      "*.log": "deny",
-      "*.log.gz": "deny",
+      "*playwright-report/*": "deny",
+      "*test-results/*": "deny",
+      "*.tsbuildinfo": "deny",
       "*pnpm-lock.yaml": "deny",
-      "*package-lock.json": "deny"
+      "*package-lock.json": "deny",
+      "*.stackdump": "deny",
+      "*.png": "deny",
+      "*.jpg": "deny",
+      "*.jpeg": "deny",
+      "*.webp": "deny",
+      "*.ico": "deny",
+      "*.mp4": "deny"
     },
     "edit": {
       "*": "allow",
-      "*pnpm-lock.yaml": "deny",
       "*.env": "deny",
       "*.env.*": "deny",
-      "*.env.example": "allow"
+      "*.env.example": "allow",
+      "*pnpm-lock.yaml": "deny",
+      "*package-lock.json": "deny",
+      ".next/*": "deny",
+      "next-env.d.ts": "deny"
     },
     "bash": {
       "*": "allow",

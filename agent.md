@@ -337,3 +337,5 @@ Be aware of these; don't copy them into new code, and flag them when relevant.
 
 _Keep this file current: when you introduce a new pattern, dependency, env var,
 route group, or convention, update the relevant section in the same change._
+
+End
