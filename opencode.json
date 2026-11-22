@@ -9,6 +9,20 @@
       "enabled": true
     }
   },
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama",
+      "options": {
+        "baseURL": "http://127.0.0"
+      },
+      "models": {
+        "gemma4:e4b": {
+          "name": "gemma4:e4b"
+        }
+      }
+    }
+  },
   "watcher": {
     "ignore": [
       "node_modules/**",

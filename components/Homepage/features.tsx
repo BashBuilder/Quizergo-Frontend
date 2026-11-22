@@ -1,148 +1,211 @@
-import { BookOpen, Clock, CheckCircle2, TrendingUp } from "lucide-react";
-import { Card, CardContent } from "../ui/card";
+import { BookOpen, CircleCheck, Timer, TrendingUp } from "lucide-react";
 
-const modes = [
+const questionRows = [
   {
-    title: "Real Past Questions",
-    description:
-      "Drill thousands of WAEC and JAMB past questions, organised by subject and ready whenever you are.",
-    icon: BookOpen,
-    badge: "Practice",
-    color: "bg-primary-50 text-primary-600 border-primary-200",
-    image:
-      "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=600&h=400&fit=crop",
+    subject: "Physics",
+    text: "A body starts from rest and reaches 20 m/s in 5 s…",
   },
   {
-    title: "Timed Mock Exams",
-    description:
-      "Pick your subjects, set a question count and time limit, then sit a mock exam under real exam conditions.",
-    icon: Clock,
-    badge: "Mock Exams",
-    color: "bg-green-50 text-green-600 border-green-200",
-    image:
-      "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600&h=400&fit=crop",
+    subject: "Chemistry",
+    text: "Which of the following species is an electrophile?",
   },
   {
-    title: "Instant Results & Review",
-    description:
-      "See your score the moment you submit, then review every question with the correct answer and a full explanation.",
-    icon: CheckCircle2,
-    badge: "Instant Feedback",
-    color: "bg-orange-50 text-orange-600 border-orange-200",
-    image:
-      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
-  },
-  {
-    title: "Track Your Progress",
-    description:
-      "Keep a full history of every quiz you've taken and watch your scores improve over time.",
-    icon: TrendingUp,
-    badge: "Progress",
-    color: "bg-primary-50 text-primary-600 border-primary-200",
-    image:
-      "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&h=400&fit=crop",
+    subject: "Mathematics",
+    text: "Solve for x: 2x² − 5x − 3 = 0",
   },
 ];
 
+const scoreTrend = [40, 52, 48, 64, 72, 84];
+const months = ["Mar", "Apr", "May", "Jun", "Jul", "Aug"];
+
+const cardClass =
+  "rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors hover:border-slate-300 sm:p-7";
+
+const iconTileClass =
+  "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-700";
+
 export default function Features() {
   return (
-    <div className="w-full">
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-14 text-center">
-            <p className="font-semibold uppercase tracking-widest text-primary-600">
-              Features
-            </p>
-            <h2 className="mt-3 text-4xl font-black">
-              Everything you need to pass
-            </h2>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {modes.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Card
-                  key={item.title}
-                  className="rounded-3xl border-primary-100 shadow-lg transition hover:-translate-y-1"
-                >
-                  <CardContent className="p-7">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-100 text-primary">
-                      <Icon />
-                    </div>
-                    <h3 className="text-xl font-bold">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-slate-600">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      {/* <section className="bg-slate-50 px-6 py-20 lg:px-16">
-        <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+    <section className="border-b border-slate-200/70 bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-600">
-              What You Can Do
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-700">
+              Why QuizerGo
             </p>
-
-            <h2 className="max-w-xl text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
-              Four ways to prepare and win.
+            <h2 className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem]">
+              Built around how exams actually work.
             </h2>
           </div>
-
-          <button className="w-fit rounded-xl border border-slate-200 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-100">
-            Explore all features
-          </button>
+          <p className="max-w-sm text-sm leading-6 text-slate-600 md:text-right">
+            No guesswork and no clutter — just the four things that move your
+            score.
+          </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {modes.map((mode, index) => {
-            const Icon = mode.icon;
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {/* Real past questions */}
+          <article className={`${cardClass} md:col-span-2`}>
+            <div className="flex items-start gap-4">
+              <span className={iconTileClass}>
+                <BookOpen size={18} aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+                  Real past questions
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Drill questions written in the WAEC and JAMB style, organised
+                  by subject so you always know what you are practising.
+                </p>
+              </div>
+            </div>
 
-            return (
-              <div
-                key={index}
-                className="group overflow-hidden rounded-3xl border border-slate-200 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
-              >
-                <div className="grid md:grid-cols-2">
-                  <img
-                    src={mode.image}
-                    alt={mode.title}
-                    className="h-64 w-full object-cover md:h-full"
-                  />
+            <div className="mt-6 rounded-2xl border border-slate-100 bg-stone-50 p-3 sm:p-4">
+              <div className="space-y-2">
+                {questionRows.map((row, index) => (
+                  <div
+                    key={row.subject}
+                    className={
+                      index === 0
+                        ? "flex items-center gap-3 rounded-xl border border-primary-200 bg-white px-3 py-2.5 ring-1 ring-primary-100/60"
+                        : "flex items-center gap-3 rounded-xl border border-slate-200/70 bg-white px-3 py-2.5"
+                    }
+                  >
+                    <span className="shrink-0 rounded-md bg-primary-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary-700">
+                      {row.subject}
+                    </span>
+                    <span className="truncate text-xs text-slate-600">
+                      {row.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </article>
 
-                  <div className="flex flex-col justify-between p-8">
-                    <div>
-                      <div
-                        className={`mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-wide ${mode.color}`}
-                      >
-                        <Icon size={14} />
-                        {mode.badge}
-                      </div>
+          {/* Timed mock exams */}
+          <article className={cardClass}>
+            <div className="flex items-start gap-4">
+              <span className={iconTileClass}>
+                <Timer size={18} aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+                  Timed mock exams
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Set your subjects, question count and time limit, then sit a
+                  session under real exam pressure.
+                </p>
+              </div>
+            </div>
 
-                      <h3 className="mb-4 text-2xl font-extrabold text-slate-900">
-                        {mode.title}
-                      </h3>
+            <div className="mt-6 flex flex-col items-center rounded-2xl border border-slate-100 bg-stone-50 px-4 py-6">
+              <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[conic-gradient(var(--primary-500)_68%,var(--primary-100)_0)]">
+                <div className="flex h-[4.5rem] w-[4.5rem] flex-col items-center justify-center rounded-full bg-stone-50">
+                  <span className="text-lg font-semibold tabular-nums tracking-tight text-slate-900">
+                    45:00
+                  </span>
+                  <span className="text-[9px] font-medium uppercase tracking-wider text-slate-500">
+                    remaining
+                  </span>
+                </div>
+              </div>
+              <p className="mt-3 text-xs font-medium text-slate-500">
+                Exam-style countdown
+              </p>
+            </div>
+          </article>
 
-                      <p className="leading-7 text-slate-600">
-                        {mode.description}
-                      </p>
-                    </div>
+          {/* Instant scoring */}
+          <article className={cardClass}>
+            <div className="flex items-start gap-4">
+              <span className={iconTileClass}>
+                <CircleCheck size={18} aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+                  Instant scoring
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Submit once and see your score immediately, with every answer
+                  explained in plain language.
+                </p>
+              </div>
+            </div>
 
-                    <button className="mt-8 inline-flex items-center gap-2 font-semibold text-primary-600 transition group-hover:gap-3">
-                      Learn more
-                      <ArrowRight size={16} />
-                    </button>
+            <div className="mt-6 rounded-2xl border border-slate-100 bg-stone-50 p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                  Session score
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                  <CircleCheck size={10} aria-hidden="true" />
+                  Graded
+                </span>
+              </div>
+              <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-slate-900">
+                82%
+              </p>
+              <p className="mt-1 text-[11px] text-slate-500">
+                33 of 40 correct · instantly
+              </p>
+            </div>
+          </article>
+
+          {/* Progress tracking */}
+          <article className={`${cardClass} md:col-span-2`}>
+            <div className="sm:flex sm:items-center sm:gap-8">
+              <div className="sm:max-w-xs">
+                <div className="flex items-start gap-4">
+                  <span className={iconTileClass}>
+                    <TrendingUp size={18} aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+                      Progress you can see
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Every completed session is saved to your dashboard, so you
+                      can watch your scores improve over time.
+                    </p>
                   </div>
                 </div>
               </div>
-            );
-          })}
+
+              <div className="mt-6 flex-1 rounded-2xl border border-slate-100 bg-stone-50 p-4 sm:mt-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                    Average score
+                  </span>
+                  <span className="text-xs font-semibold text-emerald-700">
+                    +12%
+                  </span>
+                </div>
+                <div className="mt-4 flex h-24 items-end gap-2">
+                  {scoreTrend.map((height, index) => (
+                    <div
+                      key={months[index]}
+                      className={
+                        index === scoreTrend.length - 1
+                          ? "w-full rounded-t-md bg-primary-500"
+                          : "w-full rounded-t-md bg-primary-200"
+                      }
+                      style={{ height: `${height}%` }}
+                    />
+                  ))}
+                </div>
+                <div className="mt-2 flex justify-between text-[9px] font-medium uppercase tracking-wider text-slate-500">
+                  {months.map((month) => (
+                    <span key={month}>{month}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
-      </section> */}
-    </div>
+      </div>
+    </section>
   );
 }
