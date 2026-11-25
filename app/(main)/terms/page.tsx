@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | QuizerGo",
+  title: "Terms of Service",
   description:
     "Read the terms and conditions governing your use of the QuizerGo educational platform.",
 };
@@ -14,24 +14,21 @@ const EFFECTIVE_DATE = "December 2024";
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="bg-paper">
+      <div className="mx-auto max-w-3xl px-6 py-14">
         {/* Header */}
-        <div className="mb-8">
-          <div className="mb-4 flex items-center gap-3">
-            <div>
-              <h1 className="text-balance mb-2 text-4xl font-bold">
-                Terms of Service
-              </h1>
-              <p className="text-muted-foreground">
-                Effective date: {EFFECTIVE_DATE}
-              </p>
-            </div>
-          </div>
+        <div className="border-b border-rule pb-8">
+          <p className="eyebrow text-marker-ink">Legal</p>
+          <h1 className="mt-4 text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.75rem]">
+            Terms of Service
+          </h1>
+          <p className="mt-3 text-[0.8125rem] tabular-nums text-ink-quiet">
+            Effective {EFFECTIVE_DATE}
+          </p>
         </div>
 
         {/* Intro card */}
-        <Card className="mb-8 border-primary/20">
+        <Card className="mb-8 mt-8 border-0 bg-well shadow-none ring-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ScrollText className="h-5 w-5" />

@@ -1,22 +1,97 @@
-import React from "react";
+import Link from "next/link";
+import Logo from "./Logo";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-slate-200 py-10">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 md:flex-row">
-        <p className="text-sm text-slate-500">
-          © {new Date().getFullYear()} QuizerGo. All rights reserved.
-        </p>
+    <footer className="border-t border-rule bg-paper">
+      <div className="mx-auto max-w-7xl px-6 py-14">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr] md:gap-12">
+          <div>
+            <Logo />
+            <p className="mt-4 max-w-xs text-[0.8125rem] leading-6 text-ink-quiet">
+              A timed practice paper for JAMB and WAEC, returned to you marked —
+              every answer explained.
+            </p>
+          </div>
 
-        <div className="flex gap-6 text-sm text-slate-500">
-          <a href="/privacy">Privacy</a>
-          <a href="/cookies">Cookie</a>
-          <a href="/terms">Terms</a>
-          <a href="mailto:contact@quizergo.online">Support</a>
+          <nav aria-label="Product" className="text-[0.8125rem]">
+            <p className="eyebrow eyebrow-quiet">Practice</p>
+            <ul className="mt-4 space-y-2.5">
+              <li>
+                <Link
+                  href="/subjects"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  Subjects
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/setup"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  Start a paper
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  Mark book
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <nav aria-label="Legal and support" className="text-[0.8125rem]">
+            <p className="eyebrow eyebrow-quiet">The small print</p>
+            <ul className="mt-4 space-y-2.5">
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  Terms
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/cookies"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  Cookies
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="mailto:contact@quizergo.online"
+                  className="text-ink-soft transition-colors hover:text-marker-ink"
+                >
+                  contact@quizergo.online
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div className="mt-12 flex flex-col gap-3 border-t border-rule pt-6 text-xs text-ink-quiet sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Quizergo. Free to use.</p>
+          <p className="tabular-nums">
+            Built for the paper you are actually sitting.
+          </p>
         </div>
       </div>
     </footer>
   );
 };
 
-export default React.memo(Footer);
+export default Footer;

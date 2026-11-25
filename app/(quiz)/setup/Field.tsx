@@ -10,16 +10,19 @@ export default function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-1.5 w-full">
+    <div className="w-full">
       <label
         htmlFor={htmlFor}
-        className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest"
+        className="mb-2 block text-[0.8125rem] font-semibold text-ink-soft"
       >
         {label}
       </label>
       {children}
       {error && (
-        <p className="text-xs text-rose-500 font-medium" role="alert">
+        <p
+          className="mt-2 text-[0.75rem] font-medium text-rose-600"
+          role="alert"
+        >
           {error}
         </p>
       )}

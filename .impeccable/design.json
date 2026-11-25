@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-25T20:15:42.000Z",
+  "title": "Design System: Quizergo",
+  "extensions": {
+    "colorMeta": {
+      "marker": {
+        "role": "primary",
+        "displayName": "Marker",
+        "canonical": "oklch(0.7 0.19 48)",
+        "tonalRamp": [
+          "oklch(0.27 0.08 36)",
+          "oklch(0.41 0.12 38)",
+          "oklch(0.47 0.14 37)",
+          "oklch(0.55 0.17 38)",
+          "oklch(0.65 0.19 41)",
+          "oklch(0.7 0.19 48)",
+          "oklch(0.84 0.12 66)",
+          "oklch(0.98 0.02 74)"
+        ]
+      },
+      "marker-wash": {
+        "role": "primary",
+        "displayName": "Marker Wash",
+        "canonical": "oklch(0.98 0.02 74)",
+        "tonalRamp": [
+          "oklch(0.27 0.05 36)",
+          "oklch(0.42 0.06 40)",
+          "oklch(0.58 0.06 48)",
+          "oklch(0.72 0.06 56)",
+          "oklch(0.83 0.05 64)",
+          "oklch(0.9 0.04 70)",
+          "oklch(0.95 0.03 73)",
+          "oklch(0.98 0.02 74)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(0.99 0.01 75)",
+        "tonalRamp": [
+          "oklch(0.16 0.02 55)",
+          "oklch(0.28 0.03 55)",
+          "oklch(0.45 0.02 60)",
+          "oklch(0.62 0.02 65)",
+          "oklch(0.78 0.015 70)",
+          "oklch(0.88 0.015 72)",
+          "oklch(0.94 0.012 73)",
+          "oklch(0.99 0.01 75)"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet White",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.18 0 0)",
+          "oklch(0.32 0 0)",
+          "oklch(0.48 0 0)",
+          "oklch(0.64 0 0)",
+          "oklch(0.78 0 0)",
+          "oklch(0.88 0 0)",
+          "oklch(0.95 0 0)",
+          "oklch(1 0 0)"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Quiet Well",
+        "canonical": "oklch(0.96 0.015 75)",
+        "tonalRamp": [
+          "oklch(0.2 0.01 70)",
+          "oklch(0.35 0.012 70)",
+          "oklch(0.5 0.012 70)",
+          "oklch(0.65 0.012 70)",
+          "oklch(0.78 0.012 70)",
+          "oklch(0.86 0.012 70)",
+          "oklch(0.92 0.014 72)",
+          "oklch(0.96 0.015 75)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Slate Ink",
+        "canonical": "oklch(0.22 0.03 55)",
+        "tonalRamp": [
+          "oklch(0.22 0.03 55)",
+          "oklch(0.33 0.03 55)",
+          "oklch(0.45 0.03 55)",
+          "oklch(0.58 0.03 55)",
+          "oklch(0.7 0.025 55)",
+          "oklch(0.82 0.02 55)",
+          "oklch(0.92 0.01 55)",
+          "oklch(0.98 0.005 55)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "oklch(0.91 0.015 75)",
+        "tonalRamp": [
+          "oklch(0.24 0.012 70)",
+          "oklch(0.38 0.012 70)",
+          "oklch(0.54 0.012 70)",
+          "oklch(0.68 0.013 71)",
+          "oklch(0.82 0.014 72)",
+          "oklch(0.88 0.014 73)",
+          "oklch(0.94 0.015 74)",
+          "oklch(0.99 0.015 75)"
+        ]
+      },
+      "exam": {
+        "role": "neutral",
+        "displayName": "Exam Slate",
+        "canonical": "#0f172a",
+        "tonalRamp": [
+          "#020617",
+          "#0b1223",
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#e2e8f0"
+        ]
+      },
+      "answer": {
+        "role": "neutral",
+        "displayName": "Answer Fill",
+        "canonical": "#f8fafc",
+        "tonalRamp": [
+          "#0f172a",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#f8fafc"
+        ]
+      },
+      "correct": {
+        "role": "tertiary",
+        "displayName": "Correct Green",
+        "canonical": "#059669",
+        "tonalRamp": [
+          "#064e3b",
+          "#065f46",
+          "#047857",
+          "#059669",
+          "#10b981",
+          "#34d399",
+          "#6ee7b7",
+          "#d1fae5"
+        ]
+      },
+      "wrong": {
+        "role": "tertiary",
+        "displayName": "Wrong Rose",
+        "canonical": "#f43f5e",
+        "tonalRamp": [
+          "#881337",
+          "#9f1239",
+          "#be123c",
+          "#e11d48",
+          "#f43f5e",
+          "#fb7185",
+          "#fda4af",
+          "#ffe4e6"
+        ]
+      },
+      "flag": {
+        "role": "tertiary",
+        "displayName": "Flag Amber",
+        "canonical": "#f59e0b",
+        "tonalRamp": [
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fbbf24",
+          "#fcd34d",
+          "#fef3c7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only; three short lines, last line in Marker Deep."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Marketing section titles and page titles; sentence case with a full stop."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card and panel headings, list titles, result section headings."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Marketing and legal reading copy, capped at 62–68ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Question text and explanations rendered through .lesson."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Default working size: nav, buttons, labels, form controls."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Metadata, chips, timestamps, helper text."
+      },
+      "eyebrow": {
+        "displayName": "Eyebrow",
+        "purpose": "Section kickers, field labels, micro-metadata; the 11px floor."
+      }
+    },
+    "shadows": [
+      {
+        "name": "contact",
+        "value": "0 1px 2px rgba(15,23,42,0.05)",
+        "purpose": "shadcn button, input and select primitives at rest."
+      },
+      {
+        "name": "hero-artefact",
+        "value": "0 2px 4px rgba(15,23,42,0.04), 0 24px 60px -24px rgba(15,23,42,0.28)",
+        "purpose": "The landing-page paper preview only."
+      },
+      {
+        "name": "float",
+        "value": "0 18px 40px -20px rgba(15,23,42,0.35)",
+        "purpose": "The floating Last paper card over the hero preview."
+      },
+      {
+        "name": "auth-sheet",
+        "value": "0 24px 60px -24px rgba(2,6,23,0.85)",
+        "purpose": "The light form card floating in the dark auth room."
+      },
+      {
+        "name": "popover",
+        "value": "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)",
+        "purpose": "Select menus, paired with a 1px foreground/10 ring."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state",
+        "value": "150ms ease-out",
+        "purpose": "Colour and border changes on hover, focus and selection."
+      },
+      {
+        "name": "press",
+        "value": "150ms ease-out",
+        "purpose": "active:scale(0.98) on full-width CTAs, active:translateY(1px) on primitives."
+      },
+      {
+        "name": "backdrop",
+        "value": "200ms ease-out",
+        "purpose": "Mobile nav sheet and scrim fade; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "popover",
+        "value": "100ms ease-out",
+        "purpose": "Select menu open/close and zoom."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Marker-orange action at hero and CTA size; the single loudest control on a light screen.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Start a paper <svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg></a>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 24px;border:0;border-radius:22.4px;background:var(--brand-orange,#f97316);color:#fff;font-family:Poppins,ui-sans-serif,system-ui,sans-serif;font-size:14px;font-weight:600;line-height:1;text-decoration:none;transition:background-color 150ms ease-out,transform 150ms ease-out;}.ds-btn-primary:hover{background:color-mix(in oklch,var(--brand-orange,#f97316) 80%,transparent);}.ds-btn-primary:active{transform:translateY(1px);}.ds-btn-primary:focus-visible{outline:2px solid var(--brand-orange,#f97316);outline-offset:2px;}.ds-icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}"
+    },
+    {
+      "name": "Dark Action Button",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "Exam Slate action used inside the quiz flow and on app screens, so orange stays with the selected answer.",
+      "html": "<button class=\"ds-btn-dark\" type=\"button\">Next <svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-dark{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:22.4px;background:var(--exam-slate,#0f172a);color:#fff;font-family:Poppins,ui-sans-serif,system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1;cursor:pointer;transition:background-color 150ms ease-out,transform 150ms ease-out;}.ds-btn-dark:hover{background:var(--exam-edge,#1e293b);}.ds-btn-dark:active{transform:scale(0.98);}.ds-btn-dark:focus-visible{outline:2px solid var(--brand-orange,#f97316);outline-offset:2px;}.ds-icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Quiet secondary action: Sheet on a Rule hairline, filling with Well on hover.",
+      "html": "<button class=\"ds-btn-outline\" type=\"button\">Browse subjects</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 20px;border:1px solid var(--hairline,#e7e2da);border-radius:22.4px;background:var(--paper-white,#ffffff);color:var(--ink-soft,#3d3a33);font-family:Poppins,ui-sans-serif,system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;}.ds-btn-outline:hover{background:var(--warm-stone,#f4f0e9);}.ds-btn-outline:active{transform:translateY(1px);}.ds-btn-outline:focus-visible{outline:2px solid var(--brand-orange,#f97316);outline-offset:2px;}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "The app's working input: 44px, 22.4px radius, Sheet on Rule, orange focus ring.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Search subjects</span><input class=\"ds-input\" type=\"text\" placeholder=\"Type a subject\" /></label>",
+      "css": ".ds-field{display:block;width:100%;font-family:Poppins,ui-sans-serif,system-ui,sans-serif;}.ds-field-label{display:block;margin-bottom:8px;color:var(--ink-soft,#3d3a33);font-size:13px;font-weight:600;}.ds-input{display:block;width:100%;height:44px;padding:0 16px;border:1px solid var(--hairline,#e7e2da);border-radius:22.4px;background:var(--paper-white,#ffffff);color:var(--ink,#2b2926);font-family:inherit;font-size:13px;font-weight:500;transition:border-color 150ms ease-out,box-shadow 150ms ease-out;}.ds-input::placeholder{color:var(--ink-quiet,#847e74);font-weight:400;}.ds-input:focus{outline:none;border-color:var(--primary-400,#fb923c);box-shadow:0 0 0 3px color-mix(in oklch,var(--brand-orange,#f97316) 20%,transparent);}"
+    },
+    {
+      "name": "Auth Text Field",
+      "kind": "input",
+      "refersTo": "input-field-auth",
+      "description": "The larger sign-in field: 48px, 35.2px radius, Sheet well on a dark shell, 2px Marker focus ring at 20%.",
+      "html": "<label class=\"ds-field-auth\"><span class=\"ds-field-auth-label\">Email</span><span class=\"ds-field-auth-well\"><svg class=\"ds-field-auth-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"m3 7 9 6 9-6\"/></svg><input class=\"ds-field-auth-input\" type=\"email\" placeholder=\"you@example.com\" autocomplete=\"username\" /></span></label>",
+      "css": ".ds-field-auth{display:block;width:100%;font-family:Poppins,ui-sans-serif,system-ui,sans-serif;}.ds-field-auth-label{display:block;margin-bottom:8px;color:var(--ink-soft,#3d3a33);font-size:13px;font-weight:600;}.ds-field-auth-well{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border:1px solid var(--hairline,#e7e2da);border-radius:35.2px;background:var(--paper-white,#ffffff);transition:border-color 150ms ease-out,box-shadow 150ms ease-out;}.ds-field-auth-well:focus-within{border-color:var(--primary-400,#fb923c);box-shadow:0 0 0 2px color-mix(in oklch,var(--primary-500,#f97316) 20%,transparent);}.ds-field-auth-icon{width:16px;height:16px;flex:none;fill:none;stroke:var(--ink-quiet,#847e74);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}.ds-field-auth-input{width:100%;border:0;background:transparent;outline:none;color:var(--ink,#2b2926);font:inherit;font-size:14px;}.ds-field-auth-input::placeholder{color:var(--ink-quiet,#847e74);}"
+    },
+    {
+      "name": "Subject Chip",
+      "kind": "chip",
+      "refersTo": "subject-chip",
+      "description": "Selected subject pill with a removable ×, used in setup and as a static subject tag.",
+      "html": "<span class=\"ds-chip\">Physics<button class=\"ds-chip-x\" type=\"button\" aria-label=\"Remove Physics\">×</button></span>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--brand-orange-line,#f5d9b8);border-radius:16px;background:var(--brand-orange-wash,#fdf3e7);color:var(--brand-orange-ink,#a34d0e);font-family:Poppins,ui-sans-serif,system-ui,sans-serif;font-size:12px;font-weight:600;line-height:1.4;}.ds-chip-x{border:0;background:transparent;padding:0;color:color-mix(in oklch,var(--brand-orange-ink,#a34d0e) 60%,transparent);font-size:13px;line-height:1;cursor:pointer;}.ds-chip-x:hover{color:var(--brand-orange-ink,#a34d0e);}.ds-chip-x:focus-visible{outline:2px solid var(--brand-orange,#f97316);outline-offset:2px;}"
+    },
+    {
+      "name": "Answer Option",
+      "kind": "custom",
+      "refersTo": "answer-option",
+      "description": "The signature radio row: unselected Answer fill, selected Marker Wash on a primary-400 edge with a filled letter tile.",
+      "html": "<div class=\"ds-answers\" role=\"radiogroup\" aria-label=\"Answer options\"><button class=\"ds-answer\" type=\"button\" role=\"radio\" aria-checked=\"false\"><span class=\"ds-answer-letter\">A</span><span class=\"ds-answer-text\">2.0 m/s²</span></button><button class=\"ds-answer ds-answer-selected\" type=\"button\" role=\"radio\" aria-checked=\"true\"><span class=\"ds-answer-letter\">B</span><span class=\"ds-answer-text\">4.0 m/s²</span></button></div>",
+      "css": ".ds-answers{display:flex;flex-direction:column;gap:10px;font-family:Poppins,ui-sans-serif,system-ui,sans-serif;}.ds-answer{display:flex;align-items:flex-start;gap:16px;width:100%;padding:14px 16px;border:2px solid #f1f5f9;border-radius:28.8px;background:var(--answer-fill,#f8fafc);color:var(--ink-soft,#3d3a33);font-family:inherit;font-size:14px;line-height:1.5;text-align:left;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;}.ds-answer:hover{background:var(--paper-white,#ffffff);border-color:#e2e8f0;}.ds-answer:focus-visible{outline:2px solid var(--brand-orange,#f97316);outline-offset:2px;}.ds-answer-selected,.ds-answer-selected:hover{border-color:var(--primary-400,#fb923c);background:var(--brand-orange-wash,#fdf3e7);color:var(--primary-950,#451a03);font-weight:500;}.ds-answer-letter{display:flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;height:28px;margin-top:2px;border:1px solid var(--hairline,#e7e2da);border-radius:16px;background:var(--paper-white,#ffffff);color:var(--ink-quiet,#847e74);font-size:11px;font-weight:600;text-transform:uppercase;}.ds-answer-selected .ds-answer-letter{border-color:transparent;background:var(--brand-orange,#f97316);color:#fff;}.ds-answer-text{padding-top:4px;}"
+    },
+    {
+      "name": "Record Strip",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "One Sheet panel divided into ledger cells; the middle cell carries a Marker Wash fill. The dashboard's stat pattern.",
+      "html": "<section class=\"ds-record\" aria-label=\"Key stats\"><div class=\"ds-record-cell\"><p class=\"ds-eyebrow\">Papers taken</p><p class=\"ds-record-value\">12</p><p class=\"ds-record-note\">Completed and marked</p></div><div class=\"ds-record-cell ds-record-accent\"><p class=\"ds-eyebrow\">Average score</p><p class=\"ds-record-value\">74%</p><p class=\"ds-record-note\">Across 12 papers</p></div><div class=\"ds-record-cell\"><p class=\"ds-eyebrow\">Best paper</p><p class=\"ds-record-value\">92%</p><p class=\"ds-record-note\">Your highest so far</p></div></section>",
+      "css": ".ds-record{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden;border:1px solid var(--hairline,#e7e2da);border-radius:35.2px;background:var(--paper-white,#ffffff);font-family:Poppins,ui-sans-serif,system-ui,sans-serif;}.ds-record-cell{padding:24px 28px;}.ds-record-cell+.ds-record-cell{border-left:1px solid var(--hairline,#e7e2da);}.ds-record-accent{background:var(--brand-orange-wash,#fdf3e7);}.ds-eyebrow{margin:0;color:var(--ink-quiet,#847e74);font-size:11px;font-weight:600;line-height:1.2;letter-spacing:0.18em;text-transform:uppercase;}.ds-record-value{margin:12px 0 0;color:var(--ink,#2b2926);font-size:32px;font-weight:600;line-height:1;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;}.ds-record-note{margin:8px 0 0;color:var(--ink-quiet,#847e74);font-size:11px;line-height:1.5;}"
+    },
+    {
+      "name": "Score Slab",
+      "kind": "custom",
+      "refersTo": "slab",
+      "description": "The dark room: Exam Slate with a printed grid, one orange glow, a neutral white score arc and divided result counts.",
+      "html": "<div class=\"ds-slab\"><p class=\"ds-slab-eyebrow\">Session complete</p><p class=\"ds-slab-score\">78<span>%</span></p><p class=\"ds-slab-copy\">31 of 40 correct.</p><dl class=\"ds-slab-stats\"><div><dd class=\"ds-ok\">31</dd><dt>Correct</dt></div><div><dd class=\"ds-bad\">7</dd><dt>Wrong</dt></div><div><dd class=\"ds-olive\">2</dd><dt>Skipped</dt></div></dl></div>",
+      "css": ".ds-slab{position:relative;overflow:hidden;padding:32px;border-radius:35.2px;background:var(--exam-slate,#0f172a);color:#fff;font-family:Poppins,ui-sans-serif,system-ui,sans-serif;}.ds-slab::before{content:\"\";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(255,255,255,0.06) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,0.06) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 65% 70% at 50% 40%,#000,transparent);mask-image:radial-gradient(ellipse 65% 70% at 50% 40%,#000,transparent);pointer-events:none;}.ds-slab::after{content:\"\";position:absolute;top:-80px;right:-64px;width:256px;height:256px;border-radius:50%;background:color-mix(in oklch,var(--brand-orange,#f97316) 20%,transparent);filter:blur(48px);pointer-events:none;}.ds-slab>*{position:relative;}.ds-slab-eyebrow{margin:0;color:var(--primary-300,#fbbf24);font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;}.ds-slab-score{margin:20px 0 0;font-size:40px;font-weight:600;line-height:1;letter-spacing:-0.04em;font-variant-numeric:tabular-nums;}.ds-slab-score span{font-size:18px;font-weight:500;color:rgba(255,255,255,0.5);}.ds-slab-copy{margin:6px 0 0;font-size:13px;line-height:1.6;color:rgba(255,255,255,0.5);}.ds-slab-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:20px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);}.ds-slab-stats div+div{border-left:1px solid rgba(255,255,255,0.15);padding-left:16px;}.ds-slab-stats dd{margin:0;font-size:20px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;}.ds-slab-stats dt{margin-top:6px;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.55);}.ds-ok{color:#34d399;}.ds-bad{color:#fb7185;}.ds-olive{color:rgba(255,255,255,0.5);}"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "56px Paper bar with 13px links; the active link is Marker Ink with a 2px Marker underline on the bar's edge.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main\"><a class=\"ds-nav-link\" href=\"#\">Subjects</a><a class=\"ds-nav-link ds-nav-active\" href=\"#\" aria-current=\"page\">Practice</a><a class=\"ds-nav-link\" href=\"#\">Mark book</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:stretch;gap:24px;height:56px;padding:0 24px;border-bottom:1px solid var(--hairline,#e7e2da);background:var(--paper,#fdfbf7);font-family:Poppins,ui-sans-serif,system-ui,sans-serif;}.ds-nav-link{position:relative;display:flex;align-items:center;color:var(--ink-quiet,#847e74);font-size:13px;font-weight:500;line-height:1;text-decoration:none;transition:color 150ms ease-out;}.ds-nav-link:hover{color:var(--ink,#2b2926);}.ds-nav-link:focus-visible{outline:2px solid var(--brand-orange,#f97316);outline-offset:2px;}.ds-nav-active{color:var(--brand-orange-ink,#a34d0e);}.ds-nav-active::after{content:\"\";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:999px;background:var(--brand-orange,#f97316);}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Marked Script",
+    "overview": "Quizergo looks like the paper you get back: warm off-white stock, cool slate printing, and orange pen marks in the margin. The page is quiet so the question is loud. Everything is built to be read on a phone under time pressure — one question in view, four answers within thumb reach, the countdown inside the bar — and the marking is honest: correct in green, wrong in rose, skipped in quiet ink, never softened.\n\nThe system lives in two rooms. The study room is light: Paper ground, Sheet cards, Ink typography, 1px Rule borders, generous rounding, and grouping by ruled lines rather than by stacked cards. The exam room is Exam Slate, used for the moments that carry weight — the auth shell, the setup header band, the returned score slab, the closing CTA, the submit dialog. Orange is the marker, not the paint: it appears in headings' accent words, active states, selected answers, progress fills, and small chips, and it never becomes a large field.\n\nCraft here is calm precision, not decoration. One typeface; hierarchy from size, weight and tracking. Depth is a hairline plus a whisper of contact shadow. The only expressive gestures are large corner radii, blurred orange glows inside dark rooms, a faint printed grid that fades toward the edges, and long ruled lists that read like an index or a mark book.",
+    "keyCharacteristics": [
+      "Warm Paper ground, cool Slate ink: warm surface, cool text.",
+      "Named tokens (paper, sheet, well, ink, rule, marker, exam) rather than raw Tailwind colour steps.",
+      "Two-surface rhythm: light working screens; Exam Slate for the four signature moments.",
+      "Ruled-line composition: border-t / border-b lists and divided cells replace card grids.",
+      "Generous rounding (12.8px floor, 28.8–35.2px for cards, slabs and auth fields).",
+      "Flat at rest; elevation appears only as state, or on the hero artefact.",
+      "Single typeface (Poppins, weights 400–700 only); hierarchy from size, weight and letter-spacing.",
+      "Numbers are tabular everywhere they change or compare."
+    ],
+    "rules": [
+      {
+        "name": "The Warm Paper Rule",
+        "body": "The ground is warm and the ink is cool. Never a cool grey page background; never a warm grey as body text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Marker Rule",
+        "body": "Orange covers less than roughly a tenth of any screen. It marks — a border, an underline, a chip, a progress fill, one accent word — and never becomes the background of a large panel. When a surface needs weight, use Exam Slate.",
+        "section": "colors"
+      },
+      {
+        "name": "The Grade-Colour Rule",
+        "body": "Green, rose and amber mean correct, wrong and flagged. They are never decorative, and nothing is graded with orange.",
+        "section": "colors"
+      },
+      {
+        "name": "The Named-Token Rule",
+        "body": "Style with paper, sheet, well, ink, rule, marker, exam, answer. Reach for the primary-* ramp only inside a tint or glow, never for layout colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Voice Rule",
+        "body": "One typeface. If a block needs to stand out, change size, weight, colour or tracking — never add a font.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence-Case Rule",
+        "body": "Headings are sentence case with a full stop. Only eyebrows, metadata and option letters are uppercase.",
+        "section": "typography"
+      },
+      {
+        "name": "The Eleven-Pixel Floor",
+        "body": "Nothing renders below 0.6875rem. If a label feels too big, reduce weight or colour, not size.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-At-Rest Rule",
+        "body": "A Sheet card on Paper gets a 1px Rule border and no shadow. If you want shadow-lg on a white card, the card is wrong, not the shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hover-Only Lift Rule",
+        "body": "Elevation is a response to state: press a button (active:scale-[0.98] or active:translate-y-px); hover a list row to a well/40 fill. Nothing floats permanently except the hero artefact, its card, the auth sheet and the calculator.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Sharp-Corner Rule",
+        "body": "Every container is rounded; the floor is 12.8px and anything card-sized sits at 28.8–35.2px.",
+        "section": "shapes"
+      },
+      {
+        "name": "The One-Shape Rule",
+        "body": "A repeated control keeps its silhouette across states. The question cell, the option letter tile and the chip change fill and border, never their corner.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do start every screen on Paper and place Sheet panels on it with a 1px Rule border.",
+      "Do style with the named tokens (bg-paper, bg-sheet, text-ink, border-rule, bg-marker, bg-exam), not raw colour steps.",
+      "Do group with rules: border-t/border-b lists, divide-rule cells, and tabs with a 2px underline.",
+      "Do keep orange under roughly 10% of the viewport: eyebrow, active underline, selected answer, one progress fill, one accent word.",
+      "Do use Exam Slate for weight, reserved for the auth shell, setup header, result slab, CTA band and dark actions.",
+      "Do round card-sized containers to 28.8–35.2px and keep a 12.8px floor on controls.",
+      "Do set tabular-nums on every score, percentage, timer, count and date.",
+      "Do keep app UI at 0.8125rem and reading copy at 0.9375–1rem; 600 for emphasis, 700 only for numerals on dark.",
+      "Do use the tinted-pair pattern for state — *-50 fill, *-200 hairline, *-700 text on light; *-400 text with a white/5 well on dark.",
+      "Do show focus with a 2px Marker ring on custom controls and keep it visible everywhere.",
+      "Do keep press feedback physical: active:scale-[0.98] on full-width CTAs, active:translate-y-px on primitives."
+    ],
+    "donts": [
+      "Don't fill a large panel with Marker; dark rooms and blurred orange glows carry the weight instead.",
+      "Don't use slate-*, stone-*, gray-*, zinc-* or arbitrary hex in new work. The remaining slate-100/slate-200 answer edges and the unused Testimonials section are drift, not the system.",
+      "Don't grade with orange. The result arc is neutral white; correct is emerald, wrong is rose, flagged is amber.",
+      "Don't introduce a second accent hue for focus, hover or links. Marker is the only accent; cyan-400 was retired.",
+      "Don't add a second typeface, or use weights 300/800/900 — they are not loaded.",
+      "Don't set a persistent drop shadow on a Sheet card, or stack cards where one ruled panel would do.",
+      "Don't use font-mono; there is no monospace voice. Use Poppins with tabular-nums.",
+      "Don't set type below 0.6875rem, or reach for prose classes where .lesson exists.",
+      "Don't use -500 Marker for small text on white; step to Marker Ink or Marker Deep for contrast.",
+      "Don't square a corner, shrink a panel to rounded-md, or rely on colour alone to signal correct/wrong/flagged."
+    ]
+  }
+}

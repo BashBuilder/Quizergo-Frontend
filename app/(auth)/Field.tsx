@@ -1,4 +1,5 @@
 import React from "react";
+
 const InputField = ({
   label,
   htmlFor,
@@ -11,19 +12,20 @@ const InputField = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-wrap gap-1 items-center">
+    <div className="w-full">
       <label
-        className="block text-sm min-w-36 font-medium  text-slate-200"
+        className="mb-2 block text-[0.8125rem] font-semibold text-ink-soft"
         htmlFor={htmlFor}
       >
         {label}
       </label>
-      <div className="flex items-center gap-3 grow rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-cyan-400 focus-within:ring-1 focus-within:ring-cyan-400/20">
+      <div className="flex h-12 items-center gap-3 rounded-3xl border border-rule bg-sheet px-4 transition-colors focus-within:border-primary-400 focus-within:ring-2 focus-within:ring-primary-500/20">
         {children}
       </div>
       {error && (
         <p
-          className="text-xs text-left w-full text-rose-500 font-medium"
+          id={`${htmlFor}-error`}
+          className="mt-2 text-[0.75rem] font-medium text-rose-600"
           role="alert"
         >
           {error}

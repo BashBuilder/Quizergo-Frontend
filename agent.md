@@ -140,11 +140,9 @@ is detected on the client. `<RequireAuth>` refetches on navigation and
 **Quiz flow.**
 
 1. `/setup` (react-hook-form + Zod) → `POST /quiz` with `{ subjects, questionCount, duration }`.
-2. Session JSON is saved to `sessionStorage["quizSession"]` (+ `quizDuration`), then `router.push("/quiz")`.
-3. `/quiz` renders questions (no answers are present), keeps answers in state as
-   `{ [subject]: { [questionId]: "a"|"b"|"c"|"d" } }`, and every 30s `PATCH /quiz/:sessionId/sync` with only changed answers.
-4. Submit → `POST /quiz/:sessionId/submit` with all answers; response is saved to
-   `sessionStorage["quizResult"]` and `/result` renders the breakdown.
+2. Session JSON is saved to `sessionStorage["quizSession"]` (+ `quizDuration`), stale snapshot keys are cleared, then `router.push("/quiz")`.
+3. `/quiz` resolves one deadline from `session.expiresAt` (epoch seconds, epoch ms or ISO; `0`/absent duration = untimed) and persists it as `quizDeadline`. Answers and flags are mirrored to `quizAnswers`/`quizFlags`, so a refresh restores the paper and the clock instead of resetting them. Every 30s `PATCH /quiz/:sessionId/sync` with only changed answers.
+4. The clock is derived from the deadline, never from a ticking counter, so background throttling cannot make it drift. At zero the rows lock, a "Time's up" banner appears, and the paper auto-submits. Submit (`POST /quiz/:sessionId/submit` with all answers) is guarded against double-sends; a failure keeps the paper on this device and offers a retry. The response is saved to `sessionStorage["quizResult"]` and `/result` renders the breakdown.
 5. `/dashboard` uses `GET /user/history` (`useGetQuizHistory`) and `GET /questions/subjects` (`useGetSubjects`).
 
 ## 7. Architecture rules

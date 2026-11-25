@@ -1,68 +1,66 @@
-import { ChevronDown } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const faqs = [
   {
-    question: "Which exams does QuizerGo cover?",
+    question: "Which exams does Quizergo cover?",
     answer:
-      "QuizerGo is built around the WAEC and JAMB style of examination. Questions are organised by subject, so you can focus on the papers you are sitting.",
+      "Quizergo practice is written in the WAEC and JAMB style. Questions are organised by subject, so you can sit the papers you are actually preparing for.",
   },
   {
-    question: "How do timed mock exams work?",
+    question: "How does a timed session work?",
     answer:
-      "Choose your subjects, the number of questions and a time limit. The session runs on a countdown, just like an exam, and your answers are saved as you work.",
+      "Choose your subjects, the number of questions and a time limit. The session runs on a countdown, one question at a time, and your answers are saved as you work.",
   },
   {
     question: "Can I review my answers after submitting?",
     answer:
-      "Yes. Every session ends with a scored breakdown, and you can work through each question with the correct answer and a full explanation.",
+      "Yes. Every session ends with the paper marked, question by question — your answer, the correct answer, and an explanation you can revise from.",
   },
   {
     question: "Is my progress saved if I lose connection?",
     answer:
-      "Your answers sync during the session, so a brief interruption will not cost you your work. Completed sessions are also kept in your dashboard history.",
+      "Answers sync during the session, so a brief interruption will not cost you your work. Completed papers are also kept in your mark book.",
   },
   {
     question: "Do I need to install an app?",
     answer:
-      "No. QuizerGo runs in your browser on a phone, tablet or laptop — sign in and start a session.",
+      "No. Quizergo runs in your browser on a phone, tablet or laptop — sign in and start a paper.",
   },
 ];
 
 export default function FAQ() {
   return (
-    <section className="border-b border-slate-200/70 bg-stone-50">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:py-24">
+    <section className="border-b border-rule bg-paper">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16 lg:py-24">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-700">
-            FAQ
-          </p>
-          <h2 className="mt-3 max-w-sm text-3xl font-semibold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem]">
+          <p className="eyebrow text-marker-ink">Before you start</p>
+          <h2 className="mt-4 max-w-xs text-[2rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.5rem]">
             Questions, answered.
           </h2>
-          <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600 sm:text-base">
-            Everything you need to know before your first session. Still unsure?{" "}
+          <p className="mt-5 max-w-xs text-[0.9375rem] leading-7 text-ink-quiet">
+            Still unsure about something?{" "}
             <a
               href="mailto:contact@quizergo.online"
-              className="font-semibold text-primary-700 underline-offset-4 hover:underline"
+              className="font-semibold text-marker-ink underline decoration-marker-line underline-offset-4 transition-colors hover:decoration-marker"
             >
-              Talk to us
-            </a>
-            .
+              Write to us
+            </a>{" "}
+            and a person will reply.
           </p>
         </div>
 
-        <div className="divide-y divide-slate-200 border-y border-slate-200">
+        <div className="border-t border-rule">
           {faqs.map((faq) => (
-            <details key={faq.question} className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-sm font-semibold text-slate-900 transition-colors hover:text-primary-700 [&::-webkit-details-marker]:hidden">
+            <details key={faq.question} className="group border-b border-rule">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-left text-[0.9375rem] font-semibold leading-6 text-ink transition-colors hover:text-marker-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper [&::-webkit-details-marker]:hidden">
                 {faq.question}
-                <ChevronDown
+                <Plus
                   size={16}
-                  className="shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180"
+                  className="mt-0.5 shrink-0 text-ink-quiet transition-transform group-open:rotate-45"
                   aria-hidden="true"
                 />
               </summary>
-              <p className="pb-5 pr-8 text-sm leading-6 text-slate-600">
+              <p className="max-w-[62ch] pb-6 pr-8 text-[0.875rem] leading-7 text-ink-quiet">
                 {faq.answer}
               </p>
             </details>

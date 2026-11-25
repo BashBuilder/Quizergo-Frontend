@@ -27,8 +27,20 @@ const RequireAuth = ({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        Loading...
+      <div
+        className="flex min-h-screen items-center justify-center bg-paper"
+        role="status"
+        aria-live="polite"
+      >
+        <div className="w-full max-w-xs px-6">
+          <p className="eyebrow eyebrow-quiet">Quizergo</p>
+          <p className="mt-3 text-sm text-ink-soft">
+            Checking your session…
+          </p>
+          <div className="mt-5 h-px w-full bg-rule">
+            <div className="h-px w-1/3 bg-marker" />
+          </div>
+        </div>
       </div>
     );
   }

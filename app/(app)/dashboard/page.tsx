@@ -2,19 +2,19 @@
 import React from "react";
 import Link from "next/link";
 import {
-  Trophy,
-  Target,
-  ListChecks,
   ArrowRight,
   Calendar,
-  BookOpen,
   Loader2,
   AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageWrapper from "@/components/global/PageWrapper";
 import { useAuth } from "@/hooks/auth";
-import { useGetQuizHistory, type QuizResultSummary } from "@/services/quiz.service";
+import {
+  useGetQuizHistory,
+  type QuizResultSummary,
+} from "@/services/quiz.service";
 import { useGetSubjects } from "@/services/question.service";
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -40,26 +40,30 @@ function formatTime(seconds: number) {
   return `${m}m ${s}s`;
 }
 
-function StatCard({
-  icon,
+// ── Ledger cell ──────────────────────────────────────────────────────────
+function RecordCell({
   label,
   value,
+  note,
   accent,
 }: {
-  icon: React.ReactNode;
   label: string;
-  value: string | number;
-  accent: string;
+  value: string;
+  note: string;
+  accent?: boolean;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4 shadow-sm">
-      <div className={cn("p-2.5 rounded-xl shrink-0", accent)}>{icon}</div>
-      <div className="min-w-0">
-        <p className="text-xs text-slate-500 font-medium">{label}</p>
-        <p className="text-2xl font-bold text-slate-900 leading-tight">
-          {value}
-        </p>
-      </div>
+    <div
+      className={cn(
+        "px-6 py-6 sm:px-7",
+        accent && "bg-marker-wash",
+      )}
+    >
+      <p className="eyebrow eyebrow-quiet">{label}</p>
+      <p className="mt-3 text-[2rem] font-semibold leading-none tabular-nums tracking-[-0.03em] text-ink">
+        {value}
+      </p>
+      <p className="mt-2 text-[0.6875rem] leading-5 text-ink-quiet">{note}</p>
     </div>
   );
 }
@@ -88,26 +92,23 @@ export default function DashboardPage() {
     )
     .slice(0, 8);
 
-  const trend = [...recent].reverse().slice(-6);
-
   return (
-    <PageWrapper>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-8 flex items-start justify-between flex-wrap gap-4">
+    <PageWrapper className="pb-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-rule pb-8">
           <div>
-            <p className="text-sm text-primary-500 font-semibold tracking-wide uppercase mb-1">
-              Dashboard
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              Welcome back, {user?.firstName || ""}
+            <p className="eyebrow text-marker-ink">Mark book</p>
+            <h1 className="mt-3 text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.5rem]">
+              Welcome back, {user?.firstName || "there"}.
             </h1>
-            <p className="text-slate-500 mt-1 text-sm">
-              A look at every quiz you&apos;ve taken so far.
+            <p className="mt-2 max-w-md text-[0.875rem] leading-6 text-ink-quiet">
+              Every paper you have sat, kept in one place.
             </p>
           </div>
-          <div className="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm">
-            <Calendar size={15} className="text-slate-400" aria-hidden="true" />
-            <span className="text-sm text-slate-600 font-medium">
+
+          <div className="flex items-center gap-2 rounded-xl border border-rule bg-sheet px-4 py-2.5">
+            <Calendar size={14} className="text-ink-quiet" aria-hidden="true" />
+            <span className="text-[0.8125rem] font-medium tabular-nums text-ink-soft">
               {new Date().toLocaleDateString("en-NG", {
                 weekday: "long",
                 day: "numeric",
@@ -118,167 +119,215 @@ export default function DashboardPage() {
         </div>
 
         {historyLoading ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-slate-400">
-            <Loader2 className="animate-spin" size={22} aria-hidden="true" />
-            <p className="text-sm">Loading your progress...</p>
+          <div
+            className="mt-8 overflow-hidden rounded-3xl border border-rule bg-sheet"
+            aria-busy="true"
+            aria-live="polite"
+          >
+            <span className="sr-only">Loading your mark book</span>
+            <div className="grid sm:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "px-6 py-6",
+                    i > 0 && "border-t border-rule sm:border-l sm:border-t-0",
+                  )}
+                >
+                  <div className="h-2.5 w-20 rounded-sm bg-well" />
+                  <div className="mt-4 h-8 w-16 rounded-sm bg-well" />
+                  <div className="mt-3 h-2.5 w-24 rounded-sm bg-well" />
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 border-t border-rule px-6 py-4 text-[0.8125rem] text-ink-quiet">
+              <Loader2 className="animate-spin" size={14} aria-hidden="true" />
+              Loading your papers…
+            </div>
           </div>
         ) : historyError ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center px-4">
-            <AlertCircle size={26} className="text-rose-400" aria-hidden="true" />
-            <p className="text-sm text-slate-500 max-w-sm">
-              Couldn&apos;t load your quiz history. Try again in a moment.
+          <div className="mt-8 rounded-3xl border border-rule bg-sheet px-6 py-14 text-center">
+            <AlertCircle
+              size={22}
+              className="mx-auto text-rose-400"
+              aria-hidden="true"
+            />
+            <p className="mt-4 text-sm font-semibold text-ink">
+              Your mark book didn&apos;t load.
+            </p>
+            <p className="mx-auto mt-1.5 max-w-sm text-[0.8125rem] leading-6 text-ink-quiet">
+              Nothing was lost. Your papers are on the server — try again in a
+              moment.
             </p>
             <button
+              type="button"
               onClick={() => refetch()}
-              className="text-sm font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors rounded-xl px-4 py-2"
+              className="mt-5 rounded-lg border border-rule bg-sheet px-4 py-2 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
             >
               Try again
             </button>
           </div>
         ) : quizzesTaken === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center px-4">
-            <div className="p-3 rounded-2xl bg-primary-50">
-              <Target size={26} className="text-primary-500" aria-hidden="true" />
+          <div className="mt-8 overflow-hidden rounded-3xl border border-rule bg-sheet">
+            <div className="px-7 py-10 sm:px-10 sm:py-12">
+              <p className="eyebrow eyebrow-quiet">Nothing marked yet</p>
+              <h2 className="mt-4 max-w-md text-[1.5rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
+                Your first paper goes here.
+              </h2>
+              <p className="mt-2 max-w-md text-[0.875rem] leading-7 text-ink-quiet">
+                Sit one timed session and the score, the time you used, and the
+                full marking will be filed in this book.
+              </p>
+              <Link
+                href="/setup"
+                className="mt-7 inline-flex h-10 items-center gap-2 rounded-xl bg-exam px-5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              >
+                Start your first paper
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
             </div>
-            <p className="text-base font-semibold text-slate-800">
-              No quizzes yet
-            </p>
-            <p className="text-sm text-slate-500 max-w-sm">
-              Take your first quiz and your progress will show up here.
-            </p>
-            <Link
-              href="/setup"
-              className="mt-1 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors rounded-xl px-4 py-2.5 flex items-center gap-1.5"
-            >
-              Start a quiz <ArrowRight size={14} aria-hidden="true" />
-            </Link>
+            <div className="space-y-3 px-7 pb-10 sm:px-10" aria-hidden="true">
+              {[92, 78, 64].map((w) => (
+                <div key={w} className="h-px bg-rule" style={{ width: `${w}%` }} />
+              ))}
+            </div>
           </div>
         ) : (
           <>
-            {/* ── Stat cards ── */}
+            {/* Record strip */}
             <section
               aria-label="Key stats"
-              className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6"
+              className="mt-8 grid divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-sheet sm:grid-cols-3 sm:divide-x sm:divide-y-0"
             >
-              <StatCard
-                icon={<ListChecks size={18} className="text-primary-600" aria-hidden="true" />}
-                label="Quizzes taken"
-                value={quizzesTaken}
-                accent="bg-primary-50"
+              <RecordCell
+                label="Papers taken"
+                value={String(quizzesTaken)}
+                note="Completed and marked"
               />
-              <StatCard
-                icon={<Target size={18} className="text-emerald-600" aria-hidden="true" />}
+              <RecordCell
                 label="Average score"
                 value={`${averageScore}%`}
-                accent="bg-emerald-50"
+                note={
+                  quizzesTaken === 1
+                    ? "From one paper"
+                    : `Across ${quizzesTaken} papers`
+                }
+                accent
               />
-              <StatCard
-                icon={<Trophy size={18} className="text-amber-500" aria-hidden="true" />}
-                label="Best score"
+              <RecordCell
+                label="Best paper"
                 value={`${bestScore}%`}
-                accent="bg-amber-50"
+                note="Your highest so far"
               />
             </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              {/* Left col */}
-              <div className="lg:col-span-2 flex flex-col gap-5">
-                {trend.length > 1 && (
-                  <section aria-label="Recent scores">
-                    <h2 className="text-base font-semibold text-slate-800 mb-3">
-                      Recent scores
-                    </h2>
-                    <div
-                      className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-end gap-3"
-                      role="img"
-                      aria-label="Recent quiz scores chart"
-                    >
-                      {trend.map((entry) => (
-                        <div
-                          key={entry.id}
-                          className="flex-1 flex flex-col items-center gap-1.5"
-                        >
-                          <span className="text-[11px] font-semibold text-slate-500">
-                            {pct(entry)}%
-                          </span>
-                          <div className="w-full h-24 rounded-md bg-slate-100 flex items-end overflow-hidden">
-                            <div
-                              className="w-full rounded-md bg-primary-500 transition-all duration-500"
-                              style={{ height: `${Math.max(pct(entry), 4)}%` }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                <section aria-label="Recent quizzes">
-                  <h2 className="text-base font-semibold text-slate-800 mb-3">
-                    Recent quizzes
+            <div className="mt-10 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
+              {/* Recent papers */}
+              <section aria-label="Recent papers">
+                <div className="flex items-baseline justify-between border-b border-rule pb-3">
+                  <h2 className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
+                    Recent papers
                   </h2>
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-50">
-                    {recent.map((entry) => (
-                      <div
-                        key={entry.id}
-                        className="flex items-center justify-between px-5 py-4"
-                      >
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-slate-800">
-                            {entry.score}/{entry.total} correct
-                          </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            {formatRelativeDate(entry.submittedAt)} ·{" "}
-                            {formatTime(entry.timeTaken)}
-                          </p>
-                        </div>
-                        <span className="text-sm font-bold text-primary-600 shrink-0">
+                  <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-quiet">
+                    Newest first
+                  </span>
+                </div>
+
+                <ul>
+                  {recent.map((entry) => (
+                    <li
+                      key={entry.id}
+                      className="grid grid-cols-[1fr_auto] items-center gap-x-6 gap-y-1 border-b border-rule py-4"
+                    >
+                      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <span className="w-[6.5rem] text-[0.8125rem] font-medium tabular-nums text-ink-quiet">
+                          {formatRelativeDate(entry.submittedAt)}
+                        </span>
+                        <span className="text-[0.875rem] font-semibold text-ink">
+                          {entry.score} of {entry.total} correct
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-end gap-3">
+                        <span className="hidden text-[0.75rem] tabular-nums text-ink-quiet sm:block">
+                          {formatTime(entry.timeTaken)}
+                        </span>
+                        <span className="hidden h-px w-10 bg-rule sm:block">
+                          <span
+                            className="block h-px bg-marker"
+                            style={{
+                              width: `${Math.min(pct(entry), 100)}%`,
+                            }}
+                          />
+                        </span>
+                        <span className="text-[0.9375rem] font-semibold tabular-nums text-ink">
                           {pct(entry)}%
                         </span>
                       </div>
-                    ))}
-                  </div>
-                </section>
-              </div>
+                    </li>
+                  ))}
+                </ul>
 
-              {/* Right col — quick start */}
-              <div className="flex flex-col gap-5">
-                <section aria-label="Start a new quiz">
-                  <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2 mb-3">
-                    <BookOpen size={16} className="text-primary-500" aria-hidden="true" />
-                    Start a new quiz
+                <p className="mt-4 text-[0.6875rem] leading-5 text-ink-quiet">
+                  Opening a past paper is not available yet. The scores and times
+                  above are read from your saved history.
+                </p>
+              </section>
+
+              {/* Start another */}
+              <aside aria-label="Start a new paper">
+                <div className="rounded-2xl border border-rule bg-well p-6">
+                  <BookOpen
+                    size={18}
+                    className="text-marker-ink"
+                    aria-hidden="true"
+                  />
+                  <h2 className="mt-4 text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
+                    Start another paper
                   </h2>
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <p className="text-sm text-slate-500 mb-4">
-                      Pick your subjects, set a time limit, and get instant
-                      results with a full answer review.
-                    </p>
-                    {subjectsLoading ? (
-                      <div className="flex items-center gap-2 text-slate-400 text-sm">
-                        <Loader2 className="animate-spin" size={14} aria-hidden="true" />
-                        Loading subjects...
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {(subjects ?? []).slice(0, 6).map((s) => (
-                          <span
-                            key={s.id}
-                            className="text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-full px-2.5 py-1"
-                          >
-                            {s.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <Link
-                      href="/setup"
-                      className="w-full text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors rounded-xl py-2.5 flex items-center justify-center gap-1.5"
-                    >
-                      Start a quiz <ArrowRight size={14} aria-hidden="true" />
-                    </Link>
-                  </div>
-                </section>
-              </div>
+                  <p className="mt-2 text-[0.8125rem] leading-6 text-ink-quiet">
+                    Choose your subjects, a question count and a time limit. The
+                    paper comes back marked.
+                  </p>
+
+                  {subjectsLoading ? (
+                    <div className="mt-5 flex items-center gap-2 text-[0.8125rem] text-ink-quiet">
+                      <Loader2
+                        className="animate-spin"
+                        size={13}
+                        aria-hidden="true"
+                      />
+                      Loading subjects…
+                    </div>
+                  ) : (
+                    <div className="mt-5 flex flex-wrap gap-1.5">
+                      {(subjects ?? []).slice(0, 6).map((s) => (
+                        <span
+                          key={s.id}
+                          className="rounded-md border border-rule bg-sheet px-2 py-1 text-[0.6875rem] font-medium text-ink-soft"
+                        >
+                          {s.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <Link
+                    href="/setup"
+                    className="mt-6 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-well"
+                  >
+                    Start a paper
+                    <ArrowRight size={14} aria-hidden="true" />
+                  </Link>
+                </div>
+
+                <div className="mt-6 border-t border-rule pt-4">
+                  <p className="text-[0.6875rem] leading-5 text-ink-quiet">
+                    Average is calculated across every completed paper in your
+                    history. Best is the highest percentage, not a separate
+                    attempt.
+                  </p>
+                </div>
+              </aside>
             </div>
           </>
         )}

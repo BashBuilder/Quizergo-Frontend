@@ -7,7 +7,7 @@ import CTA from "@/components/Homepage/CTA";
 
 export default function HomePage() {
   return (
-    <div className="bg-stone-50 text-slate-900">
+    <div className="bg-paper">
       <Hero />
       <HowItWorks />
       <LandingSubjects />

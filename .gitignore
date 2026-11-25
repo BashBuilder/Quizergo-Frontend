@@ -13,6 +13,8 @@
 # testing
 /coverage
 
+.impeccable/config.local.json
+
 # next.js
 /.next/
 /out/

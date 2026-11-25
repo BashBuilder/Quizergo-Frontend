@@ -7,11 +7,11 @@ import {
   XCircle,
   MinusCircle,
   ChevronDown,
-  ChevronUp,
   RotateCcw,
   BookOpen,
   Clock,
   Target,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LessonContent from "@/components/global/LessonContent";
@@ -53,90 +53,135 @@ function formatTime(seconds: number) {
 }
 
 function scoreColor(pct: number) {
-  if (pct >= 80) return "text-emerald-600";
-  if (pct >= 60) return "text-amber-600";
-  return "text-rose-600";
+  if (pct >= 80) return "text-emerald-700";
+  if (pct >= 50) return "text-ink";
+  return "text-rose-700";
 }
 
-function scoreRingColor(pct: number) {
-  if (pct >= 80) return "#34d399";
-  if (pct >= 60) return "#fbbf24";
-  return "#f87171";
-}
-
-function scoreLabel(pct: number) {
-  if (pct >= 80) return "Excellent";
-  if (pct >= 65) return "Good";
-  if (pct >= 50) return "Average";
-  return "Needs work";
+function StatusMark({ status }: { status: BreakdownQuestion["status"] }) {
+  if (status === "correct") {
+    return (
+      <CheckCircle2
+        size={16}
+        className="text-emerald-600"
+        aria-label="Correct"
+      />
+    );
+  }
+  if (status === "incorrect") {
+    return (
+      <XCircle size={16} className="text-rose-600" aria-label="Wrong" />
+    );
+  }
+  return (
+    <MinusCircle size={16} className="text-ink-quiet" aria-label="Skipped" />
+  );
 }
 
 // ── Question row ──────────────────────────────────────────────────────────
 function QuestionRow({ q, idx }: { q: BreakdownQuestion; idx: number }) {
-  const [open, setOpen] = useState(false);
-
-  const icon =
-    q.status === "correct" ? (
-      <CheckCircle2 size={15} className="text-emerald-500 shrink-0" />
-    ) : q.status === "incorrect" ? (
-      <XCircle size={15} className="text-rose-500 shrink-0" />
-    ) : (
-      <MinusCircle size={15} className="text-slate-400 shrink-0" />
-    );
+  const [open, setOpen] = useState(q.status !== "correct");
 
   return (
-    <div className="border-b border-slate-50 last:border-0">
+    <li className="border-b border-rule last:border-b-0">
       <button
-        className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-slate-50/70 transition-colors"
+        className="grid w-full grid-cols-[2.25rem_1fr_auto] items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-well/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
-        <span className="text-xs font-bold text-slate-400 w-5 shrink-0 pt-0.5">
-          {idx + 1}
+        <span className="flex items-center gap-2 pt-0.5">
+          <span className="w-4 text-right text-[0.75rem] font-semibold tabular-nums text-ink-quiet">
+            {idx + 1}
+          </span>
+          <StatusMark status={q.status} />
         </span>
-        {icon}
-        <p className="flex-1 text-sm text-slate-700 leading-snug line-clamp-2">
-          <LessonContent content={q.question} />
-        </p>
-        {open ? (
-          <ChevronUp size={13} className="text-slate-400 shrink-0 mt-0.5" />
-        ) : (
-          <ChevronDown size={13} className="text-slate-400 shrink-0 mt-0.5" />
-        )}
+
+        <div
+          className={cn(
+            "min-w-0 text-[0.875rem] leading-6 text-ink-soft",
+            !open && "line-clamp-2",
+          )}
+        >
+          <LessonContent content={q.question} compact />
+        </div>
+
+        <span className="flex items-center gap-3 pt-0.5">
+          <span className="hidden text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-quiet sm:block">
+            {q.status === "correct"
+              ? "Marked"
+              : q.status === "incorrect"
+                ? "Wrong"
+                : "Skipped"}
+          </span>
+          <ChevronDown
+            size={14}
+            className={cn(
+              "text-ink-quiet transition-transform",
+              open && "rotate-180",
+            )}
+            aria-hidden="true"
+          />
+        </span>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 space-y-2 bg-slate-50/50">
-          <div className="flex flex-wrap gap-3 text-xs">
-            <span
-              className={cn(
-                "px-2.5 py-1 rounded-lg font-semibold",
-                q.status === "correct"
-                  ? "bg-emerald-50 text-emerald-700"
-                  : q.status === "incorrect"
-                    ? "bg-rose-50 text-rose-700"
-                    : "bg-slate-100 text-slate-500",
-              )}
-            >
-              Your answer: <strong>{q.userAnswer?.toUpperCase() ?? "—"}</strong>
-            </span>
-            <span className="px-2.5 py-1 rounded-lg font-semibold bg-emerald-50 text-emerald-700">
-              Correct: <strong>{q.correctAnswer.toUpperCase()}</strong>
-            </span>
+        <div className="px-5 pb-5 sm:pl-16">
+          <div className="grid gap-2 sm:grid-cols-2">
+            {q.status === "correct" ? (
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-2.5 sm:col-span-2">
+                <p className="eyebrow text-emerald-700">
+                  Your answer, marked correct
+                </p>
+                <p className="mt-1.5 text-[0.875rem] font-semibold uppercase tabular-nums text-ink">
+                  {q.correctAnswer}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div
+                  className={cn(
+                    "rounded-xl border px-3.5 py-2.5",
+                    q.status === "incorrect"
+                      ? "border-rose-100 bg-rose-50/70"
+                      : "border-rule bg-well",
+                  )}
+                >
+                  <p
+                    className={cn(
+                      "eyebrow",
+                      q.status === "incorrect"
+                        ? "text-rose-700"
+                        : "text-ink-quiet",
+                    )}
+                  >
+                    Your answer
+                  </p>
+                  <p className="mt-1.5 text-[0.875rem] font-semibold uppercase tabular-nums text-ink">
+                    {q.userAnswer ?? "No answer"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-2.5">
+                  <p className="eyebrow text-emerald-700">Correct answer</p>
+                  <p className="mt-1.5 text-[0.875rem] font-semibold uppercase tabular-nums text-ink">
+                    {q.correctAnswer}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
+
           {q.solution && (
-            <div className="bg-white rounded-xl border border-slate-100 px-3 py-2.5">
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                Explanation
-              </p>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                <LessonContent content={q.solution} />
-              </p>
+            <div className="mt-2 rounded-xl border border-rule bg-well px-4 py-3">
+              <p className="eyebrow eyebrow-quiet">Why</p>
+              <div className="mt-1.5">
+                <LessonContent content={q.solution} compact />
+              </div>
             </div>
           )}
         </div>
       )}
-    </div>
+    </li>
   );
 }
 
@@ -154,62 +199,65 @@ function SubjectSection({
 }) {
   const [open, setOpen] = useState(true);
   const total = group.questions.length;
-  const pct = Math.round((correct / total) * 100);
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <section className="overflow-hidden rounded-2xl border border-rule bg-sheet">
       <button
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50/50 transition-colors"
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-well/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
-        <div className="flex items-center gap-3 min-w-0">
-          <div>
-            <p className="text-sm font-bold text-slate-800 text-left">
-              {group.subject}
-            </p>
-            <div className="flex items-center gap-3 text-xs text-slate-400 mt-0.5">
-              <span className="text-emerald-600 font-semibold">
-                {correct} correct
-              </span>
-              <span className="text-rose-500">{incorrect} wrong</span>
-              <span className="text-slate-400">{skipped} skipped</span>
-            </div>
-          </div>
+        <div className="min-w-0">
+          <p className="text-[0.9375rem] font-semibold tracking-[-0.01em] text-ink">
+            {group.subject}
+          </p>
+          <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-[0.75rem] tabular-nums">
+            <span className="font-medium text-emerald-700">
+              {correct} correct
+            </span>
+            <span className="text-rose-700">{incorrect} wrong</span>
+            <span className="text-ink-quiet">{skipped} skipped</span>
+          </p>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <span className={cn("text-lg font-bold", scoreColor(pct))}>
+        <div className="flex shrink-0 items-center gap-3">
+          <span className="text-[0.75rem] tabular-nums text-ink-quiet">
+            {correct}/{total}
+          </span>
+          <span
+            className={cn(
+              "text-[1.125rem] font-semibold tabular-nums tracking-[-0.02em]",
+              scoreColor(pct),
+            )}
+          >
             {pct}%
           </span>
-          {open ? (
-            <ChevronUp size={14} className="text-slate-400" />
-          ) : (
-            <ChevronDown size={14} className="text-slate-400" />
-          )}
+          <ChevronDown
+            size={14}
+            className={cn(
+              "text-ink-quiet transition-transform",
+              open && "rotate-180",
+            )}
+            aria-hidden="true"
+          />
         </div>
       </button>
 
-      {/* Score bar */}
-      <div className="h-1 bg-slate-100">
+      {/* Correct proportion, one rule */}
+      <div className="h-1 bg-well">
         <div
-          className={cn(
-            "h-full transition-all duration-700",
-            pct >= 80
-              ? "bg-emerald-400"
-              : pct >= 60
-                ? "bg-amber-400"
-                : "bg-rose-400",
-          )}
+          className="h-full bg-emerald-500"
           style={{ width: `${pct}%` }}
+          aria-hidden="true"
         />
       </div>
 
       {open && (
-        <div>
+        <ul className="border-t border-rule">
           {group.questions.map((q, idx) => (
             <QuestionRow key={q.questionId} q={q} idx={idx} />
           ))}
-        </div>
+        </ul>
       )}
     </section>
   );
@@ -225,14 +273,31 @@ export default function ResultsPage() {
 
   if (!result) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-slate-500">
-        <p>No results found.</p>
-        <Link
-          href="/dashboard"
-          className="text-sm font-semibold text-primary-600 hover:underline"
-        >
-          Back to Dashboard
-        </Link>
+      <div className="flex min-h-screen items-center justify-center bg-paper px-6 py-12">
+        <div className="w-full max-w-md rounded-3xl border border-rule bg-sheet p-8">
+          <p className="eyebrow text-marker-ink">Nothing to mark</p>
+          <h1 className="mt-3 text-[1.375rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
+            This marked paper is no longer here.
+          </h1>
+          <p className="mt-2 text-[0.875rem] leading-6 text-ink-quiet">
+            A result only lives in this tab after you hand a paper in. Your past
+            scores are still in the mark book.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 border-t border-rule pt-6 sm:flex-row">
+            <Link
+              href="/dashboard"
+              className="inline-flex h-10 items-center justify-center rounded-xl bg-exam px-5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge"
+            >
+              Open mark book
+            </Link>
+            <Link
+              href="/setup"
+              className="inline-flex h-10 items-center justify-center rounded-xl border border-rule bg-sheet px-5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
+            >
+              Sit a paper
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -240,150 +305,199 @@ export default function ResultsPage() {
   const totalCorrect = result.correct.reduce((a, c) => a + c.count, 0);
   const totalIncorrect = result.incorrect.reduce((a, c) => a + c.count, 0);
   const totalSkipped = result.skipped.reduce((a, c) => a + c.count, 0);
-  const scorePct = Math.round((totalCorrect / result.total) * 100);
+  const scorePct =
+    result.total > 0 ? Math.round((totalCorrect / result.total) * 100) : 0;
+  const circumference = 2 * Math.PI * 54;
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.01_265)] pt-20 pb-16">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        {/* Score hero */}
-        <div className="bg-linear-to-br from-slate-900 to-slate-800 rounded-3xl overflow-hidden shadow-xl mb-6">
-          <div className="px-8 py-8 flex flex-col sm:flex-row items-center gap-8">
-            {/* Ring */}
-            <div className="relative shrink-0 flex items-center justify-center w-32 h-32">
-              <svg
-                className="w-32 h-32 -rotate-90"
-                viewBox="0 0 120 120"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="54"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.1)"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="54"
-                  fill="none"
-                  stroke={scoreRingColor(scorePct)}
-                  strokeWidth="8"
-                  strokeDasharray={`${(scorePct / 100) * 339.3} 339.3`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute text-center">
-                <p className="text-3xl font-bold text-white">{scorePct}%</p>
-                <p className="text-[10px] text-white/50 font-semibold uppercase">
-                  {scoreLabel(scorePct)}
-                </p>
-              </div>
+    <div className="min-h-screen bg-paper pb-16">
+      <div className="mx-auto max-w-3xl px-4 pt-8 sm:px-6 sm:pt-10">
+        <h1 className="sr-only">Your marked paper</h1>
+        {/* Toolbar */}
+        <div className="mb-6 flex items-center justify-between border-b border-rule pb-4">
+          <p className="eyebrow eyebrow-quiet">Your paper, returned</p>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold text-ink-quiet transition-colors hover:text-marker-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+          >
+            <ArrowLeft size={13} aria-hidden="true" />
+            Mark book
+          </Link>
+        </div>
+
+        {/* Score slab */}
+        <div className="relative overflow-hidden rounded-3xl bg-exam">
+          <div
+            className="pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          >
+            <div className="printed-grid-dark absolute inset-0" />
+            <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-primary-500/20 blur-3xl" />
+          </div>
+
+          <div className="relative border-b border-white/10 px-6 pt-6 pb-5 sm:px-8">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <p className="eyebrow text-primary-300">Session complete</p>
+              <p className="text-[0.75rem] tabular-nums text-white/55">
+                {formatTime(result.timeTaken)} used
+              </p>
             </div>
 
-            {/* Stats */}
-            <div className="flex-1 w-full">
-              <p className="text-white/50 text-xs uppercase tracking-widest font-semibold mb-1">
-                Session Complete
-              </p>
-              <p className="text-white text-sm mb-4">
-                {totalCorrect} of {result.total} questions correct
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  {
-                    label: "Correct",
-                    value: totalCorrect,
-                    color: "text-emerald-400",
-                  },
-                  {
-                    label: "Wrong",
-                    value: totalIncorrect,
-                    color: "text-rose-400",
-                  },
-                  {
-                    label: "Skipped",
-                    value: totalSkipped,
-                    color: "text-slate-400",
-                  },
-                ].map((s) => (
-                  <div
-                    key={s.label}
-                    className="bg-white/5 rounded-xl p-2.5 text-center"
-                  >
-                    <p className={cn("text-xl font-bold", s.color)}>
-                      {s.value}
-                    </p>
-                    <p className="text-[10px] text-white/40 font-medium">
-                      {s.label}
-                    </p>
-                  </div>
-                ))}
+            <div className="mt-5 grid items-center gap-7 sm:grid-cols-[9.5rem_1fr] sm:gap-9">
+              {/* Score mark — neutral arc, no colour verdict */}
+              <div className="relative mx-auto h-36 w-36 sm:mx-0">
+                <svg
+                  className="h-36 w-36 -rotate-90"
+                  viewBox="0 0 120 120"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="54"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.12)"
+                    strokeWidth="6"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="54"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.85)"
+                    strokeWidth="6"
+                    strokeDasharray={`${(scorePct / 100) * circumference} ${circumference}`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <p className="text-[2.5rem] font-semibold leading-none tabular-nums tracking-[-0.04em] text-white">
+                    {scorePct}
+                    <span className="text-[1.125rem] font-medium text-white/50">
+                      %
+                    </span>
+                  </p>
+                  <p className="eyebrow mt-2 text-white/55">Marked</p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[1.375rem] font-semibold leading-snug tracking-[-0.02em] text-white">
+                  {totalCorrect} of {result.total} correct.
+                </p>
+                <p className="mt-1 text-[0.8125rem] leading-6 text-white/50">
+                  {result.breakdown.length} subject
+                  {result.breakdown.length === 1 ? "" : "s"}, marked question by
+                  question. Wrong and skipped answers are open below.
+                </p>
+
+                <dl className="mt-5 grid grid-cols-3 border-t border-white/15 pt-4">
+                  {[
+                    {
+                      label: "Correct",
+                      value: totalCorrect,
+                      className: "text-emerald-400",
+                    },
+                    {
+                      label: "Wrong",
+                      value: totalIncorrect,
+                      className: "text-rose-400",
+                    },
+                    {
+                      label: "Skipped",
+                      value: totalSkipped,
+                      className: "text-white/50",
+                    },
+                  ].map((s, index) => (
+                    <div
+                      key={s.label}
+                      className={cn(index > 0 && "border-l border-white/15 pl-4")}
+                    >
+                      <dd
+                        className={cn(
+                          "text-[1.25rem] font-semibold leading-none tabular-nums",
+                          s.className,
+                        )}
+                      >
+                        {s.value}
+                      </dd>
+                      <dt className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-white/55">
+                        {s.label}
+                      </dt>
+                    </div>
+                  ))}
+                </dl>
               </div>
             </div>
           </div>
 
-          {/* Meta row */}
-          <div className="border-t border-white/10 px-8 py-3 flex flex-wrap gap-6 text-xs text-white/40">
-            <span className="flex items-center gap-1.5">
-              <Clock size={12} aria-hidden="true" />
-              Time: {formatTime(result.timeTaken)}
+          <div className="relative flex flex-wrap gap-x-6 gap-y-2 px-6 py-3.5 text-[0.6875rem] text-white/55 sm:px-8">
+            <span className="flex items-center gap-1.5 tabular-nums">
+              <Clock size={11} aria-hidden="true" />
+              {formatTime(result.timeTaken)}
             </span>
-            <span className="flex items-center gap-1.5">
-              <BookOpen size={12} aria-hidden="true" />
+            <span className="flex items-center gap-1.5 tabular-nums">
+              <BookOpen size={11} aria-hidden="true" />
               {result.total} questions
             </span>
-            <span className="flex items-center gap-1.5">
-              <Target size={12} aria-hidden="true" />
+            <span className="flex items-center gap-1.5 tabular-nums">
+              <Target size={11} aria-hidden="true" />
               {result.breakdown.length} subject
-              {result.breakdown.length > 1 ? "s" : ""}
+              {result.breakdown.length === 1 ? "" : "s"}
             </span>
           </div>
         </div>
 
-        {/* Per-subject breakdown */}
-        <div className="space-y-4 mb-6">
-          <h2 className="text-sm font-bold text-slate-600 uppercase tracking-widest px-1">
-            Review by Subject
-          </h2>
-          {result.breakdown.map((group) => {
-            const correct =
-              result.correct.find((c) => c.subject === group.subject)?.count ??
-              0;
-            const incorrect =
-              result.incorrect.find((i) => i.subject === group.subject)
-                ?.count ?? 0;
-            const skipped =
-              result.skipped.find((s) => s.subject === group.subject)?.count ??
-              0;
-            return (
-              <SubjectSection
-                key={group.subject}
-                group={group}
-                correct={correct}
-                incorrect={incorrect}
-                skipped={skipped}
-              />
-            );
-          })}
+        {/* Marking */}
+        <div className="mt-9">
+          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-3">
+            <h2 className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
+              The marking
+            </h2>
+            <p className="text-[0.75rem] tabular-nums text-ink-quiet">
+              {totalIncorrect} wrong, {totalSkipped} skipped
+            </p>
+          </div>
+
+          <div className="mt-4 space-y-4">
+            {result.breakdown.map((group) => {
+              const correct =
+                result.correct.find((c) => c.subject === group.subject)
+                  ?.count ?? 0;
+              const incorrect =
+                result.incorrect.find((i) => i.subject === group.subject)
+                  ?.count ?? 0;
+              const skipped =
+                result.skipped.find((s) => s.subject === group.subject)?.count ??
+                0;
+              return (
+                <SubjectSection
+                  key={group.subject}
+                  group={group}
+                  correct={correct}
+                  incorrect={incorrect}
+                  skipped={skipped}
+                />
+              );
+            })}
+          </div>
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/dashboard"
-            className="flex-1 py-3 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors text-center flex items-center justify-center gap-2"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-rule bg-sheet text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
           >
             <BookOpen size={14} aria-hidden="true" />
-            Back to Dashboard
+            Back to mark book
           </Link>
           <Link
             href="/setup"
-            className="flex-1 py-3 rounded-2xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge active:scale-[0.98]"
           >
             <RotateCcw size={14} aria-hidden="true" />
-            Try Again
+            Sit another paper
           </Link>
         </div>
       </div>

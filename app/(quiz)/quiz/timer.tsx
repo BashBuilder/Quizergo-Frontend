@@ -1,68 +1,102 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Clock } from "lucide-react";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Clock, TriangleAlert } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface TimerType {
+  /** Deadline as an epoch timestamp in milliseconds. `null` means untimed. */
+  deadline: number | null;
+  /** True once the paper has been handed in (manually or by the clock). */
   submitted: boolean;
-  setSubmitted: Dispatch<SetStateAction<boolean>>;
-  totalTime: number;
+  /** Called exactly once when the deadline is reached. */
+  onExpire: () => void;
 }
 
-const Timer = ({ submitted, totalTime, setSubmitted }: TimerType) => {
-  const [timeLeft, setTimeLeft] = useState(totalTime);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+const Timer = ({ deadline, submitted, onExpire }: TimerType) => {
+  const [now, setNow] = useState(() => Date.now());
+  const expiredRef = useRef(false);
+  const onExpireRef = useRef(onExpire);
+
+  // Keep the callback fresh without re-arming the countdown.
+  useEffect(() => {
+    onExpireRef.current = onExpire;
+  }, [onExpire]);
+
+  // Derive remaining time from the deadline, so background throttling,
+  // slow devices and refreshes cannot make the clock drift.
+  useEffect(() => {
+    if (deadline === null || submitted) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [deadline, submitted]);
+
+  const remaining =
+    deadline === null ? null : Math.max(0, Math.ceil((deadline - now) / 1000));
 
   useEffect(() => {
-    if (submitted) return;
-    timerRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          clearInterval(timerRef.current!);
-          setSubmitted(true);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current!);
-  }, [submitted, setSubmitted]);
+    if (submitted || deadline === null || remaining === null) return;
+    if (remaining > 0 || expiredRef.current) return;
+    expiredRef.current = true;
+    onExpireRef.current();
+  }, [deadline, remaining, submitted]);
 
-  const mins = Math.floor(timeLeft / 60);
-  const secs = timeLeft % 60;
-  const timerUrgent = timeLeft <= 5 * 60;
+  if (deadline === null) {
+    return (
+      <div
+        className="flex shrink-0 items-center gap-2 rounded-lg border border-rule bg-well px-3 py-1.5 text-[0.8125rem] font-semibold text-ink-quiet"
+        role="timer"
+        aria-label="No time limit on this paper"
+      >
+        <Clock size={13} aria-hidden="true" />
+        Untimed
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    if (submitted) {
-      clearInterval(timerRef.current!);
-    }
-  }, [submitted]);
+  const safeRemaining = remaining ?? 0;
+  const mins = Math.floor(safeRemaining / 60);
+  const secs = safeRemaining % 60;
+  const urgent = safeRemaining <= 5 * 60;
+
+  // Announce only at the thresholds, never every second.
+  const announcement =
+    safeRemaining > 0 && safeRemaining <= 60
+      ? "One minute remaining."
+      : safeRemaining > 60 && safeRemaining <= 300
+        ? "Five minutes remaining."
+        : "";
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-2 px-3 py-1.5 rounded-xl font-mono text-sm font-bold transition-colors shrink-0",
-        timerUrgent
-          ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200"
-          : "bg-slate-100 text-slate-700",
-      )}
-      aria-label={`Time remaining: ${mins} minutes ${secs} seconds`}
-      aria-live="polite"
-    >
-      <Clock
-        size={14}
-        className={timerUrgent ? "animate-pulse" : ""}
-        aria-hidden="true"
-      />
-      {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
-    </div>
+    <>
+      <div
+        className={cn(
+          "flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-[0.8125rem] font-semibold tabular-nums transition-colors",
+          urgent
+            ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200"
+            : "border border-rule bg-well text-ink-soft",
+        )}
+        role="timer"
+        aria-live="off"
+        aria-label={`Time remaining: ${mins} minutes ${secs} seconds${
+          urgent ? ", five minutes or less" : ""
+        }`}
+      >
+        {urgent ? (
+          <TriangleAlert
+            size={13}
+            className="animate-pulse"
+            aria-hidden="true"
+          />
+        ) : (
+          <Clock size={13} aria-hidden="true" />
+        )}
+        {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+      </div>
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </span>
+    </>
   );
 };
 

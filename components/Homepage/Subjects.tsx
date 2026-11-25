@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
-import PageWrapper from "../global/PageWrapper";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { ArrowRight, RotateCw } from "lucide-react";
 import { useGetSubjects } from "@/services/question.service";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -12,127 +11,158 @@ interface SubjectsProps {
 }
 
 function Subjects({ length }: SubjectsProps) {
-  const { data: subjects, isLoading, error } = useGetSubjects();
+  const {
+    data: subjects,
+    isLoading,
+    error,
+    refetch,
+    isFetching,
+  } = useGetSubjects();
   const subjectsList = length ? subjects?.slice(0, length) : subjects;
-
-  if (error) {
-    return (
-      <div className="w-full">
-        {/* SUBJECTS SECTION */}
-        <PageWrapper className="bg-slate-900">
-          <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-400">
-                Subjects Covered
-              </p>
-
-              <h2 className="mb-4 text-2xl font-bold tracking-tight text-white md:text-4xl">
-                All your exam subjects.
-              </h2>
-
-              <p className="max-w-2xl leading-7 text-slate-300">
-                From sciences to arts and commercial subjects, everything you
-                need is available in one place.
-              </p>
-            </div>
-
-            {/* error display here generic */}
-
-            <div className="flex items-center justify-center py-10">
-              <h2 className="text-2xl font-bold tracking-tight text-white md:text-4xl">
-                Error loading subjects.
-              </h2>
-            </div>
-          </div>
-        </PageWrapper>
-      </div>
-    );
-  }
+  const count = subjectsList?.length ?? 0;
 
   return (
-    <div className="w-full">
-      {/* SUBJECTS SECTION */}
-      <PageWrapper className="bg-slate-900">
-        <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+    <div className="bg-paper">
+      <div className="mx-auto max-w-7xl px-6 pt-12 pb-20">
+        <div className="grid gap-8 border-b border-rule pb-10 md:grid-cols-[1.15fr_0.85fr] md:items-end">
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-primary-400">
-              Subjects Covered
-            </p>
-
-            <h2 className="mb-4 text-2xl font-bold tracking-tight text-white md:text-4xl">
-              All your exam subjects.
-            </h2>
-
-            <p className="max-w-2xl leading-7 text-slate-300">
-              From sciences to arts and commercial subjects, everything you need
-              is available in one place.
-            </p>
+            <p className="eyebrow text-marker-ink">Subject index</p>
+            <h1 className="mt-4 max-w-2xl text-[2.25rem] font-semibold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[2.75rem] lg:text-[3.25rem]">
+              Every paper on your timetable.
+            </h1>
           </div>
 
-          {length && !isLoading && (
-            <Link href="/subjects">
-              <Button className="w-fit text-sm rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-white transition hover:bg-white/10">
-                View all subjects
-              </Button>
-            </Link>
-          )}
+          <div className="md:justify-self-end">
+            <p className="max-w-sm text-[0.9375rem] leading-7 text-ink-quiet">
+              Sciences, arts and commercial subjects. Pick one to start a paper
+              with it already selected.
+            </p>
+            {!isLoading && !error && (
+              <p className="mt-4 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-quiet">
+                <span className="tabular-nums text-ink">{count}</span> subjects
+                on the index
+              </p>
+            )}
+          </div>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {isLoading &&
-            Array.from({ length: 4 }).map((_, index) => (
+        {isLoading && (
+          <div className="mt-10 divide-y divide-rule border-y border-rule">
+            {Array.from({ length: 8 }).map((_, index) => (
               <div
                 key={index}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 backdrop-blur-sm"
+                className="grid grid-cols-[1fr_auto] items-center gap-6 py-5"
+                aria-hidden="true"
               >
-                {/* Image skeleton */}
-                <Skeleton className="h-90 w-full rounded-none bg-white/10" />
-
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
-
-                {/* Content */}
-                <div className="absolute bottom-0 w-full p-6">
-                  <Skeleton className="h-7 w-3/4 rounded-lg bg-white/20" />
-
-                  <Skeleton className="mt-3 h-4 w-1/3 rounded-md bg-primary-400/30" />
+                <div className="flex items-center gap-5">
+                  <Skeleton className="h-14 w-14 rounded-xl bg-well" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-40 rounded-sm bg-well" />
+                    <Skeleton className="h-3 w-64 rounded-sm bg-well" />
+                  </div>
                 </div>
-
-                {/* Shine effect */}
-                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-linear-to-r from-transparent via-white/10 to-transparent" />
+                <Skeleton className="h-3 w-16 rounded-sm bg-well" />
               </div>
             ))}
+          </div>
+        )}
 
-          {!isLoading &&
-            subjectsList &&
-            subjectsList.map((subject, index) => (
-              <Link
-                key={index}
-                href={`/setup/?subject=${subject.apiKey}`}
-                className="group relative overflow-hidden rounded-3xl pointer"
+        {error && (
+          <div className="mt-10 rounded-3xl border border-rule bg-sheet px-6 py-12 text-center">
+            <p className="text-sm font-semibold text-ink">
+              The subject index didn&apos;t load.
+            </p>
+            <p className="mx-auto mt-1.5 max-w-sm text-[0.8125rem] leading-6 text-ink-quiet">
+              Check your connection and try again.
+            </p>
+            <button
+              type="button"
+              onClick={() => void refetch()}
+              disabled={isFetching}
+              aria-busy={isFetching}
+              className="mt-5 inline-flex h-9 items-center gap-2 rounded-lg border border-rule bg-sheet px-4 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well disabled:opacity-50"
+            >
+              <RotateCw
+                size={13}
+                className={isFetching ? "animate-spin" : undefined}
+                aria-hidden="true"
+              />
+              {isFetching ? "Trying again…" : "Try again"}
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !error && subjectsList && subjectsList.length === 0 && (
+          <div className="mt-10 rounded-3xl border border-rule bg-sheet px-6 py-12 text-center">
+            <p className="text-sm font-semibold text-ink">
+              No subjects are listed yet.
+            </p>
+            <p className="mx-auto mt-1.5 max-w-sm text-[0.8125rem] leading-6 text-ink-quiet">
+              The index is being updated. Try again in a moment.
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !error && subjectsList && subjectsList.length > 0 && (
+          <ol className="mt-10 border-y border-rule">
+            {subjectsList.map((subject, index) => (
+              <li
+                key={subject.apiKey ?? subject.id ?? index}
+                className="border-b border-rule last:border-b-0"
               >
-                <img
-                  src={subject.image}
-                  alt={subject.name}
-                  loading="lazy"
-                  className="h-90 w-full object-cover transition duration-500 group-hover:scale-110"
-                />
+                <Link
+                  href={`/setup/?subject=${subject.apiKey}`}
+                  className="group grid grid-cols-[auto_1fr_auto] items-center gap-x-5 gap-y-3 py-5 transition-colors hover:bg-well/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:grid-cols-[2.25rem_3.5rem_1fr_auto] sm:gap-x-6"
+                >
+                  <span
+                    className="hidden text-[0.6875rem] font-semibold tabular-nums text-ink-quiet sm:block"
+                    aria-hidden="true"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
 
-                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
+                  {subject.image ? (
+                    <img
+                      src={subject.image}
+                      alt=""
+                      loading="lazy"
+                      className="h-14 w-14 rounded-xl border border-rule object-cover"
+                    />
+                  ) : (
+                    <span
+                      className="flex h-14 w-14 items-center justify-center rounded-xl border border-marker-line bg-marker-wash text-sm font-semibold text-marker-ink"
+                      aria-hidden="true"
+                    >
+                      {subject.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
 
-                <div className="absolute bottom-0 p-6">
-                  {/* <div className="mb-2 text-3xl">{subject.emoji}</div> */}
-                  <h3 className="text-2xl font-bold text-white">
-                    {subject.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-primary-300">
-                    {subject.questions}
-                  </p>
-                </div>
-              </Link>
+                  <span className="min-w-0">
+                    <span className="block text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink transition-colors group-hover:text-marker-ink">
+                      {subject.name}
+                    </span>
+                    <span className="mt-1 line-clamp-1 block text-[0.8125rem] leading-6 text-ink-quiet">
+                      {subject.description?.trim() ||
+                        "Past questions with a timed session and full marking."}
+                    </span>
+                  </span>
+
+                  <span className="col-start-3 row-start-1 flex items-center gap-4 justify-self-end sm:col-start-4 sm:row-start-auto">
+                    <span className="hidden text-[0.8125rem] tabular-nums text-ink-quiet sm:block">
+                      {subject.questions || "Past questions"}
+                    </span>
+                    <ArrowRight
+                      size={15}
+                      className="text-ink-quiet/50 transition-colors group-hover:text-marker-ink"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Link>
+              </li>
             ))}
-        </div>
-      </PageWrapper>
+          </ol>
+        )}
+      </div>
     </div>
   );
 }

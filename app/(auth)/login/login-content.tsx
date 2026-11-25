@@ -2,14 +2,15 @@
 
 import { BookOpen, CheckCircle2, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/auth";
+import AuthShell from "../auth-shell";
+import InputField from "../Field";
 
 const schema = z.object({
   email: z.email("Invalid email address"),
@@ -55,195 +56,130 @@ export function LoginContent() {
   const passwordErrorId = "password-error";
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-slate-950 text-slate-100">
-      {/* Decorative background — hidden from assistive tech */}
-      <Image
-        width={1920}
-        height={1080}
-        alt=""
-        role="presentation"
-        src="/assets/120493 (1).jpg"
-        priority
-        className="absolute inset-0 h-full w-full object-cover opacity-20"
-      />
+    <AuthShell
+      eyebrow="Exam practice, marked"
+      headline="Pick up where the last paper ended."
+      blurb="Sign in to sit another timed paper and keep every marked result in one place."
+    >
+      <p className="eyebrow text-marker-ink">Your account</p>
+      <h1 className="mt-2 text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-ink">
+        Sign in
+      </h1>
+      <p className="mt-1.5 text-[0.8125rem] leading-6 text-ink-quiet">
+        Use the email address your account was registered with.
+      </p>
 
-      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center px-6 py-12">
-        <div className="grid w-full gap-10 lg:grid-cols-[1fr_1fr]">
-          {/* Left panel — hidden on mobile */}
-          <section
+      {justVerified && (
+        <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5">
+          <CheckCircle2
+            size={15}
+            className="shrink-0 text-emerald-700"
             aria-hidden="true"
-            className="relative max-md:hidden overflow-hidden rounded-[2rem] bg-slate-900/90 p-10 backdrop-blur-xl"
-          >
-            <div className="relative z-10 flex h-full flex-col justify-between gap-8">
-              <div>
-                <h2 className="mt-8 max-w-xl text-2xl font-semibold tracking-tight text-white">
-                  Your learning hub is one login away.
-                </h2>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
-                  Sign in to access quizzes, track your progress, and continue
-                  the streak you built for your next assessment.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Login form */}
-          <Card className="backdrop-blur-sm bg-slate-950/5 max-w-md w-full mx-auto">
-            <CardHeader>
-              <CardTitle className="text-2xl text-white">Sign in</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              {justVerified && (
-                <div className="mb-4 flex items-center gap-2 rounded-2xl bg-emerald-500/10 px-4 py-3 ring-1 ring-emerald-400/20">
-                  <CheckCircle2
-                    size={16}
-                    className="text-emerald-400 shrink-0"
-                    aria-hidden="true"
-                  />
-                  <p className="text-sm text-emerald-200">
-                    Email verified — log in to continue.
-                  </p>
-                </div>
-              )}
-
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-6"
-                noValidate
-                aria-label="Login form"
-              >
-                <div className="space-y-2">
-                  <label
-                    className="block text-sm font-medium text-slate-200"
-                    htmlFor="email"
-                  >
-                    Email or Username
-                  </label>
-                  <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-cyan-400 focus-within:ring-1 focus-within:ring-cyan-400/20">
-                    <BookOpen
-                      className="text-primary shrink-0"
-                      size={18}
-                      aria-hidden="true"
-                    />
-                    <input
-                      id="email"
-                      {...register("email")}
-                      placeholder="studentid@school.edu"
-                      className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                      type="text"
-                      autoComplete="username"
-                      aria-invalid={!!errors.email}
-                      aria-describedby={errors.email ? emailErrorId : undefined}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p
-                      id={emailErrorId}
-                      role="alert"
-                      className="text-sm text-red-300 px-1"
-                    >
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    className="block text-sm font-medium text-slate-200"
-                    htmlFor="password"
-                  >
-                    Password
-                  </label>
-                  <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-cyan-400 focus-within:ring-1 focus-within:ring-cyan-400/20">
-                    <Lock
-                      className="text-slate-400 shrink-0"
-                      size={18}
-                      aria-hidden="true"
-                    />
-                    <input
-                      id="password"
-                      {...register("password")}
-                      placeholder="••••••••"
-                      className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                      type="password"
-                      autoComplete="current-password"
-                      aria-invalid={!!errors.password}
-                      aria-describedby={
-                        errors.password ? passwordErrorId : undefined
-                      }
-                    />
-                  </div>
-                  {errors.password && (
-                    <p
-                      id={passwordErrorId}
-                      role="alert"
-                      className="text-sm text-red-300 px-1"
-                    >
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Server-side error */}
-                {serverError && (
-                  <p
-                    role="alert"
-                    className="rounded-3xl bg-red-500/10 text-center px-4 py-2 text-sm text-red-200 ring-1 ring-red-400/20"
-                  >
-                    {serverError}
-                  </p>
-                )}
-
-                <Button
-                  type="submit"
-                  className="w-full rounded-3xl py-5 text-sm font-semibold"
-                  disabled={isSubmitting}
-                  aria-busy={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2
-                        className="animate-spin mr-2"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                      <span>Signing in…</span>
-                    </>
-                  ) : (
-                    "Sign in"
-                  )}
-                </Button>
-
-                {/* forgot password redirect */}
-                <div>
-                  <p className="text-right text-sm text-slate-500">
-                    <a
-                      href="/forgot-password"
-                      className="text-orange-400 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
-                  </p>
-                </div>
-
-                {/* register redirect */}
-                <div>
-                  <p className="text-center text-sm text-slate-500">
-                    Don&apos;t have an account?
-                    <a
-                      href="/register"
-                      className="text-orange-400 hover:underline"
-                    >
-                      Sign up
-                    </a>
-                  </p>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+          />
+          <p className="text-[0.75rem] leading-5 text-emerald-800">
+            Email verified. Sign in to sit your first paper.
+          </p>
         </div>
-      </div>
-    </main>
+      )}
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-6 space-y-4"
+        noValidate
+        aria-label="Login form"
+      >
+        <InputField
+          label="Email"
+          htmlFor="email"
+          error={errors.email?.message}
+        >
+          <BookOpen
+            className="shrink-0 text-marker-ink"
+            size={16}
+            aria-hidden="true"
+          />
+          <input
+            id="email"
+            {...register("email")}
+            placeholder="you@example.com"
+            className="w-full bg-transparent text-[0.875rem] text-ink outline-none placeholder:text-ink-quiet"
+            type="email"
+            autoComplete="username"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? emailErrorId : undefined}
+          />
+        </InputField>
+
+        <InputField
+          label="Password"
+          htmlFor="password"
+          error={errors.password?.message}
+        >
+          <Lock
+            className="shrink-0 text-ink-quiet"
+            size={16}
+            aria-hidden="true"
+          />
+          <input
+            id="password"
+            {...register("password")}
+            placeholder="••••••••"
+            className="w-full bg-transparent text-[0.875rem] text-ink outline-none placeholder:text-ink-quiet"
+            type="password"
+            autoComplete="current-password"
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? passwordErrorId : undefined}
+          />
+        </InputField>
+
+        {/* Server-side error */}
+        {serverError && (
+          <p
+            role="alert"
+            className="rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-[0.75rem] leading-5 text-rose-700"
+          >
+            {serverError}
+          </p>
+        )}
+
+        <Button
+          type="submit"
+          className="h-11 w-full rounded-xl text-[0.8125rem] font-semibold"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2
+                className="mr-2 animate-spin"
+                size={15}
+                aria-hidden="true"
+              />
+              <span>Signing in…</span>
+            </>
+          ) : (
+            "Sign in"
+          )}
+        </Button>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[0.75rem]">
+          <Link
+            href="/forgot-password"
+            className="font-medium text-ink-quiet underline decoration-rule underline-offset-4 transition-colors hover:text-marker-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          >
+            Forgot your password?
+          </Link>
+          <p className="text-ink-quiet">
+            No account?{" "}
+            <Link
+              href="/register"
+              className="font-semibold text-marker-ink underline decoration-marker-line underline-offset-4 transition-colors hover:decoration-marker focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            >
+              Create one
+            </Link>
+          </p>
+        </div>
+      </form>
+    </AuthShell>
   );
 }

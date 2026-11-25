@@ -7,12 +7,11 @@ import {
 } from "@/components/ui/input-otp";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
 import { useEffect, useId, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/auth";
+import AuthShell from "../auth-shell";
 
 const RESEND_COOLDOWN = 60;
 
@@ -75,125 +74,105 @@ export function ConfirmOTPContent() {
   };
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-slate-950 text-slate-100">
-      <Image
-        width={1920}
-        height={1080}
-        alt=""
-        role="presentation"
-        src="/assets/120493 (1).jpg"
-        priority
-        className="absolute inset-0 h-full w-full object-cover opacity-20"
-      />
+    <AuthShell
+      eyebrow="Check your inbox"
+      headline="One code, then the paper."
+      blurb="Verifying the address keeps your results attached to the right account."
+    >
+      <p className="eyebrow text-marker-ink">Verification</p>
+      <h1 className="mt-2 text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-ink">
+        Enter the six-digit code
+      </h1>
+      {email && (
+        <p className="mt-1.5 text-[0.8125rem] leading-6 text-ink-quiet">
+          Sent to{" "}
+          <span className="font-semibold text-ink-soft">{email}</span>
+        </p>
+      )}
 
-      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center px-6 py-12">
-        <div className="grid w-full">
-          {/* OTP form */}
-          <Card className="backdrop-blur-sm bg-slate-950/5 max-w-sm w-full mx-auto">
-            <CardHeader>
-              <CardTitle className="text-2xl text-center text-white">
-                Confirm OTP
-              </CardTitle>
-              {email && (
-                <p className="text-center text-sm text-slate-400 mt-1">
-                  Enter the 6-digit code sent to{" "}
-                  <span className="text-slate-200 font-medium">{email}</span>
-                </p>
-              )}
-            </CardHeader>
+      <form
+        className="mt-6"
+        noValidate
+        aria-label="Confirm OTP form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void onSubmit();
+        }}
+      >
+        <label
+          htmlFor={id}
+          className="mb-2 block text-[0.8125rem] font-semibold text-ink-soft"
+        >
+          Code
+        </label>
 
-            <CardContent>
-              <form
-                className="flex flex-col items-center gap-6 "
-                noValidate
-                aria-label="Confirm OTP form"
-              >
-                <InputOTP
-                  id={id}
-                  maxLength={6}
-                  pattern={REGEXP_ONLY_DIGITS}
-                  value={otp}
-                  onChange={setOtp}
-                  className="text-white"
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot
-                      index={0}
-                      className="text-white mx-1 rounded-md border  "
-                    />
-                    <InputOTPSlot
-                      index={1}
-                      className="text-white mx-1 rounded-md border  "
-                    />
-                    <InputOTPSlot
-                      index={2}
-                      className="text-white mx-1 rounded-md border  "
-                    />
-                    <InputOTPSlot
-                      index={3}
-                      className="text-white mx-1 rounded-md border  "
-                    />
-                    <InputOTPSlot
-                      index={4}
-                      className="text-white mx-1 rounded-md border  "
-                    />
-                    <InputOTPSlot
-                      index={5}
-                      className="text-white mx-1 rounded-md border  "
-                    />
-                  </InputOTPGroup>
-                </InputOTP>
-                {serverError && (
-                  <p
-                    role="alert"
-                    className="rounded-3xl bg-red-500/10 text-center px-4 py-2 text-sm text-red-200 ring-1 ring-red-400/20"
-                  >
-                    {serverError}
-                  </p>
-                )}
-                <Button
-                  type="submit"
-                  className="w-full rounded-3xl py-5 text-sm font-semibold"
-                  disabled={isSubmitting || otp.length < 6}
-                  aria-busy={isSubmitting}
-                  onClick={onSubmit}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2
-                        className="animate-spin mr-2"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                      <span>Submitting ...</span>
-                    </>
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
+        <InputOTP
+          id={id}
+          maxLength={6}
+          pattern={REGEXP_ONLY_DIGITS}
+          value={otp}
+          onChange={setOtp}
+          aria-label="Six-digit verification code"
+          containerClassName="justify-start"
+        >
+          <InputOTPGroup className="gap-1.5">
+            {[0, 1, 2, 3, 4, 5].map((index) => (
+              <InputOTPSlot
+                key={index}
+                index={index}
+                className="h-12 w-9 rounded-xl border border-rule bg-sheet text-[1.0625rem] font-semibold text-ink shadow-none sm:w-11"
+              />
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
 
-                <div className="text-sm text-slate-400">
-                  {cooldown > 0 ? (
-                    <span>
-                      Resend code in {Math.floor(cooldown / 60)}:
-                      {String(cooldown % 60).padStart(2, "0")}
-                    </span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={onResend}
-                      disabled={resending}
-                      className="font-semibold text-orange-400 hover:underline disabled:opacity-50"
-                    >
-                      {resending ? "Resending..." : "Resend code"}
-                    </button>
-                  )}
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+        {serverError && (
+          <p
+            role="alert"
+            className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-[0.75rem] leading-5 text-rose-700"
+          >
+            {serverError}
+          </p>
+        )}
+
+        <Button
+          type="submit"
+          className="mt-5 h-11 w-full rounded-xl text-[0.8125rem] font-semibold"
+          disabled={isSubmitting || otp.length < 6}
+          aria-busy={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2
+                className="mr-2 animate-spin"
+                size={15}
+                aria-hidden="true"
+              />
+              <span>Confirming…</span>
+            </>
+          ) : (
+            "Confirm email"
+          )}
+        </Button>
+
+        <div className="mt-4 border-t border-rule pt-4 text-[0.75rem] text-ink-quiet">
+          {cooldown > 0 ? (
+            <span className="tabular-nums">
+              You can request another code in {Math.floor(cooldown / 60)}:
+              {String(cooldown % 60).padStart(2, "0")}
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={onResend}
+              disabled={resending}
+              className="font-semibold text-marker-ink underline decoration-marker-line underline-offset-4 transition-colors hover:decoration-marker disabled:opacity-50"
+            >
+              {resending ? "Resending…" : "Send another code"}
+            </button>
+          )}
         </div>
-      </div>
-    </main>
+      </form>
+    </AuthShell>
   );
 }

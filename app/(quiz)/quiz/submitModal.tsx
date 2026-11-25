@@ -32,61 +32,60 @@ export default function SubmitModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-exam-deep/50 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Submit quiz confirmation"
     >
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
-        <div className="bg-slate-900 px-6 pt-6 pb-5">
-          <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-3">
-            <Send size={20} className="text-white" aria-hidden="true" />
-          </div>
-          <h2 className="text-xl font-bold text-white">Submit Quiz?</h2>
-          <p className="text-sm text-white/60 mt-1">
-            This action cannot be undone.
+      <div className="w-full max-w-sm overflow-hidden rounded-3xl border border-rule bg-sheet">
+        <div className="border-b border-rule bg-exam px-6 py-5">
+          <p className="eyebrow text-primary-300">Hand in</p>
+          <h2 className="mt-2 text-[1.25rem] font-semibold tracking-[-0.02em] text-white">
+            Submit this paper?
+          </h2>
+          <p className="mt-1 text-[0.8125rem] text-white/50">
+            It cannot be reopened once it is handed in.
           </p>
         </div>
 
         <div className="px-6 py-5">
           {/* Overall stats */}
-          <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-rule">
             {[
               {
                 label: "Answered",
                 value: totalAnswered,
-                color: "text-emerald-600 bg-emerald-50",
               },
               {
                 label: "Skipped",
                 value: unanswered,
-                color:
-                  unanswered > 0
-                    ? "text-rose-600 bg-rose-50"
-                    : "text-slate-600 bg-slate-50",
               },
               {
                 label: "Flagged",
                 value: flagged.size,
-                color:
-                  flagged.size > 0
-                    ? "text-amber-600 bg-amber-50"
-                    : "text-slate-600 bg-slate-50",
               },
-            ].map((s) => (
+            ].map((s, index) => (
               <div
                 key={s.label}
-                className={cn("rounded-xl p-2.5 text-center", s.color)}
+                className={cn(
+                  "px-2 py-3 text-center",
+                  index > 0 && "border-l border-rule",
+                  s.label === "Flagged" && s.value > 0 && "bg-amber-50",
+                )}
               >
-                <p className="text-xl font-bold">{s.value}</p>
-                <p className="text-[11px] font-medium">{s.label}</p>
+                <p className="text-[1.25rem] font-semibold leading-none tabular-nums text-ink">
+                  {s.value}
+                </p>
+                <p className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-quiet">
+                  {s.label}
+                </p>
               </div>
             ))}
           </div>
 
           {/* Per-subject breakdown */}
           {subjects.length > 1 && (
-            <div className="mb-4 space-y-1.5">
+            <div className="mt-4 space-y-2.5">
               {subjects.map((group) => {
                 const answered = Object.keys(
                   answers[group.subject] ?? {},
@@ -95,24 +94,17 @@ export default function SubmitModal({
                 const pct = Math.round((answered / total) * 100);
                 return (
                   <div key={group.subject}>
-                    <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                      <span className="truncate max-w-45 font-medium">
+                    <div className="mb-1 flex items-center justify-between gap-3 text-[0.75rem] text-ink-quiet">
+                      <span className="max-w-45 truncate font-medium">
                         {group.subject}
                       </span>
-                      <span>
+                      <span className="tabular-nums">
                         {answered}/{total}
                       </span>
                     </div>
-                    <div className="h-1 rounded-full bg-slate-100 overflow-hidden">
+                    <div className="h-px overflow-hidden rounded-full bg-well">
                       <div
-                        className={cn(
-                          "h-full rounded-full transition-all",
-                          pct === 100
-                            ? "bg-emerald-400"
-                            : pct > 50
-                              ? "bg-primary-400"
-                              : "bg-amber-400",
-                        )}
+                        className="h-full rounded-full bg-marker"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -123,33 +115,42 @@ export default function SubmitModal({
           )}
 
           {unanswered > 0 && (
-            <p className="text-xs text-amber-600 bg-amber-50 rounded-xl px-3 py-2 mb-4 flex items-center gap-2">
-              <AlertCircle size={13} aria-hidden="true" />
-              You have {unanswered} unanswered question
-              {unanswered > 1 ? "s" : ""}. Are you sure?
+            <p className="mt-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-[0.75rem] leading-5 text-amber-800">
+              <AlertCircle
+                size={13}
+                className="mt-0.5 shrink-0"
+                aria-hidden="true"
+              />
+              {unanswered} question{unanswered > 1 ? "s are" : " is"} still
+              unanswered. They will be marked as skipped.
             </p>
           )}
 
-          <div className="flex gap-3">
+          <div className="mt-5 flex gap-3">
             <button
               onClick={onCancel}
               disabled={isSubmitting}
-              className="flex-1 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50"
+              className="h-10 flex-1 rounded-xl border border-rule bg-sheet text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well disabled:opacity-50"
             >
-              Go Back
+              Go back
             </button>
             <button
               onClick={onConfirm}
               disabled={isSubmitting}
-              className="flex-2 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+              className="flex h-10 flex-[1.6] items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge active:scale-[0.98] disabled:opacity-70"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 size={13} className="animate-spin" /> Submitting…
+                  <Loader2
+                    size={13}
+                    className="animate-spin"
+                    aria-hidden="true"
+                  />{" "}
+                  Submitting…
                 </>
               ) : (
                 <>
-                  <Send size={13} aria-hidden="true" /> Submit Now
+                  <Send size={13} aria-hidden="true" /> Submit paper
                 </>
               )}
             </button>

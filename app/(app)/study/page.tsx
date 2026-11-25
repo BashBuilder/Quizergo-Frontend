@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
 import {
   Search,
   BookOpen,
@@ -10,15 +9,14 @@ import {
   FlaskConical,
   FunctionSquare,
   Layers,
-  Zap,
   Clock,
   Target,
-  TrendingUp,
   ChevronRight,
   Play,
   Star,
   Lock,
   Filter,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -128,73 +126,10 @@ type SortBy = "recent" | "score" | "questions";
 type PracticeMode = "quick" | "full" | "weak";
 
 // ── Config ───────────────────────────────────────────────────────────────────
-const colorMap = {
-  violet: {
-    bg: "bg-violet-50",
-    icon: "bg-violet-100 text-violet-600",
-    badge: "bg-violet-100 text-violet-700",
-    bar: "bg-violet-500",
-    ring: "ring-violet-200",
-    hover: "hover:ring-violet-300",
-    glow: "shadow-violet-100",
-  },
-  blue: {
-    bg: "bg-blue-50",
-    icon: "bg-blue-100 text-blue-600",
-    badge: "bg-blue-100 text-blue-700",
-    bar: "bg-blue-500",
-    ring: "ring-blue-200",
-    hover: "hover:ring-blue-300",
-    glow: "shadow-blue-100",
-  },
-  amber: {
-    bg: "bg-amber-50",
-    icon: "bg-amber-100 text-amber-600",
-    badge: "bg-amber-100 text-amber-700",
-    bar: "bg-amber-500",
-    ring: "ring-amber-200",
-    hover: "hover:ring-amber-300",
-    glow: "shadow-amber-100",
-  },
-  rose: {
-    bg: "bg-rose-50",
-    icon: "bg-rose-100 text-rose-600",
-    badge: "bg-rose-100 text-rose-700",
-    bar: "bg-rose-500",
-    ring: "ring-rose-200",
-    hover: "hover:ring-rose-300",
-    glow: "shadow-rose-100",
-  },
-  emerald: {
-    bg: "bg-emerald-50",
-    icon: "bg-emerald-100 text-emerald-600",
-    badge: "bg-emerald-100 text-emerald-700",
-    bar: "bg-emerald-500",
-    ring: "ring-emerald-200",
-    hover: "hover:ring-emerald-300",
-    glow: "shadow-emerald-100",
-  },
-  cyan: {
-    bg: "bg-cyan-50",
-    icon: "bg-cyan-100 text-cyan-600",
-    badge: "bg-cyan-100 text-cyan-700",
-    bar: "bg-cyan-500",
-    ring: "ring-cyan-200",
-    hover: "hover:ring-cyan-300",
-    glow: "shadow-cyan-100",
-  },
-};
-
-const difficultyLabel: Record<string, { label: string; color: string }> = {
-  easy: {
-    label: "Easy",
-    color: "text-emerald-600 bg-emerald-50 ring-emerald-200",
-  },
-  medium: {
-    label: "Medium",
-    color: "text-amber-600 bg-amber-50 ring-amber-200",
-  },
-  hard: { label: "Hard", color: "text-rose-600 bg-rose-50 ring-rose-200" },
+const difficultyLabel: Record<string, string> = {
+  easy: "Easy",
+  medium: "Medium",
+  hard: "Hard",
 };
 
 const practiceModes: {
@@ -206,28 +141,28 @@ const practiceModes: {
 }[] = [
   {
     id: "quick",
-    label: "Quick Fire",
-    desc: "10 random questions",
+    label: "Quick fire",
+    desc: "10 random questions from this subject",
     icon: Zap,
     time: "~5 min",
   },
   {
     id: "full",
-    label: "Full Practice",
-    desc: "All topics covered",
+    label: "Full paper",
+    desc: "All topics covered, exam length",
     icon: BookOpen,
     time: "~30 min",
   },
   {
     id: "weak",
-    label: "Weak Areas",
-    desc: "Focus on low scores",
+    label: "Weak areas",
+    desc: "Focus on the topics you score lowest in",
     icon: Target,
     time: "~15 min",
   },
 ];
 
-// ── Subject Card ─────────────────────────────────────────────────────────────
+// ── Subject row ──────────────────────────────────────────────────────────────
 function SubjectCard({
   subject,
   onSelect,
@@ -235,163 +170,120 @@ function SubjectCard({
   subject: (typeof subjects)[0];
   onSelect: (id: string) => void;
 }) {
-  const c = colorMap[subject.color as keyof typeof colorMap];
   const Icon = subject.icon;
-  const diff = difficultyLabel[subject.difficulty];
-  const scoreColor =
-    subject.lastScore >= 80
-      ? "text-emerald-600"
-      : subject.lastScore >= 60
-        ? "text-amber-600"
-        : subject.lastScore > 0
-          ? "text-rose-600"
-          : "text-slate-400";
 
   return (
     <article
       className={cn(
-        "group relative bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-200",
-        "hover:shadow-lg hover:-translate-y-0.5",
-        subject.locked && "opacity-60 cursor-not-allowed",
+        "flex h-full flex-col rounded-2xl border border-rule bg-sheet p-5 transition-colors sm:p-6",
+        subject.locked ? "opacity-60" : "hover:border-ink/20",
       )}
       aria-label={`${subject.name} — ${subject.locked ? "locked" : "available"}`}
     >
-      {/* Top accent strip */}
-      <div className={cn("h-1 w-full")} aria-hidden="true" />
-
-      <div className="p-5">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <div className={cn("p-2.5 rounded-xl", c.icon)}>
-            <Icon size={20} aria-hidden="true" />
-          </div>
-          <div className="flex items-center gap-1.5">
-            {subject.trending && (
-              <span
-                className="flex items-center gap-0.5 text-[10px] font-semibold text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded-full"
-                aria-label="Trending"
-              >
-                <TrendingUp size={9} aria-hidden="true" /> HOT
-              </span>
-            )}
-            {subject.locked && (
-              <Lock size={14} className="text-slate-400" aria-label="Locked" />
-            )}
-            <span
-              className={cn(
-                "text-[11px] font-semibold px-2 py-0.5 rounded-full ring-1",
-                diff.color,
-              )}
-            >
-              {diff.label}
-            </span>
-          </div>
-        </div>
-
-        {/* Title */}
-        <div className="mb-1">
-          <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">
-            {subject.code}
+      <div className="flex items-start justify-between gap-3">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-marker-line bg-marker-wash text-marker-ink">
+          <Icon size={17} aria-hidden="true" />
+        </span>
+        <div className="flex items-center gap-2">
+          {subject.locked && (
+            <Lock size={13} className="text-ink-quiet" aria-label="Locked" />
+          )}
+          <span className="rounded-md border border-rule px-2 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-quiet">
+            {difficultyLabel[subject.difficulty]}
           </span>
-          <h3 className="text-base font-bold text-slate-900 leading-tight">
-            {subject.name}
-          </h3>
         </div>
-        <p className="text-xs text-slate-500 leading-relaxed mb-4">
-          {subject.description}
-        </p>
-
-        {/* Score bar */}
-        {subject.lastScore > 0 && (
-          <div className="mb-4">
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-slate-400">Last score</span>
-              <span className={cn("font-bold", scoreColor)}>
-                {subject.lastScore}%
-              </span>
-            </div>
-            <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all duration-700",
-                  c.bar,
-                )}
-                style={{ width: `${subject.lastScore}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Meta row */}
-        <div className="flex items-center gap-3 mb-4 text-xs text-slate-400">
-          <span className="flex items-center gap-1">
-            <BookOpen size={11} aria-hidden="true" />
-            {subject.questions} Qs
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock size={11} aria-hidden="true" />
-            {subject.sessions} sessions
-          </span>
-          {subject.avgScore > 0 && (
-            <span className="flex items-center gap-1">
-              <Star size={11} aria-hidden="true" />
-              Avg {subject.avgScore}%
-            </span>
-          )}
-        </div>
-
-        {/* Topic pills */}
-        <div className="flex flex-wrap gap-1 mb-4" aria-label="Topics covered">
-          {subject.topics.slice(0, 3).map((t) => (
-            <span
-              key={t}
-              className={cn(
-                "text-[10px] font-medium px-2 py-0.5 rounded-full",
-                c.badge,
-              )}
-            >
-              {t}
-            </span>
-          ))}
-          {subject.topics.length > 3 && (
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-              +{subject.topics.length - 3}
-            </span>
-          )}
-        </div>
-
-        {/* CTA */}
-        <button
-          onClick={() => !subject.locked && onSelect(subject.id)}
-          disabled={subject.locked}
-          className={cn(
-            "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150",
-            subject.locked
-              ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-              : "bg-slate-900 text-white hover:bg-slate-800 active:scale-[0.98]",
-          )}
-          aria-label={
-            subject.locked
-              ? `${subject.name} is locked`
-              : `Practice ${subject.name}`
-          }
-        >
-          {subject.locked ? (
-            <>
-              <Lock size={14} aria-hidden="true" /> Locked
-            </>
-          ) : (
-            <>
-              <Play size={14} aria-hidden="true" /> Practice
-            </>
-          )}
-        </button>
       </div>
+
+      <p className="eyebrow eyebrow-quiet mt-5">{subject.code}</p>
+      <h3 className="mt-1.5 text-[1.0625rem] font-semibold leading-snug tracking-[-0.01em] text-ink">
+        {subject.name}
+      </h3>
+      <p className="mt-1.5 text-[0.8125rem] leading-6 text-ink-quiet">
+        {subject.description}
+      </p>
+
+      {subject.lastScore > 0 && (
+        <div className="mt-4">
+          <div className="flex items-baseline justify-between">
+            <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-ink-quiet">
+              Last score
+            </span>
+            <span className="text-[0.8125rem] font-semibold tabular-nums text-ink">
+              {subject.lastScore}%
+            </span>
+          </div>
+          <div className="mt-2 h-px w-full bg-rule">
+            <div
+              className="h-px bg-marker"
+              style={{ width: `${subject.lastScore}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.6875rem] text-ink-quiet">
+        <span className="flex items-center gap-1.5 tabular-nums">
+          <BookOpen size={11} aria-hidden="true" />
+          {subject.questions} questions
+        </span>
+        <span className="flex items-center gap-1.5 tabular-nums">
+          <Clock size={11} aria-hidden="true" />
+          {subject.sessions} sessions
+        </span>
+        {subject.avgScore > 0 && (
+          <span className="flex items-center gap-1.5 tabular-nums">
+            <Star size={11} aria-hidden="true" />
+            Avg {subject.avgScore}%
+          </span>
+        )}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-1.5" aria-label="Topics covered">
+        {subject.topics.slice(0, 3).map((t) => (
+          <span
+            key={t}
+            className="rounded-md bg-well px-2 py-1 text-[0.6875rem] font-medium text-ink-quiet"
+          >
+            {t}
+          </span>
+        ))}
+        {subject.topics.length > 3 && (
+          <span className="rounded-md bg-well px-2 py-1 text-[0.6875rem] font-medium text-ink-quiet">
+            +{subject.topics.length - 3}
+          </span>
+        )}
+      </div>
+
+      <button
+        onClick={() => !subject.locked && onSelect(subject.id)}
+        disabled={subject.locked}
+        className={cn(
+          "mt-5 flex h-10 w-full items-center justify-center gap-2 rounded-xl text-[0.8125rem] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2",
+          subject.locked
+            ? "cursor-not-allowed border border-rule bg-well text-ink-quiet"
+            : "bg-exam text-white hover:bg-exam-edge",
+        )}
+        aria-label={
+          subject.locked
+            ? `${subject.name} is locked`
+            : `Practice ${subject.name}`
+        }
+      >
+        {subject.locked ? (
+          <>
+            <Lock size={13} aria-hidden="true" /> Locked
+          </>
+        ) : (
+          <>
+            <Play size={13} aria-hidden="true" /> Practice
+          </>
+        )}
+      </button>
     </article>
   );
 }
 
-// ── Mode Picker Modal ─────────────────────────────────────────────────────────
+// ── Mode picker ──────────────────────────────────────────────────────────────
 function ModePicker({
   subject,
   onClose,
@@ -402,47 +294,40 @@ function ModePicker({
   onStart: (mode: PracticeMode) => void;
 }) {
   const [selected, setSelected] = useState<PracticeMode>("quick");
-  const c = colorMap[subject.color as keyof typeof colorMap];
   const Icon = subject.icon;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-exam-deep/40 p-4 backdrop-blur-sm sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-label={`Choose practice mode for ${subject.name}`}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
-        {/* Header */}
-        <div className={cn("px-6 pt-6 pb-5", c.bg)}>
-          <div className="flex items-center gap-3 mb-3">
-            <div className={cn("p-2.5 rounded-xl", c.icon)}>
-              <Icon size={20} aria-hidden="true" />
-            </div>
+      <div className="w-full max-w-md overflow-hidden rounded-3xl border border-rule bg-sheet">
+        <div className="border-b border-rule bg-well px-6 py-5">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-marker-line bg-sheet text-marker-ink">
+              <Icon size={18} aria-hidden="true" />
+            </span>
             <div>
-              <p className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">
-                {subject.code}
-              </p>
-              <h2 className="text-lg font-bold text-slate-900">
+              <p className="eyebrow eyebrow-quiet">{subject.code}</p>
+              <h2 className="mt-1 text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
                 {subject.name}
               </h2>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-xs text-slate-500">
-            <span>{subject.questions} questions available</span>
-            <span>·</span>
-            <span>{subject.topics.length} topics</span>
-          </div>
+          <p className="mt-3 text-[0.75rem] tabular-nums text-ink-quiet">
+            {subject.questions} questions available, {subject.topics.length}{" "}
+            topics
+          </p>
         </div>
 
         <div className="px-6 py-5">
-          <p className="text-sm font-semibold text-slate-700 mb-3">
-            Choose practice mode
-          </p>
+          <p className="eyebrow eyebrow-quiet">Choose a mode</p>
 
           <div
-            className="flex flex-col gap-2"
+            className="mt-3 flex flex-col gap-2"
             role="radiogroup"
             aria-label="Practice modes"
           >
@@ -456,29 +341,31 @@ function ModePicker({
                   aria-checked={isSelected}
                   onClick={() => setSelected(mode.id)}
                   className={cn(
-                    "flex items-center gap-4 p-3.5 rounded-2xl border-2 transition-all duration-150 text-left",
+                    "flex items-center gap-4 rounded-2xl border-2 p-3.5 text-left transition-colors",
                     isSelected
-                      ? "border-slate-900 bg-slate-50"
-                      : "border-slate-100 hover:border-slate-200 bg-white",
+                      ? "border-primary-400 bg-marker-wash"
+                      : "border-rule bg-sheet hover:border-ink/20",
                   )}
                 >
-                  <div
+                  <span
                     className={cn(
-                      "p-2 rounded-xl shrink-0",
+                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
                       isSelected
-                        ? "bg-slate-900 text-white"
-                        : "bg-slate-100 text-slate-500",
+                        ? "bg-primary-500 text-white"
+                        : "bg-well text-ink-quiet",
                     )}
                   >
-                    <MIcon size={16} aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-800">
+                    <MIcon size={15} aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[0.8125rem] font-semibold text-ink">
                       {mode.label}
-                    </p>
-                    <p className="text-xs text-slate-400">{mode.desc}</p>
-                  </div>
-                  <span className="text-xs text-slate-400 shrink-0 flex items-center gap-1">
+                    </span>
+                    <span className="block text-[0.75rem] text-ink-quiet">
+                      {mode.desc}
+                    </span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-1 text-[0.6875rem] tabular-nums text-ink-quiet">
                     <Clock size={10} aria-hidden="true" /> {mode.time}
                   </span>
                 </button>
@@ -486,19 +373,19 @@ function ModePicker({
             })}
           </div>
 
-          <div className="flex gap-3 mt-5">
+          <div className="mt-5 flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+              className="h-10 flex-1 rounded-xl border border-rule bg-sheet text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
             >
               Cancel
             </button>
             <button
               onClick={() => onStart(selected)}
-              className="flex-[2] py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="flex h-10 flex-[2] items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge"
             >
-              <Play size={14} aria-hidden="true" />
-              Start Session
+              <Play size={13} aria-hidden="true" />
+              Start session
             </button>
           </div>
         </div>
@@ -542,102 +429,75 @@ export default function PracticePage() {
     setSelectedId(null);
   };
 
+  const availableCount = subjects.filter((s) => !s.locked).length;
+  const questionCount = subjects.reduce((a, s) => a + s.questions, 0);
+  const sessionCount = subjects.reduce((a, s) => a + s.sessions, 0);
+
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.01_265)] pt-20 pb-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        {/* ── Page header ── */}
-        <div className="mb-8">
-          <p className="text-sm text-primary-500 font-semibold tracking-wide uppercase mb-1">
-            Practice
-          </p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-            Choose a subject
-          </h1>
-          <p className="text-slate-500 mt-1 text-sm max-w-lg">
-            Pick any subject and start practising. Your progress is saved
-            automatically after each session.
-          </p>
+    <div className="bg-paper pb-20">
+      <div className="mx-auto max-w-7xl px-6 pt-10">
+        {/* Page header */}
+        <div className="grid gap-8 border-b border-rule pb-9 md:grid-cols-[1.15fr_0.85fr] md:items-end">
+          <div>
+            <p className="eyebrow text-marker-ink">Practice index</p>
+            <h1 className="mt-3 max-w-xl text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.5rem]">
+              Choose a subject to sit.
+            </h1>
+            <p className="mt-3 max-w-md text-[0.875rem] leading-6 text-ink-quiet">
+              Every session is marked on the server and saved to your mark book.
+            </p>
+          </div>
+
+          <dl className="grid grid-cols-3 border-t border-rule md:justify-self-end md:border-t-0">
+            {[
+              { label: "Subjects", value: availableCount },
+              { label: "Questions", value: questionCount },
+              { label: "Sessions", value: sessionCount },
+            ].map((stat, index) => (
+              <div
+                key={stat.label}
+                className={cn(
+                  "pt-4 md:pt-0",
+                  index > 0 && "border-l border-rule pl-5",
+                )}
+              >
+                <dd className="text-[1.5rem] font-semibold leading-none tabular-nums tracking-[-0.02em] text-ink">
+                  {stat.value}
+                </dd>
+                <dt className="eyebrow eyebrow-quiet mt-2">{stat.label}</dt>
+              </div>
+            ))}
+          </dl>
         </div>
 
-        {/* ── Quick stats ── */}
-        <div className="grid grid-cols-3 gap-3 mb-8 max-w-sm">
-          {[
-            {
-              label: "Subjects",
-              value: subjects.filter((s) => !s.locked).length,
-            },
-            {
-              label: "Questions",
-              value: subjects.reduce((a, s) => a + s.questions, 0),
-            },
-            {
-              label: "Sessions done",
-              value: subjects.reduce((a, s) => a + s.sessions, 0),
-            },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="bg-white rounded-2xl border border-slate-100 p-3 text-center shadow-sm"
-            >
-              <p className="text-xl font-bold text-slate-900">{stat.value}</p>
-              <p className="text-[11px] text-slate-400 font-medium">
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Filters ── */}
-        <div className="flex flex-wrap items-center gap-3 mb-6">
-          {/* Search */}
-          <div className="relative flex-1 min-w-[200px] max-w-xs">
+        {/* Filters */}
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="relative w-full max-w-xs">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-quiet"
               aria-hidden="true"
             />
             <input
               type="search"
-              placeholder="Search subjects or topics…"
+              placeholder="Search subjects or topics"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all"
+              className="h-10 w-full rounded-xl border border-rule bg-sheet pl-9 pr-4 text-[0.8125rem] text-ink outline-none transition-colors placeholder:text-ink-quiet focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20"
               aria-label="Search subjects"
             />
           </div>
 
-          {/* Difficulty filter */}
-          {/* <div
-            className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1"
-            role="group"
-            aria-label="Filter by difficulty"
-          >
-            {(["all", "easy", "medium", "hard"] as Difficulty[]).map((d) => (
-              <button
-                key={d}
-                onClick={() => setDifficulty(d)}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all capitalize",
-                  difficulty === d
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-500 hover:text-slate-800",
-                )}
-                aria-pressed={difficulty === d}
-              >
-                {d === "all" ? "All" : d}
-              </button>
-            ))}
-          </div> */}
-
-          {/* Sort */}
-          <div className="flex items-center gap-2 ml-auto text-xs text-slate-500">
+          <div className="ml-auto flex items-center gap-2 text-[0.75rem] text-ink-quiet">
             <Filter size={12} aria-hidden="true" />
-            <span>Sort:</span>
+            <label htmlFor="sort-subjects" className="font-medium">
+              Sort
+            </label>
             <select
+              id="sort-subjects"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="text-xs font-semibold text-slate-700 bg-transparent outline-none cursor-pointer"
-              aria-label="Sort subjects by"
+              className="cursor-pointer rounded-md border border-rule bg-sheet px-2 py-1.5 text-[0.75rem] font-semibold text-ink-soft outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20"
             >
               <option value="recent">Recent</option>
               <option value="score">Score</option>
@@ -646,51 +506,54 @@ export default function PracticePage() {
           </div>
         </div>
 
-        {/* ── Results count ── */}
         <p
-          className="text-xs text-slate-400 mb-4"
+          className="mt-5 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-ink-quiet"
           aria-live="polite"
           aria-atomic="true"
         >
           {filtered.length} subject{filtered.length !== 1 ? "s" : ""} found
         </p>
 
-        {/* ── Subject grid ── */}
+        {/* Grid */}
         {filtered.length > 0 ? (
           <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
             role="list"
             aria-label="Available subjects"
           >
             {filtered.map((subject) => (
-              <div key={subject.id} role="listitem">
+              <div key={subject.id} role="listitem" className="h-full">
                 <SubjectCard subject={subject} onSelect={setSelectedId} />
               </div>
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="p-4 bg-slate-100 rounded-2xl mb-4">
-              <Search size={24} className="text-slate-400" aria-hidden="true" />
-            </div>
-            <p className="text-slate-700 font-semibold">No subjects found</p>
-            <p className="text-slate-400 text-sm mt-1">
-              Try a different search or filter
+          <div className="mt-10 rounded-3xl border border-rule bg-sheet px-6 py-16 text-center">
+            <Search
+              size={20}
+              className="mx-auto text-ink-quiet"
+              aria-hidden="true"
+            />
+            <p className="mt-4 text-sm font-semibold text-ink">
+              No subject matches that search.
+            </p>
+            <p className="mt-1.5 text-[0.8125rem] text-ink-quiet">
+              Try a different subject name or topic.
             </p>
             <button
               onClick={() => {
                 setSearch("");
                 setDifficulty("all");
               }}
-              className="mt-4 text-sm text-primary-600 font-semibold hover:underline"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-lg border border-rule bg-sheet px-4 py-2 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
             >
               Clear filters
+              <ChevronRight size={13} aria-hidden="true" />
             </button>
           </div>
         )}
       </div>
 
-      {/* ── Mode picker modal ── */}
       {selectedSubject && (
         <ModePicker
           subject={selectedSubject}

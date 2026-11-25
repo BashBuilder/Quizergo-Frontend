@@ -6,7 +6,6 @@ interface InputGroupProps {
   value: string;
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  // onFocus : () => void;
   placeholder: string;
   type: string;
   autoComplete?: string;
@@ -20,29 +19,28 @@ const InputGroup = ({
   name,
   placeholder,
   type,
+  autoComplete = "off",
   icon,
 }: InputGroupProps) => {
   return (
-    <div className="space-y-5">
+    <div className="w-full">
       <label
-        className="block text-sm font-medium text-slate-200"
+        className="mb-2 block text-[0.8125rem] font-semibold text-ink-soft"
         htmlFor={name}
       >
         {label}
       </label>
-      <div className="flex items-center gap-3 rounded-3xl border border-slate-700/80 bg-slate-900/80 px-4 py-3 focus-within:border-orange-400 focus-within:ring-1 focus-within:ring-orange-400/20">
+      <div className="flex h-12 items-center gap-3 rounded-3xl border border-rule bg-sheet px-4 transition-colors focus-within:border-primary-400 focus-within:ring-2 focus-within:ring-primary-500/20">
         {icon}
-        {/* <BookOpen className="text-primary-300" size={18} /> */}
         <Input
           id={name}
           value={value}
           name={name}
           onChange={onChange}
           placeholder={placeholder || ""}
-          className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
+          className="h-full w-full border-0 bg-transparent px-0 text-sm text-ink shadow-none outline-none placeholder:text-ink-quiet"
           type={type || "text"}
-          autoComplete="off"
-          // onFocus={onFocus}
+          autoComplete={autoComplete}
         />
       </div>
     </div>

@@ -5,14 +5,21 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/hooks/queryClientProvider";
 import { AuthProvider } from "@/hooks/auth";
+
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "QuizerGo",
-  description: "QuizerGo = Your very first quiz go-to for enlightenment",
+  title: {
+    default: "Quizergo — practice that gets marked",
+    template: "%s | Quizergo",
+  },
+  description:
+    "Timed JAMB and WAEC practice. Pick your subjects, sit the paper, and get it back marked with an explanation for every answer.",
   icons: {
     icon: "/icon.png",
     apple: "/apple-icon.png",
@@ -26,8 +33,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", "antialiased", poppins.className)}>
-      <body className="min-h-full">
+    <html lang="en" className={cn("h-full", poppins.variable)}>
+      <body className="min-h-full font-sans antialiased">
         <QueryProvider>
           <AuthProvider>
             {children}

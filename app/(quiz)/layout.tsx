@@ -5,9 +5,5 @@ export default async function QuizLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <RequireAuth>{children}</RequireAuth>;
-    </>
-  );
+  return <RequireAuth>{children}</RequireAuth>;
 }

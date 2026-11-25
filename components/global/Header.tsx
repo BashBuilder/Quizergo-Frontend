@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "../ui/button";
 import { Menu, X, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,15 +7,16 @@ import Logo from "./Logo";
 import { useAuth } from "@/hooks/auth";
 import { cn } from "@/lib/utils";
 import { links } from "@/data/constants";
+import { buttonVariants } from "@/components/ui/button";
 import { toast } from "sonner";
 
 function NavSkeleton() {
   return (
-    <div className="hidden md:flex items-center gap-3" aria-hidden="true">
-      {[72, 56, 88].map((w) => (
+    <div className="hidden md:flex items-center gap-2" aria-hidden="true">
+      {[64, 92].map((w) => (
         <div
           key={w}
-          className="h-8 rounded-md bg-slate-200 animate-pulse"
+          className="h-7 rounded-md bg-well animate-pulse"
           style={{ width: w }}
         />
       ))}
@@ -27,12 +27,12 @@ function NavSkeleton() {
 function Avatar({ name }: { name: string }) {
   const initials = (name || "").slice(0, 2).toUpperCase();
   return (
-    <div
-      className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-800 ring-2 ring-primary-200 select-none"
+    <span
+      className="flex h-7 w-7 items-center justify-center rounded-lg bg-marker-wash text-[0.6875rem] font-semibold tracking-wide text-marker-ink ring-1 ring-marker-line"
       aria-hidden="true"
     >
       {initials}
-    </div>
+    </span>
   );
 }
 
@@ -50,6 +50,10 @@ const Header = () => {
   const closeMenu = () => setMenuOpenPathname(null);
   const toggleMenu = () => (mobileOpen ? closeMenu() : openMenu());
 
+  const navLinks = user
+    ? [...links, { href: "/dashboard", label: "Mark book" }]
+    : links;
+
   useEffect(() => {
     if (!mobileOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -62,7 +66,6 @@ const Header = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [mobileOpen]);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
@@ -70,7 +73,8 @@ const Header = () => {
     };
   }, [mobileOpen]);
 
-  const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -92,33 +96,34 @@ const Header = () => {
   return (
     <>
       <header
-        className="fixed top-0 z-50 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-xl"
+        className="fixed top-0 z-50 w-full border-b border-rule bg-paper/90 backdrop-blur-xl"
         role="banner"
       >
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <Logo />
-          </div>
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-6 px-6">
+          <Logo />
 
           <nav
             aria-label="Main navigation"
-            className="hidden md:flex items-center gap-1"
+            className="hidden md:flex items-center gap-6"
           >
-            {links.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
                 className={cn(
-                  "relative px-3 py-1.5 text-sm font-medium rounded-md transition-colors duration-150",
+                  "relative flex h-14 items-center text-[0.8125rem] font-medium transition-colors",
                   isActive(link.href)
-                    ? "text-primary-600 bg-primary-50"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100",
+                    ? "text-marker-ink"
+                    : "text-ink-quiet hover:text-ink",
                 )}
               >
                 {link.label}
                 {isActive(link.href) && (
-                  <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary-500" />
+                  <span
+                    className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-marker"
+                    aria-hidden="true"
+                  />
                 )}
               </Link>
             ))}
@@ -128,33 +133,39 @@ const Header = () => {
             {isLoading ? (
               <NavSkeleton />
             ) : user ? (
-              <div className="flex items-center gap-3">
+              <>
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
-                  aria-label={`Go to dashboard — logged in as ${user.firstName}`}
+                  className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2.5 text-[0.8125rem] font-medium text-ink-soft transition-colors hover:bg-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                  aria-label={`Mark book, signed in as ${user.firstName}`}
                 >
                   <Avatar name={user.firstName} />
                   <span className="hidden lg:block">{user.firstName}</span>
                 </Link>
-                <Button
-                  variant="outline"
-                  className="text-sm h-8"
+                <button
+                  type="button"
+                  className="rounded-lg px-2.5 py-1.5 text-[0.8125rem] font-medium text-ink-quiet transition-colors hover:bg-well hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:opacity-50"
                   onClick={handleLogout}
                   disabled={isLoggingOut}
                 >
-                  {isLoggingOut ? "Signing out..." : "Sign out"}
-                </Button>
-              </div>
+                  {isLoggingOut ? "Signing out…" : "Sign out"}
+                </button>
+              </>
             ) : (
               <>
-                <Link href="/login">
-                  <Button variant="outline" className="text-sm h-8">
-                    Login
-                  </Button>
+                <Link
+                  href="/login"
+                  className="rounded-lg px-2.5 py-1.5 text-[0.8125rem] font-medium text-ink-soft transition-colors hover:bg-well hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                >
+                  Sign in
                 </Link>
-                <Link href="/register">
-                  <Button className="text-sm h-8">Get Started</Button>
+                <Link
+                  href="/register"
+                  className={buttonVariants({
+                    className: "h-8 rounded-md px-3.5 text-[0.8125rem]",
+                  })}
+                >
+                  Start a paper
                 </Link>
               </>
             )}
@@ -162,20 +173,24 @@ const Header = () => {
 
           <button
             ref={mobileToggleRef}
-            className="flex md:hidden items-center justify-center rounded-md p-2 text-slate-600 hover:bg-slate-100 transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-ink-soft transition-colors hover:bg-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 md:hidden"
             onClick={toggleMenu}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileOpen ? (
+              <X size={19} aria-hidden="true" />
+            ) : (
+              <Menu size={19} aria-hidden="true" />
+            )}
           </button>
         </div>
       </header>
 
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/20 md:hidden"
+          className="fixed inset-0 z-40 bg-exam-deep/30 md:hidden"
           aria-hidden="true"
           onClick={closeMenu}
         />
@@ -187,73 +202,79 @@ const Header = () => {
         role="dialog"
         aria-label="Mobile navigation"
         aria-modal="true"
+        aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
         className={cn(
-          "fixed top-14 left-0 right-0 z-40 md:hidden bg-white border-b border-slate-200 shadow-lg transition-all duration-200",
+          "fixed inset-x-0 top-14 z-40 border-b border-rule bg-paper md:hidden",
           mobileOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 -translate-y-2 pointer-events-none",
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0",
         )}
       >
-        <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col gap-1">
-          <nav aria-label="Mobile navigation links">
-            {links.map((link) => (
+        <div className="mx-auto max-w-7xl px-6 py-5">
+          <nav aria-label="Mobile navigation links" className="flex flex-col">
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
                 className={cn(
-                  "flex items-center justify-between w-full px-3 py-3 rounded-lg text-sm font-medium transition-colors",
-                  isActive(link.href)
-                    ? "text-primary-600 bg-primary-50"
-                    : "text-slate-700 hover:bg-slate-50",
+                  "flex items-center justify-between border-b border-rule py-3.5 text-[0.9375rem] font-medium transition-colors",
+                  isActive(link.href) ? "text-marker-ink" : "text-ink-soft",
                 )}
               >
                 {link.label}
                 <ChevronRight
-                  size={14}
-                  className="text-slate-400"
+                  size={15}
+                  className="text-ink-quiet/60"
                   aria-hidden="true"
                 />
               </Link>
             ))}
           </nav>
 
-          <div className="mt-3 pt-3 border-t border-slate-100">
+          <div className="mt-5">
             {isLoading ? (
               <div className="flex flex-col gap-2" aria-hidden="true">
-                <div className="h-10 rounded-lg bg-slate-200 animate-pulse" />
-                <div className="h-10 rounded-lg bg-slate-200 animate-pulse" />
+                <div className="h-10 rounded-md bg-well animate-pulse" />
               </div>
             ) : user ? (
-              <div className="flex flex-col gap-2">
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
-                >
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
                   <Avatar name={user.firstName} />
-                  <div>
-                    <p className="font-medium">{user.firstName}</p>
-                    <p className="text-xs text-slate-500">{user.email}</p>
+                  <div className="min-w-0">
+                    <p className="truncate text-[0.8125rem] font-semibold text-ink">
+                      {user.firstName} {user.lastName}
+                    </p>
+                    <p className="truncate text-xs text-ink-quiet">
+                      {user.email}
+                    </p>
                   </div>
-                </Link>
-                <Button
-                  variant="outline"
+                </div>
+                <button
+                  type="button"
                   disabled={isLoggingOut}
-                  className="w-full text-sm"
+                  className="w-full rounded-md border border-rule bg-sheet py-2.5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well disabled:opacity-50"
                   onClick={handleLogout}
                 >
-                  {isLoggingOut ? "Signing out..." : "Sign out"}
-                </Button>
+                  {isLoggingOut ? "Signing out…" : "Sign out"}
+                </button>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <Link href="/login" className="w-full">
-                  <Button variant="outline" className="w-full text-sm">
-                    Login
-                  </Button>
+                <Link
+                  href="/login"
+                  className="w-full rounded-md border border-rule bg-sheet py-2.5 text-center text-[0.8125rem] font-semibold text-ink-soft"
+                >
+                  Sign in
                 </Link>
-                <Link href="/register" className="w-full">
-                  <Button className="w-full text-sm">Get Started</Button>
+                <Link
+                  href="/register"
+                  className={buttonVariants({
+                    className: "h-10 w-full rounded-md text-[0.8125rem]",
+                  })}
+                >
+                  Start a paper
                 </Link>
               </div>
             )}

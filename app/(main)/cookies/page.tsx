@@ -1,48 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Cookie,
-  Settings,
-  BarChart3,
-  Shield,
-  Zap,
-  Globe,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy | QuizerGo",
+  title: "Cookie Policy",
   description:
     "Learn about how QuizerGo uses cookies to enhance your learning experience.",
 };
 
 export default function CookiePolicyPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="bg-paper">
+      <div className="mx-auto max-w-3xl px-6 py-14">
         {/* Header */}
-        <div className="mb-8">
-          <div className="mb-4 flex items-center gap-3">
-            <div>
-              <h1 className="text-balance text-4xl font-bold">Cookie Policy</h1>
-              <p className="text-lg text-muted-foreground">
-                Last updated:{" "}
-                {new Date(
-                  new Date().getTime() - 120 * 24 * 60 * 60 * 1000,
-                ).toLocaleDateString("en-US", {
-                  month: "long",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
-          </div>
+        <div className="border-b border-rule pb-8">
+          <p className="eyebrow text-marker-ink">Legal</p>
+          <h1 className="mt-4 text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.75rem]">
+            Cookie Policy
+          </h1>
+          <p className="mt-3 text-[0.8125rem] tabular-nums text-ink-quiet">
+            Last updated{" "}
+            {new Date(
+              new Date().getTime() - 120 * 24 * 60 * 60 * 1000,
+            ).toLocaleDateString("en-US", {
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
 
         {/* Quick Overview */}
-        <Card className="mb-8 border-primary/20">
+        <Card className="mb-8 mt-8 border-0 bg-well shadow-none ring-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Globe className="h-5 w-5" />

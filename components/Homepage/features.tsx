@@ -1,5 +1,3 @@
-import { BookOpen, CircleCheck, Timer, TrendingUp } from "lucide-react";
-
 const questionRows = [
   {
     subject: "Physics",
@@ -18,192 +16,146 @@ const questionRows = [
 const scoreTrend = [40, 52, 48, 64, 72, 84];
 const months = ["Mar", "Apr", "May", "Jun", "Jul", "Aug"];
 
-const cardClass =
-  "rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors hover:border-slate-300 sm:p-7";
-
-const iconTileClass =
-  "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary-100 bg-primary-50 text-primary-700";
-
 export default function Features() {
   return (
-    <section className="border-b border-slate-200/70 bg-white">
+    <section className="border-b border-rule bg-sheet">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:py-24">
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr] md:items-end">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-700">
-              Why QuizerGo
-            </p>
-            <h2 className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem]">
-              Built around how exams actually work.
+            <p className="eyebrow text-marker-ink">Why Quizergo</p>
+            <h2 className="mt-4 max-w-xl text-[2rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink sm:text-[2.5rem] lg:text-[2.75rem]">
+              Built around how a real paper behaves.
             </h2>
           </div>
-          <p className="max-w-sm text-sm leading-6 text-slate-600 md:text-right">
-            No guesswork and no clutter — just the four things that move your
-            score.
+          <p className="max-w-sm text-[0.9375rem] leading-7 text-ink-quiet md:justify-self-end md:pb-1">
+            No dashboards to admire and no points to collect — four things that
+            change what happens on exam day.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {/* Real past questions */}
-          <article className={`${cardClass} md:col-span-2`}>
-            <div className="flex items-start gap-4">
-              <span className={iconTileClass}>
-                <BookOpen size={18} aria-hidden="true" />
-              </span>
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight text-slate-900">
-                  Real past questions
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Drill questions written in the WAEC and JAMB style, organised
-                  by subject so you always know what you are practising.
-                </p>
-              </div>
-            </div>
+        <div className="mt-12 overflow-hidden rounded-3xl border border-rule bg-sheet">
+          <div className="grid lg:grid-cols-12">
+            {/* Lead: the question bank */}
+            <article className="border-b border-rule p-7 sm:p-9 lg:col-span-7 lg:border-b-0 lg:border-r lg:p-10">
+              <h3 className="text-[1.375rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
+                Questions written the way the exam asks them.
+              </h3>
+              <p className="mt-2.5 max-w-lg text-[0.9375rem] leading-7 text-ink-quiet">
+                Organised by subject, so you always know what you are practising
+                — and never padded with trivia to make the count look bigger.
+              </p>
 
-            <div className="mt-6 rounded-2xl border border-slate-100 bg-stone-50 p-3 sm:p-4">
-              <div className="space-y-2">
-                {questionRows.map((row, index) => (
+              <div className="mt-7 border-t border-rule">
+                {questionRows.map((row) => (
                   <div
                     key={row.subject}
-                    className={
-                      index === 0
-                        ? "flex items-center gap-3 rounded-xl border border-primary-200 bg-white px-3 py-2.5 ring-1 ring-primary-100/60"
-                        : "flex items-center gap-3 rounded-xl border border-slate-200/70 bg-white px-3 py-2.5"
-                    }
+                    className="flex items-baseline gap-4 border-b border-rule py-3.5 last:border-b-0"
                   >
-                    <span className="shrink-0 rounded-md bg-primary-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary-700">
+                    <span className="w-20 shrink-0 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-marker-ink">
                       {row.subject}
                     </span>
-                    <span className="truncate text-xs text-slate-600">
+                    <span className="min-w-0 text-[0.8125rem] leading-6 text-ink-soft">
                       {row.text}
                     </span>
                   </div>
                 ))}
               </div>
-            </div>
-          </article>
+            </article>
 
-          {/* Timed mock exams */}
-          <article className={cardClass}>
-            <div className="flex items-start gap-4">
-              <span className={iconTileClass}>
-                <Timer size={18} aria-hidden="true" />
-              </span>
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight text-slate-900">
-                  Timed mock exams
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Set your subjects, question count and time limit, then sit a
-                  session under real exam pressure.
+            {/* Timed condition — the one dark moment in the section */}
+            <article className="p-7 sm:p-9 lg:col-span-5 lg:p-8">
+              <div className="sheet-slab relative overflow-hidden p-7">
+                <div
+                  className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-500/25 blur-2xl"
+                  aria-hidden="true"
+                />
+                <p className="eyebrow relative text-primary-300">Time left</p>
+                <p className="relative mt-3 text-[3.25rem] font-semibold leading-none tabular-nums tracking-[-0.04em] text-white">
+                  45:00
+                </p>
+                <div className="relative mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                  <div className="h-full w-[68%] rounded-full bg-primary-400" />
+                </div>
+                <p className="relative mt-3 text-[0.6875rem] font-medium leading-5 text-white/50">
+                  Counted down from the first question to the last.
                 </p>
               </div>
-            </div>
 
-            <div className="mt-6 flex flex-col items-center rounded-2xl border border-slate-100 bg-stone-50 px-4 py-6">
-              <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[conic-gradient(var(--primary-500)_68%,var(--primary-100)_0)]">
-                <div className="flex h-[4.5rem] w-[4.5rem] flex-col items-center justify-center rounded-full bg-stone-50">
-                  <span className="text-lg font-semibold tabular-nums tracking-tight text-slate-900">
-                    45:00
-                  </span>
-                  <span className="text-[9px] font-medium uppercase tracking-wider text-slate-500">
-                    remaining
-                  </span>
-                </div>
-              </div>
-              <p className="mt-3 text-xs font-medium text-slate-500">
-                Exam-style countdown
+              <h3 className="mt-6 text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
+                A clock that actually ends the paper.
+              </h3>
+              <p className="mt-2 text-[0.875rem] leading-6 text-ink-quiet">
+                Choose subjects, question count and time limit. The session runs
+                on a countdown and reports the time you actually used.
               </p>
-            </div>
-          </article>
+            </article>
+          </div>
 
-          {/* Instant scoring */}
-          <article className={cardClass}>
-            <div className="flex items-start gap-4">
-              <span className={iconTileClass}>
-                <CircleCheck size={18} aria-hidden="true" />
-              </span>
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight text-slate-900">
-                  Instant scoring
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Submit once and see your score immediately, with every answer
-                  explained in plain language.
-                </p>
-              </div>
-            </div>
+          <div className="grid border-t border-rule md:grid-cols-2">
+            {/* Scoring */}
+            <article className="border-b border-rule p-7 sm:p-9 md:border-b-0 md:border-r">
+              <h3 className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
+                Marked once, on the server.
+              </h3>
+              <p className="mt-2 max-w-sm text-[0.875rem] leading-6 text-ink-quiet">
+                Submit once and the paper comes back scored, with every answer
+                explained in plain language. The client never holds the key.
+              </p>
 
-            <div className="mt-6 rounded-2xl border border-slate-100 bg-stone-50 p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                  Session score
+              <div className="mt-6 flex items-end gap-3">
+                <span className="text-[3.5rem] font-semibold leading-none tabular-nums tracking-[-0.04em] text-ink">
+                  33
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                  <CircleCheck size={10} aria-hidden="true" />
-                  Graded
+                <span className="pb-1.5 text-[0.8125rem] font-medium tabular-nums text-ink-quiet">
+                  / 40 correct
                 </span>
               </div>
-              <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-slate-900">
-                82%
-              </p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                33 of 40 correct · instantly
-              </p>
-            </div>
-          </article>
-
-          {/* Progress tracking */}
-          <article className={`${cardClass} md:col-span-2`}>
-            <div className="sm:flex sm:items-center sm:gap-8">
-              <div className="sm:max-w-xs">
-                <div className="flex items-start gap-4">
-                  <span className={iconTileClass}>
-                    <TrendingUp size={18} aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-slate-900">
-                      Progress you can see
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Every completed session is saved to your dashboard, so you
-                      can watch your scores improve over time.
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-4 h-px w-full bg-rule">
+                <div className="h-px w-[82%] bg-marker" />
               </div>
+              <p className="mt-3 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-quiet">
+                82% on the last paper
+              </p>
+            </article>
 
-              <div className="mt-6 flex-1 rounded-2xl border border-slate-100 bg-stone-50 p-4 sm:mt-0">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                    Average score
-                  </span>
-                  <span className="text-xs font-semibold text-emerald-700">
-                    +12%
-                  </span>
-                </div>
-                <div className="mt-4 flex h-24 items-end gap-2">
+            {/* Progress */}
+            <article className="p-7 sm:p-9">
+              <h3 className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
+                Your record, kept.
+              </h3>
+              <p className="mt-2 max-w-sm text-[0.875rem] leading-6 text-ink-quiet">
+                Every completed paper is saved to your mark book, so next week
+                has something to beat.
+              </p>
+
+              <div className="mt-7">
+                <div className="flex h-20 items-end gap-2.5 border-b border-rule">
                   {scoreTrend.map((height, index) => (
                     <div
                       key={months[index]}
                       className={
                         index === scoreTrend.length - 1
-                          ? "w-full rounded-t-md bg-primary-500"
-                          : "w-full rounded-t-md bg-primary-200"
+                          ? "w-full bg-marker"
+                          : "w-full bg-primary-200/70"
                       }
                       style={{ height: `${height}%` }}
+                      aria-hidden="true"
                     />
                   ))}
                 </div>
-                <div className="mt-2 flex justify-between text-[9px] font-medium uppercase tracking-wider text-slate-500">
+                <div className="mt-2 flex justify-between">
                   {months.map((month) => (
-                    <span key={month}>{month}</span>
+                    <span
+                      key={month}
+                      className="text-[0.6875rem] font-medium uppercase tracking-[0.1em] text-ink-quiet"
+                    >
+                      {month}
+                    </span>
                   ))}
                 </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
       </div>
     </section>

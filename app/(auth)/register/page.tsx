@@ -2,16 +2,15 @@
 
 import { Loader2, Lock, Unlock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "../Field";
+import AuthShell from "../auth-shell";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/auth";
 
 const schema = z
@@ -24,7 +23,7 @@ const schema = z
       .min(1, "Password is required")
       .refine((val) => {
         return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(val);
-      }, "Password must be at least 8 characters and include uppercase, lowercase, and a number"),
+      }, "At least 8 characters, with an uppercase letter, a lowercase letter and a number"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -33,6 +32,9 @@ const schema = z
   });
 
 type FormFields = z.infer<typeof schema>;
+
+const inputClass =
+  "w-full bg-transparent text-[0.875rem] text-ink outline-none placeholder:text-ink-quiet";
 
 export default function RegisterPage() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -57,7 +59,7 @@ export default function RegisterPage() {
       const response = await registerUser(formData);
       toast.success(
         response.message ||
-          "Registration successful! Verification otp sent to your email.",
+          "Registration successful. A verification code is on its way.",
       );
       const email = encodeURIComponent(formData.email);
       router.push(`/confirm?email=${email}`);
@@ -71,239 +73,192 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-slate-950 text-slate-100">
-      {/* Decorative background — hidden from assistive tech */}
-      <Image
-        width={1920}
-        height={1080}
-        alt=""
-        role="presentation"
-        src="/assets/120493 (1).jpg"
-        priority
-        className="absolute inset-0 h-full w-full object-cover opacity-20"
-      />
-      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center px-6 py-12">
-        <div className="grid w-full gap-10 lg:grid-cols-[1fr_1fr]">
-          {/* Left panel — hidden on mobile */}
-          <section
-            aria-hidden="true"
-            className="relative max-md:hidden overflow-hidden rounded-[2rem] bg-slate-900/90 p-10 backdrop-blur-xl"
+    <AuthShell
+      eyebrow="Start here"
+      headline="One account, then the paper."
+      blurb="Register with an email, verify the code we send, and set up your first timed session. Everything you sit is kept in your mark book."
+    >
+      <p className="eyebrow text-marker-ink">New account</p>
+      <h1 className="mt-2 text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-ink">
+        Create an account
+      </h1>
+      <p className="mt-1.5 text-[0.8125rem] leading-6 text-ink-quiet">
+        We will email a six-digit code to confirm the address.
+      </p>
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-6 space-y-4"
+        noValidate
+        aria-label="Registration form"
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <InputField
+            label="First name"
+            htmlFor="firstName"
+            error={errors.firstName?.message}
           >
-            <div className="relative z-10 flex h-full flex-col justify-between gap-8">
-              <div>
-                <h2 className="mt-8 max-w-xl text-2xl font-semibold tracking-tight text-white">
-                  Your learning hub is one login away.
-                </h2>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
-                  Sign in to access quizzes, track your progress, and continue
-                  the streak you built for your next assessment.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Login form */}
-          <Card className="backdrop-blur-sm bg-slate-950/5 max-w-md w-full mx-auto">
-            <CardHeader>
-              <CardTitle className="text-2xl text-white">Sign up</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-3 overflow-y-auto max-h-200 md:max-h-102 scrollbar-thin scrollbar-thumb-slate-700/50 scrollbar-track-transparent"
-                noValidate
-                aria-label="Login form"
-              >
-                <InputField
-                  label="First Name"
-                  htmlFor="firstName"
-                  error={
-                    errors.firstName ? errors.firstName.message : undefined
-                  }
-                >
-                  <input
-                    id="firstName"
-                    {...register("firstName")}
-                    placeholder="John"
-                    className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type="text"
-                    autoComplete="given-name"
-                    aria-invalid={!!errors.firstName}
-                    aria-describedby={
-                      errors.firstName ? errors.firstName.message : undefined
-                    }
-                  />
-                </InputField>
-                <InputField
-                  label="Last Name"
-                  htmlFor="lastName"
-                  error={errors.lastName ? errors.lastName.message : undefined}
-                >
-                  <input
-                    id="lastName"
-                    {...register("lastName")}
-                    placeholder="Doe"
-                    className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type="text"
-                    autoComplete="family-name"
-                    aria-invalid={!!errors.lastName}
-                    aria-describedby={
-                      errors.lastName ? errors.lastName.message : undefined
-                    }
-                  />
-                </InputField>
-                <InputField
-                  label="Email"
-                  htmlFor="email"
-                  error={errors.email ? errors.email.message : undefined}
-                >
-                  <input
-                    id="email"
-                    {...register("email")}
-                    placeholder="studentid@school.edu"
-                    className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type="text"
-                    autoComplete="username"
-                    aria-invalid={!!errors.email}
-                  />
-                </InputField>
-
-                <InputField
-                  label="Password"
-                  htmlFor="password"
-                  error={errors.password ? errors.password.message : undefined}
-                >
-                  <input
-                    id="password"
-                    {...register("password")}
-                    placeholder="••••••••"
-                    className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type={show.password ? "text" : "password"}
-                    autoComplete="current-password"
-                    aria-invalid={!!errors.password}
-                  />
-                  <button
-                    className="cursor-pointer"
-                    type="button"
-                    onClick={() =>
-                      setShow((prev) => ({
-                        ...prev,
-                        password: !prev.password,
-                      }))
-                    }
-                  >
-                    <Lock
-                      className={cn(
-                        "text-slate-400 shrink-0",
-                        show.password ? "hidden" : "block",
-                      )}
-                      size={18}
-                    />
-                    <Unlock
-                      className={cn(
-                        "text-slate-400 shrink-0",
-                        show.password ? "block" : "hidden",
-                      )}
-                      size={18}
-                    />
-                  </button>
-                </InputField>
-                <InputField
-                  label="Confirm Password"
-                  htmlFor="confirmPassword"
-                  error={
-                    errors.confirmPassword
-                      ? errors.confirmPassword.message
-                      : undefined
-                  }
-                >
-                  <input
-                    id="confirmPassword"
-                    {...register("confirmPassword")}
-                    placeholder="••••••••"
-                    className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                    type={show.confirmPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    aria-invalid={!!errors.confirmPassword}
-                    aria-describedby={
-                      errors.confirmPassword
-                        ? errors.confirmPassword.message
-                        : undefined
-                    }
-                  />
-                  <button
-                    className="cursor-pointer"
-                    type="button"
-                    onClick={() =>
-                      setShow((prev) => ({
-                        ...prev,
-                        confirmPassword: !prev.confirmPassword,
-                      }))
-                    }
-                  >
-                    <Lock
-                      className={cn(
-                        "text-slate-400 shrink-0",
-                        show.confirmPassword ? "hidden" : "block",
-                      )}
-                      size={18}
-                    />
-                    <Unlock
-                      className={cn(
-                        "text-slate-400 shrink-0",
-                        show.confirmPassword ? "block" : "hidden",
-                      )}
-                      size={18}
-                    />
-                  </button>
-                </InputField>
-                {serverError && (
-                  <p
-                    role="alert"
-                    className="rounded-3xl bg-red-500/10 text-center px-4 py-2 text-sm text-red-200 ring-1 ring-red-400/20"
-                  >
-                    {serverError}
-                  </p>
-                )}
-
-                <Button
-                  type="submit"
-                  className="w-full rounded-3xl py-5 text-sm font-semibold"
-                  disabled={isSubmitting}
-                  aria-busy={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2
-                        className="animate-spin mr-2"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                      <span>Signing up…</span>
-                    </>
-                  ) : (
-                    "Sign up"
-                  )}
-                </Button>
-
-                {/* register redirect */}
-                <div>
-                  <p className="text-center text-sm text-slate-50">
-                    Already have an account?{" "}
-                    <a
-                      href="/login"
-                      className="text-orange-400 hover:underline"
-                    >
-                      Login
-                    </a>
-                  </p>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+            <input
+              id="firstName"
+              {...register("firstName")}
+              placeholder="Chidi"
+              className={inputClass}
+              type="text"
+              autoComplete="given-name"
+              aria-invalid={!!errors.firstName}
+              aria-describedby={
+                errors.firstName ? "firstName-error" : undefined
+              }
+            />
+          </InputField>
+          <InputField
+            label="Last name"
+            htmlFor="lastName"
+            error={errors.lastName?.message}
+          >
+            <input
+              id="lastName"
+              {...register("lastName")}
+              placeholder="Okafor"
+              className={inputClass}
+              type="text"
+              autoComplete="family-name"
+              aria-invalid={!!errors.lastName}
+              aria-describedby={errors.lastName ? "lastName-error" : undefined}
+            />
+          </InputField>
         </div>
-      </div>
-    </main>
+
+        <InputField
+          label="Email"
+          htmlFor="email"
+          error={errors.email?.message}
+        >
+          <input
+            id="email"
+            {...register("email")}
+            placeholder="you@example.com"
+            className={inputClass}
+            type="email"
+            autoComplete="username"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "email-error" : undefined}
+          />
+        </InputField>
+
+        <InputField
+          label="Password"
+          htmlFor="password"
+          error={errors.password?.message}
+        >
+          <input
+            id="password"
+            {...register("password")}
+            placeholder="••••••••"
+            className={inputClass}
+            type={show.password ? "text" : "password"}
+            autoComplete="new-password"
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? "password-error" : undefined}
+          />
+          <button
+            className="rounded-md p-1 text-ink-quiet transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            type="button"
+            onClick={() =>
+              setShow((prev) => ({
+                ...prev,
+                password: !prev.password,
+              }))
+            }
+            aria-label={show.password ? "Hide password" : "Show password"}
+            aria-pressed={show.password}
+          >
+            {show.password ? (
+              <Unlock size={16} aria-hidden="true" />
+            ) : (
+              <Lock size={16} aria-hidden="true" />
+            )}
+          </button>
+        </InputField>
+
+        <InputField
+          label="Confirm password"
+          htmlFor="confirmPassword"
+          error={errors.confirmPassword?.message}
+        >
+          <input
+            id="confirmPassword"
+            {...register("confirmPassword")}
+            placeholder="••••••••"
+            className={inputClass}
+            type={show.confirmPassword ? "text" : "password"}
+            autoComplete="new-password"
+            aria-invalid={!!errors.confirmPassword}
+            aria-describedby={
+              errors.confirmPassword ? "confirmPassword-error" : undefined
+            }
+          />
+          <button
+            className="rounded-md p-1 text-ink-quiet transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            type="button"
+            onClick={() =>
+              setShow((prev) => ({
+                ...prev,
+                confirmPassword: !prev.confirmPassword,
+              }))
+            }
+            aria-label={
+              show.confirmPassword ? "Hide password" : "Show password"
+            }
+            aria-pressed={show.confirmPassword}
+          >
+            {show.confirmPassword ? (
+              <Unlock size={16} aria-hidden="true" />
+            ) : (
+              <Lock size={16} aria-hidden="true" />
+            )}
+          </button>
+        </InputField>
+
+        {serverError && (
+          <p
+            role="alert"
+            className="rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-[0.75rem] leading-5 text-rose-700"
+          >
+            {serverError}
+          </p>
+        )}
+
+        <Button
+          type="submit"
+          className="h-11 w-full rounded-xl text-[0.8125rem] font-semibold"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2
+                className="mr-2 animate-spin"
+                size={15}
+                aria-hidden="true"
+              />
+              <span>Creating account…</span>
+            </>
+          ) : (
+            "Create account"
+          )}
+        </Button>
+
+        <p className="pt-1 text-center text-[0.75rem] text-ink-quiet">
+          Already registered?{" "}
+          <Link
+            href="/login"
+            className="font-semibold text-marker-ink underline decoration-marker-line underline-offset-4 transition-colors hover:decoration-marker focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          >
+            Sign in
+          </Link>
+        </p>
+      </form>
+    </AuthShell>
   );
 }
