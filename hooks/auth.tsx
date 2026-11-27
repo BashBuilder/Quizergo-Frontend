@@ -44,7 +44,6 @@ interface AuthContextValue {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: unknown;
-  refetch: () => void;
   login: (email: string, password: string) => Promise<LoginResponse>;
   register: (payload: RegisterPayload) => Promise<RegisterResponse>;
   verifyOtp: (email: string, otp: string) => Promise<{ message: string }>;
@@ -60,12 +59,17 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
-  // null = "haven't checked localStorage yet" (avoids an SSR/client mismatch
-  // and avoids firing /auth/me before we know whether a token even exists)
+  // Track user auth state in memory to avoid refetching /me on every navigation
   const [hasToken, setHasToken] = useState<boolean | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
+  // Check for token on mount (runs once)
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- reading browser state synchronously is required here
   useEffect(() => {
-    setHasToken(!!tokenStorage.getItem(TOKEN_KEY));
+    const token = tokenStorage.getItem(TOKEN_KEY);
+    setHasToken(!!token);
+    // Mark as hydrated to allow rendering without "Loading..." flash
+    setHydrated(true);
   }, []);
 
   const {
@@ -73,21 +77,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading: userLoading,
     isError,
     error,
-    refetch,
   } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: async () => {
       const res = await getMe();
       return res.user as User;
     },
-    enabled: hasToken === true,
+    // Only enable the query once we know we have a token
+    enabled: hasToken === true && hydrated,
     retry: false,
-    staleTime: 0,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    // Cache the user data for the session - no refetch on mount or focus
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    // If cached data exists (e.g., from a previous login), use it immediately
+    initialData: queryClient.getQueryData<User>(["auth", "me"]) as User | undefined,
   });
 
-  const isLoading = hasToken === null || (hasToken === true && userLoading);
+  // Show loading only during initial hydration, not on navigation
+  const isLoading = hasToken === null || (hasToken === true && userLoading && !hydrated);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -95,6 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       tokenStorage.setItem(TOKEN_KEY, data.accessToken);
       tokenStorage.setItem(REFRESH_KEY, data.refreshToken);
       setHasToken(true);
+      // Cache the user data in React Query for instant access on navigation
       queryClient.setQueryData(["auth", "me"], data.user);
       return data;
     },
@@ -137,7 +146,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     isAuthenticated: hasToken === true && !!user && !isError,
     error,
-    refetch,
     login,
     register,
     verifyOtp,

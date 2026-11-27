@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,8 +18,7 @@ import Field from "./Field";
 import { DURATIONS, QUESTION_COUNTS } from "./constant";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetSubjects } from "@/services/question.service";
-import { toast } from "sonner";
-import axios from "@/config/axios";
+import { useCreateQuizSession } from "@/services/quiz.service";
 
 // ── Schema ─────────────────────────────────────────────────────────────────
 const schema = z.object({
@@ -35,7 +33,6 @@ type FormValues = z.infer<typeof schema>;
 
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function QuizSetupPage() {
-  const [isLoading, setIsLoading] = useState(false);
   const query = useSearchParams();
   const preselectedSubject = query.get("subject");
   const {
@@ -46,6 +43,9 @@ export default function QuizSetupPage() {
     isFetching: subjectsFetching,
   } = useGetSubjects();
   const router = useRouter();
+
+  // Mutation for creating quiz session
+  const { mutate, isPending } = useCreateQuizSession();
 
   const {
     control,
@@ -85,33 +85,31 @@ export default function QuizSetupPage() {
     );
   };
 
-  const onSubmit = async (data: FormValues) => {
-    setIsLoading(true);
-    try {
-      const res = await axios.post("/quiz", {
+  const onSubmit = (data: FormValues) => {
+    mutate(
+      {
         subjects: data.subjects,
         questionCount: Number(data.questionCount),
         duration: Number(data.duration),
-      });
-
-      const session = res.data;
-
-      // Store session info for quiz page. Clear any snapshot from an older
-      // paper so the deadline and answers cannot leak into this one.
-      sessionStorage.removeItem("quizDeadline");
-      sessionStorage.removeItem("quizAnswers");
-      sessionStorage.removeItem("quizFlags");
-      sessionStorage.removeItem("quizResult");
-      sessionStorage.setItem("quizSession", JSON.stringify(session));
-      sessionStorage.setItem("quizDuration", data.duration);
-
-      router.push("/quiz");
-      // eslint-disable-next-line
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to start session");
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      {
+        onSuccess: (session) => {
+          // Store session info for quiz page. Clear any snapshot from an older
+          // paper so the deadline and answers cannot leak into this one.
+          try {
+            sessionStorage.removeItem("quizDeadline");
+            sessionStorage.removeItem("quizAnswers");
+            sessionStorage.removeItem("quizFlags");
+            sessionStorage.removeItem("quizResult");
+            sessionStorage.setItem("quizSession", JSON.stringify(session));
+            sessionStorage.setItem("quizDuration", data.duration);
+          } catch {
+            // Session storage might be unavailable
+          }
+          router.push("/quiz");
+        },
+      },
+    );
   };
 
   const totalQuestions = (Number(watchCount) || 0) * watchSubjects.length;
@@ -378,11 +376,11 @@ export default function QuizSetupPage() {
 
               <Button
                 type="submit"
-                disabled={isLoading}
-                aria-busy={isLoading}
+                disabled={isPending}
+                aria-busy={isPending}
                 className="mt-5 h-11 w-full rounded-xl bg-exam text-[0.8125rem] font-semibold text-white hover:bg-exam-edge"
               >
-                {isLoading ? (
+                {isPending ? (
                   <>
                     <Loader2
                       size={15}

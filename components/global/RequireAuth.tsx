@@ -11,20 +11,18 @@ const RequireAuth = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  const { isLoading, isAuthenticated, refetch } = useAuth();
+  const { isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const pathName = usePathname();
 
-  useEffect(() => {
-    refetch();
-  }, [pathName, refetch]);
-
+  // Only redirect when auth state is resolved (not loading)
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.replace("/login");
+      router.replace(`/login?next=${encodeURIComponent(pathName)}`);
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, router, pathName]);
 
+  // Show loading only during initial auth check, not on navigation
   if (isLoading) {
     return (
       <div

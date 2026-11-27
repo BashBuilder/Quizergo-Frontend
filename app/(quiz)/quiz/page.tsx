@@ -20,23 +20,6 @@ import Timer from "./timer";
 import axios from "@/config/axios";
 import { toast } from "sonner";
 
-// ── Types ──────────────────────────────────────────────────────────────────
-type SubjectGroup = {
-  subject: string;
-  questions: QuestionType[];
-};
-
-type Session = {
-  sessionId: string;
-  totalQuestions: number;
-  duration: number | null;
-  expiresAt: number | string | null;
-  questions: SubjectGroup[];
-};
-
-// answers shape matches backend: { subject, answers: { [mockId]: "a"|"b"|"c"|"d" } }
-type AnswersMap = Record<string, Record<string, string>>;
-
 // ── Session storage ────────────────────────────────────────────────────────
 const SESSION_KEY = "quizSession";
 const DURATION_KEY = "quizDuration";
@@ -602,6 +585,13 @@ export default function QuizPage() {
                 <div className="text-[1.0625rem] font-medium leading-7 text-ink">
                   <LessonContent content={question.question} />
                 </div>
+                {question.image && (
+                  <img
+                    src={question.image}
+                    alt={`${activeGroup?.subject} question ${current + 1} diagram`}
+                    className="mt-4 max-w-full rounded-xl border border-rule object-contain"
+                  />
+                )}
               </div>
 
               <div
@@ -701,7 +691,7 @@ export default function QuizPage() {
               </div>
 
               <div
-                className="mt-4 grid grid-cols-5 gap-1.5"
+                className="mt-4 flex flex-wrap gap-1.5"
                 role="list"
                 aria-label="Question navigation"
               >
@@ -723,7 +713,7 @@ export default function QuizPage() {
                       aria-current={isCurrent ? "true" : undefined}
                       aria-label={`Question ${idx + 1}${isAnswered ? ", answered" : ""}${isFlagged ? ", flagged" : ""}`}
                       className={cn(
-                        "flex aspect-square w-full items-center justify-center rounded-lg text-[0.75rem] font-semibold tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
+                        "flex h-8 w-8 items-center justify-center rounded-lg text-[0.6875rem] font-semibold tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
                         isCurrent
                           ? "bg-exam text-white ring-2 ring-exam ring-offset-2 ring-offset-sheet"
                           : isFlagged
@@ -781,7 +771,7 @@ export default function QuizPage() {
               {totalAnswered}/{totalQuestions} answered
             </span>
           </div>
-          <div className="mt-3 grid grid-cols-8 gap-1.5 sm:grid-cols-10">
+          <div className="mt-3 flex flex-wrap gap-1.5">
             {activeGroup?.questions.map((q, idx) => {
               const isAnswered = !!answers[activeGroup.subject]?.[String(q.id)];
               const isFlagged = flagged.has(`${activeGroup.subject}:${q.id}`);
@@ -793,7 +783,7 @@ export default function QuizPage() {
                   aria-label={`Question ${idx + 1}`}
                   aria-current={isCurrent ? "true" : undefined}
                   className={cn(
-                    "flex aspect-square items-center justify-center rounded-lg text-[0.75rem] font-semibold tabular-nums transition-colors",
+                    "flex h-8 w-8 items-center justify-center rounded-lg text-[0.6875rem] font-semibold tabular-nums transition-colors",
                     isCurrent
                       ? "bg-exam text-white ring-2 ring-exam ring-offset-1"
                       : isFlagged

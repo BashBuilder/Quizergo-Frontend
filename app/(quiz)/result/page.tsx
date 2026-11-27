@@ -3,47 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  CheckCircle2,
-  XCircle,
-  MinusCircle,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   RotateCcw,
   BookOpen,
   Clock,
   Target,
-  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LessonContent from "@/components/global/LessonContent";
-
-// ── Types matching backend QuizResultReturnType ───────────────────────────
-type BreakdownQuestion = {
-  questionId: number;
-  question: string;
-  userAnswer: string | null;
-  correctAnswer: string;
-  solution: string | null;
-  status: "correct" | "incorrect" | "skipped";
-};
-
-type BreakdownGroup = {
-  subject: string;
-  questions: BreakdownQuestion[];
-};
-
-type SubjectCount = { subject: string; count: number };
-
-type QuizResult = {
-  sessionId: string;
-  score: number;
-  total: number;
-  correct: SubjectCount[];
-  incorrect: SubjectCount[];
-  skipped: SubjectCount[];
-  timeTaken: number;
-  breakdown: BreakdownGroup[];
-  submittedAt: number;
-};
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function formatTime(seconds: number) {
@@ -52,214 +20,124 @@ function formatTime(seconds: number) {
   return `${m}m ${s}s`;
 }
 
-function scoreColor(pct: number) {
-  if (pct >= 80) return "text-emerald-700";
-  if (pct >= 50) return "text-ink";
-  return "text-rose-700";
-}
+// ── Session storage helpers ───────────────────────────────────────────────
+const optionLabels = ["a", "b", "c", "d", "e"];
 
-function StatusMark({ status }: { status: BreakdownQuestion["status"] }) {
-  if (status === "correct") {
-    return (
-      <CheckCircle2
-        size={16}
-        className="text-emerald-600"
-        aria-label="Correct"
-      />
-    );
-  }
-  if (status === "incorrect") {
-    return (
-      <XCircle size={16} className="text-rose-600" aria-label="Wrong" />
-    );
-  }
-  return (
-    <MinusCircle size={16} className="text-ink-quiet" aria-label="Skipped" />
-  );
-}
-
-// ── Question row ──────────────────────────────────────────────────────────
-function QuestionRow({ q, idx }: { q: BreakdownQuestion; idx: number }) {
-  const [open, setOpen] = useState(q.status !== "correct");
-
-  return (
-    <li className="border-b border-rule last:border-b-0">
-      <button
-        className="grid w-full grid-cols-[2.25rem_1fr_auto] items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-well/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-      >
-        <span className="flex items-center gap-2 pt-0.5">
-          <span className="w-4 text-right text-[0.75rem] font-semibold tabular-nums text-ink-quiet">
-            {idx + 1}
-          </span>
-          <StatusMark status={q.status} />
-        </span>
-
-        <div
-          className={cn(
-            "min-w-0 text-[0.875rem] leading-6 text-ink-soft",
-            !open && "line-clamp-2",
-          )}
-        >
-          <LessonContent content={q.question} compact />
-        </div>
-
-        <span className="flex items-center gap-3 pt-0.5">
-          <span className="hidden text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-quiet sm:block">
-            {q.status === "correct"
-              ? "Marked"
-              : q.status === "incorrect"
-                ? "Wrong"
-                : "Skipped"}
-          </span>
-          <ChevronDown
-            size={14}
-            className={cn(
-              "text-ink-quiet transition-transform",
-              open && "rotate-180",
-            )}
-            aria-hidden="true"
-          />
-        </span>
-      </button>
-
-      {open && (
-        <div className="px-5 pb-5 sm:pl-16">
-          <div className="grid gap-2 sm:grid-cols-2">
-            {q.status === "correct" ? (
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-2.5 sm:col-span-2">
-                <p className="eyebrow text-emerald-700">
-                  Your answer, marked correct
-                </p>
-                <p className="mt-1.5 text-[0.875rem] font-semibold uppercase tabular-nums text-ink">
-                  {q.correctAnswer}
-                </p>
-              </div>
-            ) : (
-              <>
-                <div
-                  className={cn(
-                    "rounded-xl border px-3.5 py-2.5",
-                    q.status === "incorrect"
-                      ? "border-rose-100 bg-rose-50/70"
-                      : "border-rule bg-well",
-                  )}
-                >
-                  <p
-                    className={cn(
-                      "eyebrow",
-                      q.status === "incorrect"
-                        ? "text-rose-700"
-                        : "text-ink-quiet",
-                    )}
-                  >
-                    Your answer
-                  </p>
-                  <p className="mt-1.5 text-[0.875rem] font-semibold uppercase tabular-nums text-ink">
-                    {q.userAnswer ?? "No answer"}
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-2.5">
-                  <p className="eyebrow text-emerald-700">Correct answer</p>
-                  <p className="mt-1.5 text-[0.875rem] font-semibold uppercase tabular-nums text-ink">
-                    {q.correctAnswer}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
-
-          {q.solution && (
-            <div className="mt-2 rounded-xl border border-rule bg-well px-4 py-3">
-              <p className="eyebrow eyebrow-quiet">Why</p>
-              <div className="mt-1.5">
-                <LessonContent content={q.solution} compact />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </li>
-  );
-}
-
-// ── Subject section ───────────────────────────────────────────────────────
-function SubjectSection({
-  group,
-  correct,
-  incorrect,
-  skipped,
+// ── Question view component (matches quiz page design) ───────────────────
+function QuestionView({
+  q,
+  idx,
+  totalQ,
+  subject,
 }: {
-  group: BreakdownGroup;
-  correct: number;
-  incorrect: number;
-  skipped: number;
+  q: BreakdownQuestion;
+  idx: number;
+  totalQ: number;
+  subject: string;
 }) {
-  const [open, setOpen] = useState(true);
-  const total = group.questions.length;
-  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const isCorrectAnswer = (label: string) =>
+    label.toLowerCase() === q.correctAnswer.toLowerCase();
+  const isUserAnswer = (label: string) =>
+    q.userAnswer && q.userAnswer.toUpperCase() === label.toUpperCase();
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-rule bg-sheet">
-      <button
-        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-well/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-      >
-        <div className="min-w-0">
-          <p className="text-[0.9375rem] font-semibold tracking-[-0.01em] text-ink">
-            {group.subject}
-          </p>
-          <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-[0.75rem] tabular-nums">
-            <span className="font-medium text-emerald-700">
-              {correct} correct
+    <div className="mb-4 overflow-hidden rounded-3xl border border-rule bg-sheet">
+      <div className="border-b border-rule px-5 py-4 sm:px-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-exam text-[0.8125rem] font-semibold tabular-nums text-white">
+              {idx + 1}
             </span>
-            <span className="text-rose-700">{incorrect} wrong</span>
-            <span className="text-ink-quiet">{skipped} skipped</span>
-          </p>
+            <p className="text-[0.75rem] tabular-nums text-ink-quiet">
+              Question {idx + 1} of {totalQ}
+            </p>
+          </div>
         </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <span className="text-[0.75rem] tabular-nums text-ink-quiet">
-            {correct}/{total}
-          </span>
-          <span
-            className={cn(
-              "text-[1.125rem] font-semibold tabular-nums tracking-[-0.02em]",
-              scoreColor(pct),
-            )}
-          >
-            {pct}%
-          </span>
-          <ChevronDown
-            size={14}
-            className={cn(
-              "text-ink-quiet transition-transform",
-              open && "rotate-180",
-            )}
-            aria-hidden="true"
-          />
-        </div>
-      </button>
-
-      {/* Correct proportion, one rule */}
-      <div className="h-1 bg-well">
-        <div
-          className="h-full bg-emerald-500"
-          style={{ width: `${pct}%` }}
-          aria-hidden="true"
-        />
       </div>
 
-      {open && (
-        <ul className="border-t border-rule">
-          {group.questions.map((q, idx) => (
-            <QuestionRow key={q.questionId} q={q} idx={idx} />
-          ))}
-        </ul>
+      <div className="px-5 py-6 sm:px-6">
+        <div className="text-[1.0625rem] font-medium leading-7 text-ink">
+          <LessonContent content={q.question} />
+        </div>
+        {q.image && (
+          <img
+            src={q.image}
+            alt={`${subject} question ${idx + 1} diagram`}
+            className="mt-4 max-w-full rounded-xl border border-rule object-contain"
+          />
+        )}
+      </div>
+
+      <div
+        className="space-y-2.5 px-5 pb-6 sm:px-6"
+        role="radiogroup"
+        aria-label="Answer options"
+      >
+        {q.option &&
+          Object.values(q.option).map((option, idx) => {
+            const optKey = optionLabels[idx];
+            const selected = isUserAnswer(optKey);
+            const isCorrect = isCorrectAnswer(optKey);
+
+            // Always show the right answer; also show the user's pick when wrong.
+            let borderClass = "border-slate-100 bg-answer";
+            let textClass = "text-ink-soft";
+            let badgeClass = "border border-rule bg-sheet text-ink-quiet";
+
+            if (isCorrect) {
+              if (q.status === "correct") {
+                borderClass = "border-primary-400 bg-marker-wash";
+                textClass = "font-medium text-primary-950";
+                badgeClass = "bg-primary-500 text-white";
+              } else {
+                borderClass = "border-emerald-400 bg-emerald-50";
+                textClass = "font-medium text-emerald-700";
+                badgeClass = "bg-emerald-500 text-white";
+              }
+            } else if (selected) {
+              borderClass = "border-rose-400 bg-rose-50";
+              textClass = "font-medium text-rose-700";
+              badgeClass = "bg-rose-500 text-white";
+            }
+
+            return (
+              <button
+                key={idx}
+                type="button"
+                className={cn(
+                  "group flex w-full items-start gap-4 rounded-2xl border-2 px-4 py-3.5 text-left transition-colors",
+                  borderClass,
+                )}
+                role="radio"
+                aria-checked={selected ? "true" : "false"}
+                disabled
+              >
+                <span
+                  className={cn(
+                    "mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg text-[0.6875rem] font-semibold uppercase transition-colors",
+                    badgeClass,
+                  )}
+                  aria-hidden="true"
+                >
+                  {optKey}
+                </span>
+                <div className={cn("pt-0.5 text-[0.875rem] leading-6", textClass)}>
+                  <LessonContent content={option as string} compact />
+                </div>
+              </button>
+            );
+          })}
+      </div>
+
+      {q.solution && (
+        <div className="rounded-b-xl border-x border-rule bg-well px-5 py-4">
+          <p className="eyebrow eyebrow-quiet mb-2">Solution</p>
+          <div className="text-[0.875rem] leading-6 text-ink">
+            <LessonContent content={q.solution} compact />
+          </div>
+        </div>
       )}
-    </section>
+    </div>
   );
 }
 
@@ -268,8 +146,16 @@ export default function ResultsPage() {
   const result = useMemo<QuizResult | null>(() => {
     if (typeof window === "undefined") return null;
     const raw = sessionStorage.getItem("quizResult");
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
   }, []);
+
+  const [activeSubjectIdx, setActiveSubjectIdx] = useState(0);
+  const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
 
   if (!result) {
     return (
@@ -309,24 +195,56 @@ export default function ResultsPage() {
     result.total > 0 ? Math.round((totalCorrect / result.total) * 100) : 0;
   const circumference = 2 * Math.PI * 54;
 
+  // Get all questions and current question
+  const allQuestions = result.breakdown.flatMap((g) =>
+    g.questions.map((q) => ({ ...q, subject: g.subject }))
+  );
+  const currentQ = allQuestions[currentQuestionIdx];
+  const activeSubject = result.breakdown[activeSubjectIdx]?.subject ?? "";
+  const totalQ = allQuestions.length;
+
+  // Calculate question index within subject
+  const questionIndexInSubject = currentQuestionIdx -
+    result.breakdown.slice(0, activeSubjectIdx).reduce((sum, g) => sum + g.questions.length, 0);
+
+  const goTo = (idx: number) => setCurrentQuestionIdx(Math.max(0, Math.min(allQuestions.length - 1, idx)));
+  const goToSubject = (idx: number) => {
+    setActiveSubjectIdx(idx);
+    const firstQuestionInSubject = result.breakdown.slice(0, idx).reduce((sum, g) => sum + g.questions.length, 0);
+    setCurrentQuestionIdx(firstQuestionInSubject);
+  };
+
+  // Build session from result for navigation
+  const questions: SubjectGroup[] = result.breakdown.map(g => ({
+    subject: g.subject,
+    questions: g.questions as unknown as QuestionType[]
+  }));
+
+  // Calculate current subject question count from result
+  const totalQInSubject = questions[activeSubjectIdx]?.questions.length ?? 0;
+
   return (
-    <div className="min-h-screen bg-paper pb-16">
-      <div className="mx-auto max-w-3xl px-4 pt-8 sm:px-6 sm:pt-10">
-        <h1 className="sr-only">Your marked paper</h1>
-        {/* Toolbar */}
-        <div className="mb-6 flex items-center justify-between border-b border-rule pb-4">
-          <p className="eyebrow eyebrow-quiet">Your paper, returned</p>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold text-ink-quiet transition-colors hover:text-marker-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-          >
-            <ArrowLeft size={13} aria-hidden="true" />
-            Mark book
-          </Link>
+    <div className="flex min-h-screen flex-col bg-paper">
+      {/* Top bar */}
+      <header className="sticky top-0 z-30 border-b border-rule bg-paper/95 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
+          <div className="min-w-0">
+            <p className="eyebrow truncate text-marker-ink">
+              {activeSubject}
+            </p>
+            <p className="mt-1 text-[0.75rem] font-medium tabular-nums text-ink-quiet">
+              Question {questionIndexInSubject + 1} of {totalQInSubject}
+            </p>
+          </div>
         </div>
+      </header>
+
+      {/* Main */}
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-7 sm:px-6 sm:py-8">
+        <h1 className="sr-only">Your marked paper</h1>
 
         {/* Score slab */}
-        <div className="relative overflow-hidden rounded-3xl bg-exam">
+        <div className="relative overflow-hidden rounded-3xl bg-exam mb-6">
           <div
             className="pointer-events-none absolute inset-0"
             aria-hidden="true"
@@ -344,7 +262,7 @@ export default function ResultsPage() {
             </div>
 
             <div className="mt-5 grid items-center gap-7 sm:grid-cols-[9.5rem_1fr] sm:gap-9">
-              {/* Score mark — neutral arc, no colour verdict */}
+              {/* Score mark */}
               <div className="relative mx-auto h-36 w-36 sm:mx-0">
                 <svg
                   className="h-36 w-36 -rotate-90"
@@ -387,8 +305,7 @@ export default function ResultsPage() {
                 </p>
                 <p className="mt-1 text-[0.8125rem] leading-6 text-white/50">
                   {result.breakdown.length} subject
-                  {result.breakdown.length === 1 ? "" : "s"}, marked question by
-                  question. Wrong and skipped answers are open below.
+                  {result.breakdown.length === 1 ? "" : "s"}, {totalIncorrect} wrong, {totalSkipped} skipped
                 </p>
 
                 <dl className="mt-5 grid grid-cols-3 border-t border-white/15 pt-4">
@@ -448,39 +365,67 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* Marking */}
-        <div className="mt-9">
-          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-3">
-            <h2 className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink">
-              The marking
-            </h2>
-            <p className="text-[0.75rem] tabular-nums text-ink-quiet">
-              {totalIncorrect} wrong, {totalSkipped} skipped
-            </p>
-          </div>
+        {/* Question view */}
+        {currentQ && (
+          <QuestionView
+            q={currentQ}
+            idx={questionIndexInSubject}
+            totalQ={totalQInSubject}
+            subject={activeSubject}
+          />
+        )}
 
-          <div className="mt-4 space-y-4">
-            {result.breakdown.map((group) => {
-              const correct =
-                result.correct.find((c) => c.subject === group.subject)
-                  ?.count ?? 0;
-              const incorrect =
-                result.incorrect.find((i) => i.subject === group.subject)
-                  ?.count ?? 0;
-              const skipped =
-                result.skipped.find((s) => s.subject === group.subject)?.count ??
-                0;
-              return (
-                <SubjectSection
-                  key={group.subject}
-                  group={group}
-                  correct={correct}
-                  incorrect={incorrect}
-                  skipped={skipped}
-                />
-              );
-            })}
-          </div>
+        {/* Navigation */}
+        <div className="flex items-center justify-between gap-4">
+          <button
+            onClick={() => goTo(currentQuestionIdx - 1)}
+            disabled={currentQuestionIdx === 0}
+            className={cn(
+              "flex h-10 items-center gap-2 rounded-xl border border-rule bg-sheet px-4 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well disabled:cursor-not-allowed disabled:opacity-40",
+            )}
+            aria-label="Previous question"
+          >
+            <ChevronLeft size={15} aria-hidden="true" /> Previous
+          </button>
+
+          <button
+            onClick={() => goTo(currentQuestionIdx + 1)}
+            disabled={currentQuestionIdx === allQuestions.length - 1}
+            className={cn(
+              "flex h-10 items-center gap-2 rounded-xl bg-exam px-5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40",
+            )}
+            aria-label="Next question"
+          >
+            Next <ChevronRight size={15} aria-hidden="true" />
+          </button>
+        </div>
+
+        {/* Question number navigation */}
+        <div
+          className="mt-4 flex flex-wrap gap-1.5"
+          role="list"
+          aria-label="Question navigation"
+        >
+          {allQuestions.map((q, idx) => {
+            const isCurrent = idx === currentQuestionIdx;
+            return (
+              <button
+                key={q.questionId}
+                onClick={() => goTo(idx)}
+                role="listitem"
+                aria-current={isCurrent ? "true" : undefined}
+                aria-label={`Question ${idx + 1}`}
+                className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-lg text-[0.6875rem] font-semibold tabular-nums transition-colors",
+                  isCurrent
+                    ? "bg-exam text-white ring-2 ring-exam ring-offset-1"
+                    : "bg-well text-ink-quiet hover:bg-rule",
+                )}
+              >
+                {idx + 1}
+              </button>
+            );
+          })}
         </div>
 
         {/* Actions */}
@@ -500,7 +445,7 @@ export default function ResultsPage() {
             Sit another paper
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

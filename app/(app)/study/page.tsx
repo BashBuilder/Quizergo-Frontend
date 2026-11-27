@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useMemo } from "react";
 import {
   Search,
@@ -6,7 +7,6 @@ import {
   Cpu,
   Network,
   Binary,
-  FlaskConical,
   FunctionSquare,
   Layers,
   Clock,
@@ -17,109 +17,11 @@ import {
   Lock,
   Filter,
   Zap,
+  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// ── Mock Data ─────────────────────────────────────────────────────────────────
-const subjects = [
-  {
-    id: "csc301",
-    code: "CSC 301",
-    name: "Data Structures",
-    description:
-      "Arrays, linked lists, trees, graphs and algorithmic complexity",
-    icon: Binary,
-    color: "violet",
-    questions: 240,
-    avgScore: 87,
-    lastScore: 92,
-    difficulty: "medium",
-    sessions: 14,
-    trending: true,
-    locked: false,
-    topics: ["Arrays", "Linked Lists", "Trees", "Graphs", "Sorting"],
-  },
-  {
-    id: "csc305",
-    code: "CSC 305",
-    name: "Operating Systems",
-    description: "Process management, memory, file systems and concurrency",
-    icon: Cpu,
-    color: "blue",
-    questions: 185,
-    avgScore: 72,
-    lastScore: 74,
-    difficulty: "hard",
-    sessions: 9,
-    trending: false,
-    locked: false,
-    topics: ["Processes", "Threads", "Memory", "Deadlock", "File Systems"],
-  },
-  {
-    id: "csc311",
-    code: "CSC 311",
-    name: "Computer Networks",
-    description: "TCP/IP, routing protocols, network security and architecture",
-    icon: Network,
-    color: "amber",
-    questions: 160,
-    avgScore: 61,
-    lastScore: 60,
-    difficulty: "hard",
-    sessions: 6,
-    trending: false,
-    locked: false,
-    topics: ["TCP/IP", "Routing", "DNS", "HTTP", "Security"],
-  },
-  {
-    id: "mth301",
-    code: "MTH 301",
-    name: "Numerical Methods",
-    description: "Root finding, interpolation, numerical integration and ODEs",
-    icon: FunctionSquare,
-    color: "rose",
-    questions: 120,
-    avgScore: 55,
-    lastScore: 58,
-    difficulty: "hard",
-    sessions: 4,
-    trending: false,
-    locked: false,
-    topics: ["Newton-Raphson", "Bisection", "Integration", "ODEs"],
-  },
-  {
-    id: "csc321",
-    code: "CSC 321",
-    name: "Software Engineering",
-    description: "SDLC, design patterns, testing methodologies and agile",
-    icon: Layers,
-    color: "emerald",
-    questions: 200,
-    avgScore: 90,
-    lastScore: 88,
-    difficulty: "easy",
-    sessions: 18,
-    trending: true,
-    locked: false,
-    topics: ["SDLC", "Design Patterns", "Testing", "Agile", "UML"],
-  },
-  {
-    id: "csc331",
-    code: "CSC 331",
-    name: "Compiler Design",
-    description: "Lexical analysis, parsing, semantic analysis and code gen",
-    icon: FlaskConical,
-    color: "cyan",
-    questions: 95,
-    avgScore: 0,
-    lastScore: 0,
-    difficulty: "hard",
-    sessions: 0,
-    trending: false,
-    locked: true,
-    topics: ["Lexer", "Parser", "AST", "Code Generation"],
-  },
-];
+import PageWrapper from "@/components/global/PageWrapper";
+import { useGetStudySubjects, type StudySubject } from "@/services/study.service";
 
 type Difficulty = "all" | "easy" | "medium" | "hard";
 type SortBy = "recent" | "score" | "questions";
@@ -130,6 +32,20 @@ const difficultyLabel: Record<string, string> = {
   easy: "Easy",
   medium: "Medium",
   hard: "Hard",
+};
+
+const difficultyColor: Record<string, string> = {
+  easy: "emerald",
+  medium: "amber",
+  hard: "rose",
+};
+
+const iconMap: Record<string, React.ElementType> = {
+  Binary,
+  Cpu,
+  Network,
+  FunctionSquare,
+  Layers,
 };
 
 const practiceModes: {
@@ -167,10 +83,10 @@ function SubjectCard({
   subject,
   onSelect,
 }: {
-  subject: (typeof subjects)[0];
+  subject: StudySubject;
   onSelect: (id: string) => void;
 }) {
-  const Icon = subject.icon;
+  const Icon = iconMap[subject.icon] ?? BookOpen;
 
   return (
     <article
@@ -289,12 +205,12 @@ function ModePicker({
   onClose,
   onStart,
 }: {
-  subject: (typeof subjects)[0];
+  subject: StudySubject;
   onClose: () => void;
   onStart: (mode: PracticeMode) => void;
 }) {
   const [selected, setSelected] = useState<PracticeMode>("quick");
-  const Icon = subject.icon;
+  const Icon = iconMap[subject.icon] ?? BookOpen;
 
   return (
     <div
@@ -355,7 +271,7 @@ function ModePicker({
                         : "bg-well text-ink-quiet",
                     )}
                   >
-                    <MIcon size={15} aria-hidden="true" />
+                      <MIcon size={15} aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-[0.8125rem] font-semibold text-ink">
@@ -394,6 +310,28 @@ function ModePicker({
   );
 }
 
+// ── Skeleton Loader ──────────────────────────────────────────────────────────
+function SubjectSkeleton() {
+  return (
+    <article className="flex h-full flex-col rounded-2xl border border-rule bg-sheet p-5 animate-pulse sm:p-6">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-rule bg-well" />
+        <div className="h-5 w-16 rounded-md border border-rule bg-well" />
+      </div>
+      <div className="mt-5 h-3 w-24 rounded bg-well" />
+      <div className="mt-1.5 h-5 w-3/4 rounded bg-well" />
+      <div className="mt-1.5 h-4 w-full rounded bg-well" />
+      <div className="mt-4 h-4 w-1/2 rounded bg-well" />
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        <div className="h-5 w-16 rounded bg-well" />
+        <div className="h-5 w-16 rounded bg-well" />
+        <div className="h-5 w-20 rounded bg-well" />
+      </div>
+      <div className="mt-5 h-10 w-full rounded bg-well" />
+    </article>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function PracticePage() {
   const [search, setSearch] = useState("");
@@ -401,9 +339,11 @@ export default function PracticePage() {
   const [sortBy, setSortBy] = useState<SortBy>("recent");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const selectedSubject = subjects.find((s) => s.id === selectedId) ?? null;
+  const { data: subjects, isLoading, error } = useGetStudySubjects();
+  const selectedSubject = subjects?.find((s) => s.id === selectedId) ?? null;
 
   const filtered = useMemo(() => {
+    if (!subjects) return [];
     let list = [...subjects];
     if (search) {
       const q = search.toLowerCase();
@@ -421,7 +361,7 @@ export default function PracticePage() {
       list.sort((a, b) => b.questions - a.questions);
     else list.sort((a, b) => b.sessions - a.sessions);
     return list;
-  }, [search, difficulty, sortBy]);
+  }, [subjects, search, difficulty, sortBy]);
 
   const handleStart = (mode: PracticeMode) => {
     // TODO: navigate to quiz session with subject + mode
@@ -429,12 +369,12 @@ export default function PracticePage() {
     setSelectedId(null);
   };
 
-  const availableCount = subjects.filter((s) => !s.locked).length;
-  const questionCount = subjects.reduce((a, s) => a + s.questions, 0);
-  const sessionCount = subjects.reduce((a, s) => a + s.sessions, 0);
+  const availableCount = subjects?.filter((s) => !s.locked).length ?? 0;
+  const questionCount = subjects?.reduce((a, s) => a + s.questions, 0) ?? 0;
+  const sessionCount = subjects?.reduce((a, s) => a + s.sessions, 0) ?? 0;
 
   return (
-    <div className="bg-paper pb-20">
+    <PageWrapper className="bg-paper pb-20">
       <div className="mx-auto max-w-7xl px-6 pt-10">
         {/* Page header */}
         <div className="grid gap-8 border-b border-rule pb-9 md:grid-cols-[1.15fr_0.85fr] md:items-end">
@@ -515,7 +455,39 @@ export default function PracticePage() {
         </p>
 
         {/* Grid */}
-        {filtered.length > 0 ? (
+        {isLoading ? (
+          <div
+            className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            role="list"
+            aria-label="Available subjects"
+          >
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} role="listitem" className="h-full">
+                <SubjectSkeleton />
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="mt-10 rounded-3xl border border-rule bg-sheet px-6 py-16 text-center">
+            <AlertCircle
+              size={20}
+              className="mx-auto text-rose-500"
+              aria-hidden="true"
+            />
+            <p className="mt-4 text-sm font-semibold text-ink">
+              Could not load subjects
+            </p>
+            <p className="mt-1.5 text-[0.8125rem] text-ink-quiet">
+              Please try again later or check your connection.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-5 inline-flex items-center gap-1.5 rounded-lg border border-rule bg-sheet px-4 py-2 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
+            >
+              Retry
+            </button>
+          </div>
+        ) : filtered.length > 0 ? (
           <div
             className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
             role="list"
@@ -561,6 +533,6 @@ export default function PracticePage() {
           onStart={handleStart}
         />
       )}
-    </div>
+    </PageWrapper>
   );
 }

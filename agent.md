@@ -59,8 +59,14 @@ pnpm start      # next start
 pnpm lint       # eslint (next core-web-vitals + typescript)
 ```
 
-There is **no test runner configured** yet. Until one is added, `pnpm lint` and
-`pnpm build` (which type-checks) are the verification steps.
+A test runner (Vitest with Testing Library) is now configured. Run:
+
+```bash
+pnpm test           # run tests once
+pnpm test:watch     # watch mode for development
+pnpm test:ui        # web UI for test debugging
+pnpm test:coverage  # with coverage report
+```
 
 Add shadcn components with the shadcn CLI (config in `components.json`,
 aliases `@/components`, `@/components/ui`, `@/lib`, `@/hooks`).
@@ -122,10 +128,11 @@ once a second page needs it.
 `user`, `isLoading`, `isAuthenticated`, `login`, `register`, `verifyOtp`,
 `resendOtp`, `forgotPassword`, `resetPassword`, `logout`. Tokens
 (`quizergo_token`, `quizergo_refresh_token`; keys in `data/auth.constants.ts`)
-are stored in `localStorage` through `lib/token-storage.ts`, which is SSR-safe.
-`/auth/me` is fetched through React Query (`["auth","me"]`) only after a token
-is detected on the client. `<RequireAuth>` refetches on navigation and
-`router.replace("/login")` when unauthenticated.
+are stored in cookies through `lib/token-storage.ts`, which is SSR-safe.
+`/auth/me` is cached in React Query (`["auth","me"]`) with a 5-minute
+staleTime and is only fetched once on initial client mount. The middleware
+prevents "Loading..." flashes by checking cookies on the server. Protected
+routes redirect to `/login?next=<pathname>` without UI delay.
 
 **HTTP.** `config/axios.ts` configures the global axios instance:
 
@@ -216,9 +223,9 @@ Example: a "Leaderboard" page for logged-in users.
 - Never render raw HTML from the API. All question/solution content goes through
   `LessonContent`, which sanitizes (`rehype-sanitize`) and renders KaTeX. Do not
   bypass it with `dangerouslySetInnerHTML`.
-- Never log or display tokens. Bearer tokens currently live in `localStorage`
-  (XSS-exposed by design); do not widen that exposure, and do not store any
-  other sensitive data client-side.
+- Never log or display tokens. Bearer tokens now live in cookies via `lib/token-storage.ts`,
+  reducing XSS exposure. HttpOnly cookies (set by backend) provide the strongest
+  protection; fall back to SameSite=Lax cookies for compatibility.
 - Never store or request correct answers client-side before submission; grading is server-only.
 - Do not add secrets to `NEXT_PUBLIC_*`.
 
@@ -296,42 +303,16 @@ Keep this table in sync when the backend changes.
 - **Verify.** Run `pnpm lint` and `pnpm build` before declaring work done; say so if you couldn't.
 - Keep the UI consistent with the existing design language and accessibility patterns above.
 
-## 12. Known issues in the current codebase
+## Verification Workflow
 
-Be aware of these; don't copy them into new code, and flag them when relevant.
+1. **After each code edit (Fast Loop):**
+   - Do NOT run `pnpm run build` or full test suites.
+   - Run `npx tsc --noEmit --incremental` to verify types.
+   - Run `npx next lint --file <modified_files>` on changed files only.
+   - If tests exist for the modified file, run only that specific test file (e.g., `npx vitest run <test_file>`).
 
-1. **Dead/incorrect `useGetQuestions`** (`services/question.service.tsx`) calls
-   `/questions/questions` (the backend route is `GET /questions`), force-appends `"english"`
-   to the subjects, and the real quiz flow doesn't use it. Remove it or fix it before reuse.
-2. **`resendOtp` targets `/auth/resend-otp`**, which the backend does not
-   currently expose (the service comment says it is an assumption). The backend
-   re-sends OTPs implicitly (e.g. login while unverified).
-3. **Mock/placeholder data still in the tree:** `app/(app)/study/page.tsx` (hard-coded CS subjects),
-   `app/(quiz)/quiz/constants.ts` (sample questions/meta), `app/(quiz)/setup/constant.ts` (`SUBJECTS`, `years`, `MODES`),
-   `app/(quiz)/quiz/result.tsx` (empty file), and `data/constants.ts` `pricing`/`subjects` used by landing sections.
-4. **Duplicate type definitions:** `result/page.tsx` redefines the backend result
-   types locally, and `QuestionType` in `__types__` references an `Option` type
-   that is not declared in this repo. Centralize the quiz types.
-5. **Inline axios + `any` in pages** (`setup/page.tsx`, `quiz/page.tsx`) instead
-   of service hooks; `sessionStorage` JSON is parsed without `try/catch`.
-6. **Auth hardening gaps:** tokens in `localStorage`; auth gating is client-only
-   (no server-side redirect), so protected pages flash a "Loading..." state; `RequireAuth` calls `refetch()` on
-   every navigation. Don't make this worse; discuss before changing.
-7. **Plain `<a href>`** is used for internal links on the login page (full reload); use `next/link`.
-8. **Small bugs/leftovers:** `app/(quiz)/layout.tsx` renders a stray `;` after
-   `<RequireAuth>`; `(main)/layout.tsx` nests `<main>` inside `<main>`; `InputGroup`
-   ignores its `autoComplete` prop; `tsconfig.json` includes a stray `"app/(auth)/confirm"` entry; the
-   login field is labelled "Email or Username" but the schema is email-only; `bash.exe.stackdump`
-   and unused `public/*.svg` Next boilerplate are committed.
-9. `config/axios.ts` decides "unprotected route" with `window.location.pathname.startsWith`
-   (so `/` is special-cased), and accesses `window` inside the interceptor. Keep that
-   code browser-only; never import it into Server Components.
-10. **No tests.** Add a runner (Vitest + Testing Library, Playwright for the quiz flow)
-    before relying on automated verification, and update this file when you do.
-11. `opencode.json` is empty here; the backend repo's `opencode.json` points at
-    `backend/agent.md` and `frontend/agent.md`. Place this file at the path your tooling expects.
-
----
+2. **Before finishing a task / PR (Final Gate):**
+   - Only run `npm run build` and the full test suite when all requested features are implemented and ready for final review.
 
 _Keep this file current: when you introduce a new pattern, dependency, env var,
 route group, or convention, update the relevant section in the same change._

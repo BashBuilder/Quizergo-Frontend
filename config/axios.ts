@@ -83,6 +83,12 @@ function clearSession() {
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Guard: This interceptor runs on both client and server.
+    // Only access browser APIs when in the browser.
+    if (typeof window === "undefined") {
+      return Promise.reject(error);
+    }
+
     const status = error.response?.status;
     const code = error.response?.data?.code;
     const originalRequest = error.config;

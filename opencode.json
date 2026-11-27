@@ -1,9 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": [
-    "AGENTS.md",
-    "agent.md"
-  ],
+  "instructions": "agent.md",
   "mcp": {
     "graphify": {
       "type": "stdio",

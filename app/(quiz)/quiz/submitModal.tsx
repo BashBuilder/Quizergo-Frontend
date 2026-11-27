@@ -2,12 +2,12 @@
 import { AlertCircle, Loader2, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Types from __types__/index.d.ts (globally available)
+type AnswersMap = Record<string, Record<string, string>>;
 type SubjectGroup = {
   subject: string;
   questions: { id: number | string }[];
 };
-
-type AnswersMap = Record<string, Record<string, string>>;
 
 export default function SubmitModal({
   answers,

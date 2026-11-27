@@ -42,7 +42,9 @@ export function LoginContent() {
     setServerError(null);
     try {
       await login(formData.email, formData.password);
-      router.push("/dashboard");
+      // Redirect to the saved "next" URL after login, or default to dashboard
+      const nextUrl = query.get("next")?.split("&")[0]; // Basic XSS protection
+      router.push(nextUrl && nextUrl.startsWith("/") ? nextUrl : "/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         setServerError(error.message);

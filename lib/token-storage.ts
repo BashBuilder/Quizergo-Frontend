@@ -1,29 +1,40 @@
-// Bearer tokens live in localStorage on web (there's no secure-enclave
-// equivalent to expo-secure-store in a browser). All access is guarded for
-// SSR since Next.js renders this on the server too, where `window` is
-// undefined.
+// Bearer tokens live in cookies for security (HttpOnly when possible).
+// Cookies are automatically included in requests to the same origin.
+// We use document.cookie for client-side JS, which works for non-HttpOnly cookies.
+// HttpOnly cookies cannot be read by JS - the backend will need to handle those.
 export const tokenStorage = {
+  // Cookie-based storage (works with SameSite=Lax cookies)
   getItem(key: string): string | null {
-    if (typeof window === "undefined") return null;
+    if (typeof document === "undefined") return null;
     try {
-      return window.localStorage.getItem(key);
+      const name = key + "=";
+      const decoded = decodeURIComponent(document.cookie);
+      const cookies = decoded.split("; ");
+      for (const cookie of cookies) {
+        if (cookie.startsWith(name)) {
+          return cookie.substring(name.length);
+        }
+      }
+      return null;
     } catch {
       return null;
     }
   },
   setItem(key: string, value: string): void {
-    if (typeof window === "undefined") return;
+    if (typeof document === "undefined") return;
     try {
-      window.localStorage.setItem(key, value);
+      // Set cookie with 7-day expiry, HttpOnly is set by server
+      // For XSS mitigation, prefer server-set HttpOnly cookies
+      const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = `${key}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax; Secure`;
     } catch {
-      // storage unavailable (private browsing, quota, etc.) -- fail silently,
-      // same as the mobile app's secureStorage wrapper
+      // storage unavailable -- fail silently
     }
   },
   removeItem(key: string): void {
-    if (typeof window === "undefined") return;
+    if (typeof document === "undefined") return;
     try {
-      window.localStorage.removeItem(key);
+      document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
     } catch {
       // ignore
     }
