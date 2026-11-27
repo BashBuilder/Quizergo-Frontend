@@ -1,25 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["AGENTS.md", "agent.md"],
+  "instructions": [
+    "AGENTS.md",
+    "agent.md"
+  ],
   "mcp": {
-    "21st": {
-      "type": "remote",
-      "url": "https://21st.dev/api/mcp",
-      "headers": { "x-api-key": "{env:API_KEY_21ST}" },
-      "enabled": true
-    }
-  },
-  "provider": {
-    "ollama": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama",
-      "options": {
-        "baseURL": "http://127.0.0"
-      },
-      "models": {
-        "gemma4:e4b": {
-          "name": "gemma4:e4b"
-        }
+    "graphify": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "graphify.mcp"
+      ],
+      "env": {
+        "PYTHONPATH": ".",
+        "GRAPHIFY_PATH": "C:\\Users\\Delice\\Desktop\\dev\\Quizergo-Frontend\\graphify-out"
       }
     }
   },
