@@ -8,6 +8,7 @@ const protectedRoutes = [
   "/setup",
   "/quiz",
   "/result",
+  "/qbot",
 ];
 
 // Public routes that should allow access even with token

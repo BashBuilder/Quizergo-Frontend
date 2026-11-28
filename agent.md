@@ -90,7 +90,7 @@ app/
   not-found.tsx
   (main)/               # PUBLIC marketing: /, /subjects, /terms, /privacy, /cookies  (Header + Footer)
   (auth)/               # PUBLIC auth: /login, /register, /confirm, /forgot-password  (Logo only)
-  (app)/                # AUTHENTICATED shell with Header: /dashboard, /study (wrapped in <RequireAuth>)
+  (app)/                # AUTHENTICATED shell with Header: /dashboard, /study, /qbot (wrapped in <RequireAuth>)
   (quiz)/               # AUTHENTICATED, no header: /setup, /quiz, /result (wrapped in <RequireAuth>)
 components/
   ui/                   # shadcn primitives (button, card, input, select, ...). Generated; edit sparingly
@@ -151,6 +151,15 @@ routes redirect to `/login?next=<pathname>` without UI delay.
 3. `/quiz` resolves one deadline from `session.expiresAt` (epoch seconds, epoch ms or ISO; `0`/absent duration = untimed) and persists it as `quizDeadline`. Answers and flags are mirrored to `quizAnswers`/`quizFlags`, so a refresh restores the paper and the clock instead of resetting them. Every 30s `PATCH /quiz/:sessionId/sync` with only changed answers.
 4. The clock is derived from the deadline, never from a ticking counter, so background throttling cannot make it drift. At zero the rows lock, a "Time's up" banner appears, and the paper auto-submits. Submit (`POST /quiz/:sessionId/submit` with all answers) is guarded against double-sends; a failure keeps the paper on this device and offers a retry. The response is saved to `sessionStorage["quizResult"]` and `/result` renders the breakdown.
 5. `/dashboard` uses `GET /user/history` (`useGetQuizHistory`) and `GET /questions/subjects` (`useGetSubjects`).
+
+**Qbot.** `/qbot` is a chat workspace in the `(app)` shell. The service layer
+(`services/qbot.service.tsx`) owns conversation list/history queries, deletion,
+and the SSE client. Replies stream through `POST /qbot/message` with `fetch`
+(not `EventSource`, because the route needs a POST body and bearer header);
+chunks are parsed by `lib/sse.ts` and rendered through `LessonContent` so
+Markdown and KaTeX work. Sending without a `conversationId` is how a new
+conversation starts — the backend creates it and returns the id in the `start`
+event, so the UI never creates empty conversations.
 
 ## 7. Architecture rules
 
@@ -285,8 +294,16 @@ Base: `NEXT_PUBLIC_API_URL` (default `http://localhost:4000/api/v1`). Auth heade
 | PATCH  | `/quiz/:sessionId/sync`   | yes  | body: `{ answers: [{ subject, answers: {id: "a"} }] }`      |
 | POST   | `/quiz/:sessionId/submit` | yes  | same body → graded result (rate-limited: 1 per 10s)         |
 | GET    | `/user/history`           | yes  | array of past `QuizResult` rows                             |
+| POST   | `/qbot/message`           | yes  | body: `{ message, conversationId? }` → SSE events (`start`, `chunk`, `complete`, `error`) |
+| POST   | `/qbot/message/non-streaming` | yes | same body → `{ conversationId, messageId, content, ... }` |
+| POST   | `/qbot/conversations`     | yes  | body: `{ title? }` → conversation (UI starts via `/qbot/message`) |
+| GET    | `/qbot/conversations`     | yes  | `{ conversations, total, limit, offset }`, newest first, includes `lastMessage` |
+| GET    | `/qbot/conversations/:id` | yes  | conversation with its latest messages                         |
+| GET    | `/qbot/conversations/:id/messages` | yes | `{ messages, total, limit, offset, hasMore }`        |
+| PATCH  | `/qbot/conversations/:id` | yes  | body: `{ title }`                                           |
+| DELETE | `/qbot/conversations/:id` | yes  | deletes the conversation and its messages                   |
 
-Rate-limited endpoints return `429`; surface the message instead of retrying in a loop.
+Rate-limited endpoints return `429`; surface the message instead of retrying in a loop. `/qbot/message` is limited per user (default 30/minute).
 Keep this table in sync when the backend changes.
 
 ## 11. Working principles for agents

@@ -51,7 +51,11 @@ const Header = () => {
   const toggleMenu = () => (mobileOpen ? closeMenu() : openMenu());
 
   const navLinks = user
-    ? [...links, { href: "/dashboard", label: "Mark book" }]
+    ? [
+        ...links,
+        { href: "/qbot", label: "Qbot" },
+        { href: "/dashboard", label: "Mark book" },
+      ]
     : links;
 
   useEffect(() => {

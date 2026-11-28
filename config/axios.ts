@@ -4,7 +4,7 @@ import { queryClient } from "./queryClient";
 import { tokenStorage } from "@/lib/token-storage";
 import { TOKEN_KEY, REFRESH_KEY } from "@/data/auth.constants";
 
-const apiUrl =
+export const apiUrl =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
 
 axios.defaults.baseURL = apiUrl;
@@ -50,7 +50,7 @@ axios.interceptors.request.use((config) => {
 // in-flight refresh instead of each firing their own.
 let refreshPromise: Promise<string | null> | null = null;
 
-async function refreshAccessToken(): Promise<string | null> {
+export async function refreshAccessToken(): Promise<string | null> {
   const refreshToken = tokenStorage.getItem(REFRESH_KEY);
   if (!refreshToken) return null;
 
