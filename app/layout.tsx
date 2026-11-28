@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/hooks/queryClientProvider";
 import { AuthProvider } from "@/hooks/auth";
+import FloatingQbot from "@/components/global/FloatingQbot";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             {children}
+            <FloatingQbot />
             <Toaster richColors position="top-right" />
           </AuthProvider>
         </QueryProvider>
