@@ -41,11 +41,21 @@ export function LoginContent() {
   const onSubmit: SubmitHandler<FormFields> = async (formData) => {
     setServerError(null);
     try {
-      await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password);
       // Redirect to the saved "next" URL after login, or default to dashboard
       const nextUrl = query.get("next")?.split("&")[0]; // Basic XSS protection
       router.push(nextUrl && nextUrl.startsWith("/") ? nextUrl : "/dashboard");
     } catch (error) {
+      // Check for pending verification error and redirect to confirm page
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        (error as { type?: string }).type === "PENDING_VERIFICATION"
+      ) {
+        const pendingError = error as { email: string };
+        router.push(`/confirm?email=${encodeURIComponent(pendingError.email)}`);
+        return;
+      }
       if (error instanceof Error) {
         setServerError(error.message);
         return;

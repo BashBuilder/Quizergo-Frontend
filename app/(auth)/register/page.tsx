@@ -64,6 +64,16 @@ export default function RegisterPage() {
       const email = encodeURIComponent(formData.email);
       router.push(`/confirm?email=${email}`);
     } catch (error) {
+      // Check for pending verification error and redirect to confirm page
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        (error as { type?: string }).type === "PENDING_VERIFICATION"
+      ) {
+        const pendingError = error as { email: string };
+        router.push(`/confirm?email=${encodeURIComponent(pendingError.email)}`);
+        return;
+      }
       if (error instanceof Error) {
         setServerError(error.message);
         return;

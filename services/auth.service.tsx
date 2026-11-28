@@ -8,6 +8,19 @@ function extractMessage(error: unknown, fallback: string) {
   return fallback;
 }
 
+// Helper to check if error indicates pending verification
+function isPendingVerificationError(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) return false;
+  const code = error.response?.data?.code;
+  const message = error.response?.data?.message?.toLowerCase() || "";
+  return (
+    code === "PENDING_VERIFICATION" ||
+    code === "UNVERIFIED" ||
+    message.includes("verify") ||
+    message.includes("verification")
+  );
+}
+
 export const getMe = async () => {
   try {
     const user = await axios.get("/auth/me");
@@ -24,6 +37,11 @@ export interface LoginResponse {
   user: User;
 }
 
+export interface PendingVerificationError {
+  type: "PENDING_VERIFICATION";
+  email: string;
+}
+
 export const login = async (email: string, password: string) => {
   try {
     const { data } = await axios.post<LoginResponse>("/auth/login", {
@@ -32,6 +50,9 @@ export const login = async (email: string, password: string) => {
     });
     return data;
   } catch (error) {
+    if (isPendingVerificationError(error)) {
+      throw { type: "PENDING_VERIFICATION", email } as PendingVerificationError;
+    }
     throw new Error(extractMessage(error, "Login failed. Please try again."));
   }
 };
@@ -54,6 +75,9 @@ export const register = async (payload: {
     );
     return data;
   } catch (error) {
+    if (isPendingVerificationError(error)) {
+      throw { type: "PENDING_VERIFICATION", email: payload.email } as PendingVerificationError;
+    }
     throw new Error(
       extractMessage(error, "Registration failed. Please try again."),
     );

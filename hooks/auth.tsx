@@ -20,6 +20,7 @@ import {
   logoutRequest,
   type LoginResponse,
   type RegisterResponse,
+  type PendingVerificationError,
 } from "@/services/auth.service";
 import { tokenStorage } from "@/lib/token-storage";
 import { TOKEN_KEY, REFRESH_KEY } from "@/data/auth.constants";
@@ -44,8 +45,13 @@ interface AuthContextValue {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: unknown;
-  login: (email: string, password: string) => Promise<LoginResponse>;
-  register: (payload: RegisterPayload) => Promise<RegisterResponse>;
+  login: (
+    email: string,
+    password: string,
+  ) => Promise<LoginResponse>;
+  register: (
+    payload: RegisterPayload,
+  ) => Promise<RegisterResponse>;
   verifyOtp: (email: string, otp: string) => Promise<{ message: string }>;
   resendOtp: (email: string) => Promise<{ message: string }>;
   forgotPassword: (email: string) => Promise<{ message: string }>;
@@ -99,19 +105,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const data = await loginRequest(email, password);
-      tokenStorage.setItem(TOKEN_KEY, data.accessToken);
-      tokenStorage.setItem(REFRESH_KEY, data.refreshToken);
-      setHasToken(true);
-      // Cache the user data in React Query for instant access on navigation
-      queryClient.setQueryData(["auth", "me"], data.user);
-      return data;
+      try {
+        const data = await loginRequest(email, password);
+        tokenStorage.setItem(TOKEN_KEY, data.accessToken);
+        tokenStorage.setItem(REFRESH_KEY, data.refreshToken);
+        setHasToken(true);
+        // Cache the user data in React Query for instant access on navigation
+        queryClient.setQueryData(["auth", "me"], data.user);
+        return data;
+      } catch (error) {
+        // Re-throw PendingVerificationError so the page can redirect
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          (error as PendingVerificationError).type === "PENDING_VERIFICATION"
+        ) {
+          throw error;
+        }
+        throw error;
+      }
     },
     [queryClient],
   );
 
   const register = useCallback(async (payload: RegisterPayload) => {
-    return registerRequest(payload);
+    try {
+      return await registerRequest(payload);
+    } catch (error) {
+      // Re-throw PendingVerificationError so the page can redirect
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        (error as PendingVerificationError).type === "PENDING_VERIFICATION"
+      ) {
+        throw error;
+      }
+      throw error;
+    }
   }, []);
 
   const verifyOtp = useCallback(async (email: string, otp: string) => {
