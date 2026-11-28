@@ -6,15 +6,14 @@ import { toast } from "sonner";
 /**
  * Summary of a past attempt. Mirrors the backend's `QuizResult` Prisma
  * model (userId/answers/createdAt aren't needed on the client).
- * `submittedAt` is a Prisma `DateTime`, which serialises to an ISO string.
+ * `submittedAt` is an epoch timestamp in milliseconds.
  */
 export interface QuizResultSummary {
-  id: string;
   sessionId: string;
   score: number;
   total: number;
   timeTaken: number;
-  submittedAt: string;
+  submittedAt: number;
 }
 
 // Types from __types__/index.d.ts (globally available)

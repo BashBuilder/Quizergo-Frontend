@@ -22,8 +22,8 @@ function pct(entry: QuizResultSummary) {
   return entry.total > 0 ? Math.round((entry.score / entry.total) * 100) : 0;
 }
 
-function formatRelativeDate(iso: string) {
-  const date = new Date(iso);
+function formatRelativeDate(timestamp: number | string) {
+  const date = new Date(timestamp);
   if (Number.isNaN(date.getTime())) return "--";
   const diffDays = Math.floor((Date.now() - date.getTime()) / 86400000);
   if (diffDays <= 0) return "Today";
@@ -236,7 +236,7 @@ export default function DashboardPage() {
                 <ul>
                   {recent.map((entry) => (
                     <li
-                      key={entry.id}
+                      key={entry.sessionId}
                       className="grid grid-cols-[1fr_auto] items-center gap-x-6 gap-y-1 border-b border-rule py-4"
                     >
                       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
