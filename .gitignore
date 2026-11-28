@@ -44,4 +44,6 @@ next-env.d.ts
 
 graphify-out/*
 
+.playwright-mcp*
+
 

@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/auth";
 import AuthShell from "../auth-shell";
 import InputField from "../Field";
@@ -53,6 +54,7 @@ export function LoginContent() {
         (error as { type?: string }).type === "PENDING_VERIFICATION"
       ) {
         const pendingError = error as { email: string };
+        toast.info("Please verify your email to continue");
         router.push(`/confirm?email=${encodeURIComponent(pendingError.email)}`);
         return;
       }

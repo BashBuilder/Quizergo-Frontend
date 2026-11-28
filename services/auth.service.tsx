@@ -12,10 +12,13 @@ function extractMessage(error: unknown, fallback: string) {
 function isPendingVerificationError(error: unknown): boolean {
   if (!axios.isAxiosError(error)) return false;
   const code = error.response?.data?.code;
+  const status = error.response?.data?.status;
   const message = error.response?.data?.message?.toLowerCase() || "";
   return (
+    code === "PENDING_OTP_VERIFICATION" ||
     code === "PENDING_VERIFICATION" ||
     code === "UNVERIFIED" ||
+    status === "pending_otp_verification" ||
     message.includes("verify") ||
     message.includes("verification")
   );
@@ -42,6 +45,18 @@ export interface PendingVerificationError {
   email: string;
 }
 
+// Helper to extract email from error response (for cases where backend provides it)
+function getEmailFromError(error: unknown): string | undefined {
+  if (axios.isAxiosError(error)) {
+    const responseData = error.response?.data;
+    // Check if email is provided in the error response
+    if (typeof responseData?.email === "string") {
+      return responseData.email;
+    }
+  }
+  return undefined;
+}
+
 export const login = async (email: string, password: string) => {
   try {
     const { data } = await axios.post<LoginResponse>("/auth/login", {
@@ -51,7 +66,8 @@ export const login = async (email: string, password: string) => {
     return data;
   } catch (error) {
     if (isPendingVerificationError(error)) {
-      throw { type: "PENDING_VERIFICATION", email } as PendingVerificationError;
+      const errEmail = getEmailFromError(error) || email;
+      throw { type: "PENDING_VERIFICATION", email: errEmail } as PendingVerificationError;
     }
     throw new Error(extractMessage(error, "Login failed. Please try again."));
   }
@@ -76,7 +92,8 @@ export const register = async (payload: {
     return data;
   } catch (error) {
     if (isPendingVerificationError(error)) {
-      throw { type: "PENDING_VERIFICATION", email: payload.email } as PendingVerificationError;
+      const errEmail = getEmailFromError(error) || payload.email;
+      throw { type: "PENDING_VERIFICATION", email: errEmail } as PendingVerificationError;
     }
     throw new Error(
       extractMessage(error, "Registration failed. Please try again."),

@@ -71,6 +71,7 @@ export default function RegisterPage() {
         (error as { type?: string }).type === "PENDING_VERIFICATION"
       ) {
         const pendingError = error as { email: string };
+        toast.info("Please verify your email to continue");
         router.push(`/confirm?email=${encodeURIComponent(pendingError.email)}`);
         return;
       }
