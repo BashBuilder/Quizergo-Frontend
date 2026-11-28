@@ -76,7 +76,7 @@ export default function SubmitModal({
                 <p className="text-[1.25rem] font-semibold leading-none tabular-nums text-ink">
                   {s.value}
                 </p>
-                <p className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-quiet">
+                <p className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-widest text-ink-quiet">
                   {s.label}
                 </p>
               </div>

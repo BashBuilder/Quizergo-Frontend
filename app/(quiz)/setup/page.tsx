@@ -156,7 +156,7 @@ export default function QuizSetupPage() {
         <div className="w-full">
           <div className="mb-6 lg:hidden">
             <p className="eyebrow text-marker-ink">New session</p>
-            <h1 className="mt-3 text-[1.75rem] font-semibold leading-tight tracking-[-0.025em] text-ink">
+            <h1 className="mt-3 text-[1.75rem] font-semibold leading-tight tracking-tight text-ink">
               Set up the paper.
             </h1>
           </div>
@@ -266,7 +266,9 @@ export default function QuizSetupPage() {
                     >
                       <RotateCw
                         size={11}
-                        className={subjectsFetching ? "animate-spin" : undefined}
+                        className={
+                          subjectsFetching ? "animate-spin" : undefined
+                        }
                         aria-hidden="true"
                       />
                       Try again
@@ -295,7 +297,10 @@ export default function QuizSetupPage() {
                     name="questionCount"
                     control={control}
                     render={({ field }) => (
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
                         <SelectTrigger
                           id="questionCount"
                           className={cn(
@@ -328,7 +333,10 @@ export default function QuizSetupPage() {
                     name="duration"
                     control={control}
                     render={({ field }) => (
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
                         <SelectTrigger
                           id="duration"
                           className={cn(
@@ -392,7 +400,11 @@ export default function QuizSetupPage() {
                 ) : (
                   <>
                     Start session
-                    <ChevronRight size={15} className="ml-1" aria-hidden="true" />
+                    <ChevronRight
+                      size={15}
+                      className="ml-1"
+                      aria-hidden="true"
+                    />
                   </>
                 )}
               </Button>

@@ -21,7 +21,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageWrapper from "@/components/global/PageWrapper";
-import { useGetStudySubjects, type StudySubject } from "@/services/study.service";
+import {
+  useGetStudySubjects,
+  type StudySubject,
+} from "@/services/study.service";
 
 type Difficulty = "all" | "easy" | "medium" | "hard";
 type SortBy = "recent" | "score" | "questions";
@@ -32,12 +35,6 @@ const difficultyLabel: Record<string, string> = {
   easy: "Easy",
   medium: "Medium",
   hard: "Hard",
-};
-
-const difficultyColor: Record<string, string> = {
-  easy: "emerald",
-  medium: "amber",
-  hard: "rose",
 };
 
 const iconMap: Record<string, React.ElementType> = {
@@ -104,7 +101,7 @@ function SubjectCard({
           {subject.locked && (
             <Lock size={13} className="text-ink-quiet" aria-label="Locked" />
           )}
-          <span className="rounded-md border border-rule px-2 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-quiet">
+          <span className="rounded-md border border-rule px-2 py-1 text-[0.6875rem] font-semibold uppercase tracking-widest text-ink-quiet">
             {difficultyLabel[subject.difficulty]}
           </span>
         </div>
@@ -271,7 +268,7 @@ function ModePicker({
                         : "bg-well text-ink-quiet",
                     )}
                   >
-                      <MIcon size={15} aria-hidden="true" />
+                    <MIcon size={15} aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-[0.8125rem] font-semibold text-ink">
@@ -298,7 +295,7 @@ function ModePicker({
             </button>
             <button
               onClick={() => onStart(selected)}
-              className="flex h-10 flex-[2] items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge"
+              className="flex h-10 flex-2 items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge"
             >
               <Play size={13} aria-hidden="true" />
               Start session

@@ -94,8 +94,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initialData: queryClient.getQueryData<User>(["auth", "me"]) as User | undefined,
   });
 
-  // Show loading only during initial hydration, not on navigation
-  const isLoading = hasToken === null || (hasToken === true && userLoading && !hydrated);
+  // Show loading only during initial auth check, not on navigation
+  const isLoading = hasToken === null || (hasToken === true && userLoading);
 
   const login = useCallback(
     async (email: string, password: string) => {

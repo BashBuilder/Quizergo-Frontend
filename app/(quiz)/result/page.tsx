@@ -236,79 +236,174 @@ export default function ResultsPage() {
               Question {questionIndexInSubject + 1} of {totalQInSubject}
             </p>
           </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <Link
+              href="/dashboard"
+              className="flex h-9 items-center gap-1.5 rounded-lg border border-rule bg-sheet px-3 text-[0.75rem] font-semibold text-ink-soft transition-colors hover:bg-well"
+            >
+              <BookOpen size={12} aria-hidden="true" />
+              <span className="hidden sm:inline">Mark book</span>
+            </Link>
+            <Link
+              href="/setup"
+              className="flex h-9 items-center gap-1.5 rounded-lg bg-exam px-3 text-[0.75rem] font-semibold text-white transition-colors hover:bg-exam-edge"
+            >
+              <RotateCcw size={12} aria-hidden="true" />
+              <span className="hidden sm:inline">Sit another</span>
+            </Link>
+          </div>
         </div>
+
+        {/* Subject tabs — only shown when multiple subjects */}
+        {result.breakdown.length > 1 && (
+          <div className="overflow-x-auto border-t border-rule">
+            <div className="mx-auto flex max-w-5xl px-4 sm:px-6">
+              {result.breakdown.map((group, idx) => {
+                const isActive = idx === activeSubjectIdx;
+                const correctCount = group.questions.filter(q => q.status === "correct").length;
+                return (
+                  <button
+                    key={group.subject}
+                    onClick={() => goToSubject(idx)}
+                    className={cn(
+                      "flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-2.5 text-[0.75rem] font-semibold transition-colors",
+                      isActive
+                        ? "border-exam text-ink"
+                        : "border-transparent text-ink-quiet hover:text-ink",
+                    )}
+                    aria-current={isActive ? "true" : undefined}
+                  >
+                    {group.subject}
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0.5 text-[0.6875rem] font-semibold tabular-nums",
+                        isActive
+                          ? "bg-exam text-white"
+                          : "bg-well text-ink-quiet",
+                      )}
+                    >
+                      {correctCount}/{group.questions.length}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main */}
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-7 sm:px-6 sm:py-8">
         <h1 className="sr-only">Your marked paper</h1>
 
-        {/* Score slab */}
-        <div className="relative overflow-hidden rounded-3xl bg-exam mb-6">
-          <div
-            className="pointer-events-none absolute inset-0"
-            aria-hidden="true"
-          >
-            <div className="printed-grid-dark absolute inset-0" />
-            <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-primary-500/20 blur-3xl" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_280px]">
+          {/* Question panel & navigation */}
+          <div>
+            {currentQ && (
+              <QuestionView
+                q={currentQ}
+                idx={questionIndexInSubject}
+                totalQ={totalQInSubject}
+                subject={activeSubject}
+              />
+            )}
+
+            {/* Navigation */}
+            <div className="flex items-center justify-between gap-4 mt-4">
+              <button
+                onClick={() => goTo(currentQuestionIdx - 1)}
+                disabled={currentQuestionIdx === 0}
+                className={cn(
+                  "flex h-10 items-center gap-2 rounded-xl border border-rule bg-sheet px-4 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well disabled:cursor-not-allowed disabled:opacity-40",
+                )}
+                aria-label="Previous question"
+              >
+                <ChevronLeft size={15} aria-hidden="true" /> Previous
+              </button>
+
+              <button
+                onClick={() => goTo(currentQuestionIdx + 1)}
+                disabled={currentQuestionIdx === allQuestions.length - 1}
+                className={cn(
+                  "flex h-10 items-center gap-2 rounded-xl bg-exam px-5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40",
+                )}
+                aria-label="Next question"
+              >
+                Next <ChevronRight size={15} aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
-          <div className="relative border-b border-white/10 px-6 pt-6 pb-5 sm:px-8">
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <p className="eyebrow text-primary-300">Session complete</p>
-              <p className="text-[0.75rem] tabular-nums text-white/55">
-                {formatTime(result.timeTaken)} used
-              </p>
-            </div>
-
-            <div className="mt-5 grid items-center gap-7 sm:grid-cols-[9.5rem_1fr] sm:gap-9">
-              {/* Score mark */}
-              <div className="relative mx-auto h-36 w-36 sm:mx-0">
-                <svg
-                  className="h-36 w-36 -rotate-90"
-                  viewBox="0 0 120 120"
-                  aria-hidden="true"
-                >
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="54"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.12)"
-                    strokeWidth="6"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="54"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.85)"
-                    strokeWidth="6"
-                    strokeDasharray={`${(scorePct / 100) * circumference} ${circumference}`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <p className="text-[2.5rem] font-semibold leading-none tabular-nums tracking-[-0.04em] text-white">
-                    {scorePct}
-                    <span className="text-[1.125rem] font-medium text-white/50">
-                      %
-                    </span>
-                  </p>
-                  <p className="eyebrow mt-2 text-white/55">Marked</p>
-                </div>
+          {/* Sidebar / Session Complete Card & Question Navigation */}
+          <aside className="space-y-6">
+            {/* Session Complete Card */}
+            <div className="relative overflow-hidden rounded-3xl bg-exam p-5 text-white">
+              <div
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
+              >
+                <div className="printed-grid-dark absolute inset-0" />
+                <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-primary-500/20 blur-3xl" />
               </div>
 
-              <div>
-                <p className="text-[1.375rem] font-semibold leading-snug tracking-[-0.02em] text-white">
-                  {totalCorrect} of {result.total} correct.
-                </p>
-                <p className="mt-1 text-[0.8125rem] leading-6 text-white/50">
-                  {result.breakdown.length} subject
-                  {result.breakdown.length === 1 ? "" : "s"}, {totalIncorrect} wrong, {totalSkipped} skipped
-                </p>
+              <div className="relative">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="eyebrow text-primary-300">Session complete</p>
+                  <p className="text-[0.6875rem] tabular-nums text-white/55">
+                    {formatTime(result.timeTaken)}
+                  </p>
+                </div>
 
-                <dl className="mt-5 grid grid-cols-3 border-t border-white/15 pt-4">
+                <div className="mt-4 flex items-center gap-5">
+                  {/* Score mark */}
+                  <div className="relative h-24 w-24 shrink-0">
+                    <svg
+                      className="h-24 w-24 -rotate-90"
+                      viewBox="0 0 120 120"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="54"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.12)"
+                        strokeWidth="6"
+                      />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="54"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.85)"
+                        strokeWidth="6"
+                        strokeDasharray={`${(scorePct / 100) * circumference} ${circumference}`}
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <p className="text-[1.75rem] font-semibold leading-none tabular-nums tracking-[-0.04em] text-white">
+                        {scorePct}
+                        <span className="text-[0.875rem] font-medium text-white/50">
+                          %
+                        </span>
+                      </p>
+                      <p className="text-[0.625rem] uppercase tracking-[0.1em] text-white/55 mt-0.5">Marked</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-[1.125rem] font-semibold leading-snug tracking-[-0.02em] text-white">
+                      {totalCorrect} of {result.total} correct
+                    </p>
+                    <p className="mt-0.5 text-[0.75rem] leading-5 text-white/60">
+                      {totalIncorrect} wrong, {totalSkipped} skipped
+                    </p>
+                  </div>
+                </div>
+
+                <dl className="mt-4 grid grid-cols-3 border-t border-white/15 pt-3">
                   {[
                     {
                       label: "Correct",
@@ -328,17 +423,17 @@ export default function ResultsPage() {
                   ].map((s, index) => (
                     <div
                       key={s.label}
-                      className={cn(index > 0 && "border-l border-white/15 pl-4")}
+                      className={cn(index > 0 && "border-l border-white/15 pl-3")}
                     >
                       <dd
                         className={cn(
-                          "text-[1.25rem] font-semibold leading-none tabular-nums",
+                          "text-[1rem] font-semibold leading-none tabular-nums",
                           s.className,
                         )}
                       >
                         {s.value}
                       </dd>
-                      <dt className="mt-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-white/55">
+                      <dt className="mt-1 text-[0.5625rem] font-semibold uppercase tracking-[0.1em] text-white/55">
                         {s.label}
                       </dt>
                     </div>
@@ -346,104 +441,65 @@ export default function ResultsPage() {
                 </dl>
               </div>
             </div>
-          </div>
 
-          <div className="relative flex flex-wrap gap-x-6 gap-y-2 px-6 py-3.5 text-[0.6875rem] text-white/55 sm:px-8">
-            <span className="flex items-center gap-1.5 tabular-nums">
-              <Clock size={11} aria-hidden="true" />
-              {formatTime(result.timeTaken)}
-            </span>
-            <span className="flex items-center gap-1.5 tabular-nums">
-              <BookOpen size={11} aria-hidden="true" />
-              {result.total} questions
-            </span>
-            <span className="flex items-center gap-1.5 tabular-nums">
-              <Target size={11} aria-hidden="true" />
-              {result.breakdown.length} subject
-              {result.breakdown.length === 1 ? "" : "s"}
-            </span>
-          </div>
-        </div>
+            {/* Question navigator */}
+            <div className="rounded-2xl border border-rule bg-sheet p-5">
+              <h2 className="eyebrow eyebrow-quiet">Questions</h2>
 
-        {/* Question view */}
-        {currentQ && (
-          <QuestionView
-            q={currentQ}
-            idx={questionIndexInSubject}
-            totalQ={totalQInSubject}
-            subject={activeSubject}
-          />
-        )}
+              <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
+                {[
+                  { color: "bg-emerald-500", label: "Correct" },
+                  { color: "bg-rose-500", label: "Wrong" },
+                  { color: "bg-well", label: "Skipped" },
+                ].map((l) => (
+                  <div key={l.label} className="flex items-center gap-1.5">
+                    <span
+                      className={cn("h-2.5 w-2.5 rounded-sm", l.color)}
+                      aria-hidden="true"
+                    />
+                    <span className="text-[0.6875rem] text-ink-quiet">
+                      {l.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between gap-4">
-          <button
-            onClick={() => goTo(currentQuestionIdx - 1)}
-            disabled={currentQuestionIdx === 0}
-            className={cn(
-              "flex h-10 items-center gap-2 rounded-xl border border-rule bg-sheet px-4 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well disabled:cursor-not-allowed disabled:opacity-40",
-            )}
-            aria-label="Previous question"
-          >
-            <ChevronLeft size={15} aria-hidden="true" /> Previous
-          </button>
-
-          <button
-            onClick={() => goTo(currentQuestionIdx + 1)}
-            disabled={currentQuestionIdx === allQuestions.length - 1}
-            className={cn(
-              "flex h-10 items-center gap-2 rounded-xl bg-exam px-5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40",
-            )}
-            aria-label="Next question"
-          >
-            Next <ChevronRight size={15} aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* Question number navigation */}
-        <div
-          className="mt-4 flex flex-wrap gap-1.5"
-          role="list"
-          aria-label="Question navigation"
-        >
-          {allQuestions.map((q, idx) => {
-            const isCurrent = idx === currentQuestionIdx;
-            return (
-              <button
-                key={q.questionId}
-                onClick={() => goTo(idx)}
-                role="listitem"
-                aria-current={isCurrent ? "true" : undefined}
-                aria-label={`Question ${idx + 1}`}
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-lg text-[0.6875rem] font-semibold tabular-nums transition-colors",
-                  isCurrent
-                    ? "bg-exam text-white ring-2 ring-exam ring-offset-1"
-                    : "bg-well text-ink-quiet hover:bg-rule",
-                )}
+              <div
+                className="mt-4 flex flex-wrap gap-1.5"
+                role="list"
+                aria-label="Question navigation"
               >
-                {idx + 1}
-              </button>
-            );
-          })}
-        </div>
+                {allQuestions.map((q, idx) => {
+                  const isCurrent = idx === currentQuestionIdx;
+                  let bgClass = "bg-well text-ink-quiet hover:bg-rule";
+                  if (q.status === "correct") {
+                    bgClass = isCurrent ? "bg-primary-500 text-white" : "bg-primary-100 text-primary-900 hover:bg-primary-200";
+                  } else if (q.status === "incorrect") {
+                    bgClass = isCurrent ? "bg-rose-600 text-white" : "bg-rose-100 text-rose-900 hover:bg-rose-200";
+                  } else {
+                    bgClass = isCurrent ? "bg-exam text-white" : "bg-well text-ink-quiet hover:bg-rule";
+                  }
 
-        {/* Actions */}
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link
-            href="/dashboard"
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-rule bg-sheet text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:bg-well"
-          >
-            <BookOpen size={14} aria-hidden="true" />
-            Back to mark book
-          </Link>
-          <Link
-            href="/setup"
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-exam text-[0.8125rem] font-semibold text-white transition-colors hover:bg-exam-edge active:scale-[0.98]"
-          >
-            <RotateCcw size={14} aria-hidden="true" />
-            Sit another paper
-          </Link>
+                  return (
+                    <button
+                      key={q.questionId}
+                      onClick={() => goTo(idx)}
+                      role="listitem"
+                      aria-current={isCurrent ? "true" : undefined}
+                      aria-label={`Question ${idx + 1}`}
+                      className={cn(
+                        "flex h-8 w-8 items-center justify-center rounded-lg text-[0.6875rem] font-semibold tabular-nums transition-colors",
+                        isCurrent && "ring-2 ring-exam ring-offset-1",
+                        bgClass,
+                      )}
+                    >
+                      {idx + 1}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </aside>
         </div>
       </main>
     </div>
