@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { ConfirmOTPContent } from "./confirm-content";
 
+export const dynamic = "force-dynamic";
+
 export default function ConfirmPage() {
   return (
     <Suspense
